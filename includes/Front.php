@@ -56,33 +56,62 @@ class Front {
 			//Get Order
 			$row = $wpdb->get_row( "SELECT * FROM `z_order` WHERE `id` = {$_GET['order_id']}", ARRAY_A );
 			if ( null !== $row ) {
-				$text .= '<div class="status-order">وضعیت سفارش : ' . Helper::show_status( $row['id'] ) . '</div>';
-				$text .='
+				$text  .= '<div class="status-order">وضعیت سفارش : ' . Helper::show_status( $row['id'] ) . '</div>';
+				$entry = Gravity_Form::get_entry( $row['entry_id'] );
+
+				$text .= '
 				<div class="order-accordion">
 					<div class="title">
-						<div class="pull-right">عنوان اول من</div>
+						<div class="pull-right">' . $entry[ Gravity_Form::$title ] . '</div>
 						<div class="pull-left">+</div>
 						<div class="clearfix"></div>
 					</div>
-					<div class="content">محتوا این قسمت</div>
+					<div class="content">
+					<table class="sticky-list">
+					<tbody>
+					';
+
+				$form = \GFAPI::get_form( Gravity_Form::$order_form_id );
+				foreach ( $form['fields'] as $field ) {
+
+					$label        = $field->label;
+					$remove_field = array( 71, 67 );
+					if ( ! empty( $label ) and isset( $entry[ $field->id ] ) and ! empty( $entry[ $field->id ] ) and $field->type != "hidden" and ! in_array( $field->id, $remove_field ) ) {
+						$value = $entry[ $field->id ];
+						if ( $field->type == "fileupload" ) {
+							$list_file = json_decode( $value );
+							$x         = 1;
+							$value     = '';
+							foreach ( $list_file as $f ) {
+								$value .= '<a href="' . $f . '" target="_blank">دریافت فایل ' . $x . ' </a>';
+								$x ++;
+								if ( $x >= count( $list_file ) ) {
+									$value .= '<br>';
+								}
+							}
+						}
+
+						$text .= '
+		                <tr>
+		                    <td>' . esc_html( $label ) . '</td>
+		                    <td>' . $value . '</td>
+		                </tr>';
+					}
+				}
+
+				$text .= '
+				</tbody>
+				</table>
+				</div>
 				</div>
 				<div class="clearfix"></div>
-				
-				<div class="order-accordion">
-					<div class="title">
-						<div class="pull-right">عنوان اول من</div>
-						<div class="pull-left">+</div>
-						<div class="clearfix"></div>
-					</div>
-					<div class="content">محتوا این قسمت</div>
-				</div>
-				<div class="clearfix"></div>
-				
-				<div class="order-accordion">
-					<div class="title">عنوان اول</div>
-					<div class="content">محتوا این قسمت</div>
-				</div>
 				';
+
+
+
+
+
+
 
 
 			}

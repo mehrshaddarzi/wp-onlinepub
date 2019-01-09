@@ -33,7 +33,7 @@
 
 .status-order {
     width: 100%;
-    min-height: 35px;
+    height: 30px;
     background: #eddea5;
     border-radius: 5px;
     padding: 5px;
@@ -44,7 +44,7 @@
 
 .order-accordion {
     width: 100%;
-    min-height: 150px;
+    min-height: 35px;
     transition: 1s all;
 }
 
@@ -70,6 +70,7 @@
     padding: 5px 20px;
     line-height: 24px;
     display: none;
+    margin-bottom: 50px;
 }
 
 .order-accordion .title:hover {
