@@ -112,7 +112,7 @@ class WP_Online_Pub {
 
 		//Test Service
 		if ( isset( $_GET['test'] ) ) {
-			require_once $this->plugin_path.'/template/email.php';
+			require_once wp_normalize_path( $this->plugin_path . 'template/email.php' );
 			exit;
 		}
 
