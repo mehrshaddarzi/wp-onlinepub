@@ -75,9 +75,7 @@ class WP_Online_Pub {
 
 		//Test Service
 		if ( isset( $_GET['test'] ) ) {
-			$form = GFAPI::get_form( 12 );
-			echo '<pre>';
-			print_r($form);
+
 			exit;
 		}
 
@@ -90,9 +88,10 @@ class WP_Online_Pub {
 	 * @param $to
 	 * @param $text
 	 * @param string $template
+	 * @param array $args
 	 * @return bool
 	 */
-	public static function send_sms( $to, $text, $template = '' ) {
+	public static function send_sms( $to, $text, $template = '', $args = array() ) {
 
 		//Brand Name
 		$brand = "نشرآنلاین";
@@ -101,17 +100,31 @@ class WP_Online_Pub {
 
 		//Sms To Admin
 		if ( $to == "admin" ) {
-			$to = '09101566463';
+			//$to = '09101566463';
+			$to = '09358510091';
 		}
 
 		//Template Sms
 		switch ( $template ) {
-			case "red":
-				echo "Your favorite color is red!";
+			case "send_to_admin_at_new_order":
+				$text = 'یک سفارش جدید به شناسه ';
+				$text .= $args['order_id'];
+				$text .= ' به نام ';
+				$text .= $args['user_name'];
+				$text .= ' در سایت ثبت شده است';
 				break;
+
+			case "send_to_user_at_new_order":
+				$text = 'کاربر گرامی سفارش شما با موفقت ثبت و برای بررسی اولیه ارسال شده است';
+				$text .= "\n" . $brand;
+				break;
+
+
 			default:
 				$text = $text . "\n" . $brand;
 		}
+
+		//replace text
 
 		//Send Sms
 		$url     = 'http://login.niazpardaz.ir/SMSInOutBox/SendSms';
