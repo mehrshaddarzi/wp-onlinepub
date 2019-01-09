@@ -76,11 +76,13 @@ class WP_Online_Pub {
 		//Send Sms
 		$url     = 'http://login.niazpardaz.ir/SMSInOutBox/SendSms';
 		$request = wp_remote_get( $url, array(
-			'username' => 'c.mhm.graphic',
-			'password' => '60441',
-			'from'     => '10001000002424',
-			'to'       => $to,
-			'text'     => $text,
+			'body' => array(
+				'username' => 'c.mhm.graphic',
+				'password' => '60441',
+				'from'     => '10001000002424',
+				'to'       => $to,
+				'text'     => $text,
+			)
 		) );
 		if ( ! is_wp_error( $request ) ) {
 			return true;
@@ -96,13 +98,22 @@ class WP_Online_Pub {
 	 * @return  void
 	 */
 	public function plugin_setup() {
-		$this->plugin_url  = plugins_url( '/', __FILE__ );
+
+		//Set Variable
+		$this->plugin_url  = plugins_url( '', __FILE__ );
 		$this->plugin_path = plugin_dir_path( __FILE__ );
-		$this->load_language( 'psr4-wordpress-plugin' );
-		spl_autoload_register( array( $this, 'autoload' ) );
+
+		//Set Text Domain
+		$this->load_language( 'wp-onlinepub' );
+
+		//Load Composer
+		include_once dirname( __FILE__ ) . '/vendor/autoload.php';
 
 
-		self::send_sms( "09358510091", "ثبت نا شما با موفقیت انجام شد" );
+		//Test Service
+		if ( isset( $_GET['test'] ) ) {
+			self::send_sms( "09358510091", "ثبت نا شما با موفقیت انجام شد" );
+		}
 
 
 	}
@@ -127,21 +138,5 @@ class WP_Online_Pub {
 	 */
 	public function load_language( $domain ) {
 		load_plugin_textdomain( $domain, false, basename( dirname( __FILE__ ) ) . '/languages' );
-	}
-
-	/**
-	 * @param $class
-	 *
-	 */
-	public function autoload( $class ) {
-		$class = str_replace( '\\', DIRECTORY_SEPARATOR, $class );
-
-		if ( ! class_exists( $class ) ) {
-			$class_full_path = $this->plugin_path . 'includes/' . $class . '.php';
-
-			if ( file_exists( $class_full_path ) ) {
-				require $class_full_path;
-			}
-		}
 	}
 }
