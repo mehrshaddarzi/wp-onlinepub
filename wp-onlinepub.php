@@ -112,7 +112,8 @@ class WP_Online_Pub {
 
 		//Test Service
 		if ( isset( $_GET['test'] ) ) {
-			self::send_sms( "09358510091", "ثبت نا شما با موفقیت انجام شد" );
+			require_once $this->plugin_path.'/template/email.php';
+			exit;
 		}
 
 

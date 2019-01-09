@@ -8,6 +8,8 @@ namespace WP_OnlinePub;
  * A simple class for creating and
  * sending Emails using WordPress
  *
+ *
+ * @license https://github.com/anthonybudd/WP_Mail
  * @author     AnthonyBudd <anthonybudd94@gmail.com>
  */
 Class WP_Mail {
