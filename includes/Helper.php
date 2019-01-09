@@ -74,4 +74,43 @@ class Helper {
 	}
 
 
+	/**
+	 * Show Order Status
+	 *
+	 * @param int $status
+	 * @return string
+	 */
+	public static function show_status( $status = 1 ) {
+		switch ( $status ) {
+			case "1":
+				return 'در حال بررسی اولیه';
+				break;
+			case "2":
+				return 'صدور پیش فاکتور';
+				break;
+			case "3":
+				return 'تایید پرداخت';
+				break;
+			case "4":
+				return 'تایید انجام سفارش';
+				break;
+			case "5":
+				return 'در حال انجام کار';
+				break;
+			case "6":
+				return 'ارسال برای بازبینی';
+				break;
+			case "7":
+				return 'صدور فاکتور';
+				break;
+			case "8":
+				return 'تایید واریز';
+				break;
+			case "9":
+				return 'اتمام پروژه';
+				break;
+		}
+	}
+
+
 }
