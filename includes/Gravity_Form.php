@@ -18,6 +18,11 @@ class Gravity_Form {
 	public static $order_type = 78;
 
 	/**
+	 * Hidden Field id in Entry Table
+	 */
+	public static $hidden_field_id = array( 71, 67 );
+
+	/**
 	 * Gravity_Form constructor.
 	 */
 	public function __construct() {

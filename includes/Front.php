@@ -71,7 +71,7 @@ class Front {
 					<tbody>
 					';
 
-				$entry_tbl = get_entry_table( $row['entry_id'], array( "hidden" ), array( 71, 67 ) );
+				$entry_tbl = Gravity_Form::get_entry_table( $row['entry_id'], array( "hidden" ), Gravity_Form::$hidden_field_id );
 				foreach ( $entry_tbl as $k => $v ) {
 					$text .= '
 		                <tr>
