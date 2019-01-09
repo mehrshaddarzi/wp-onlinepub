@@ -30,14 +30,21 @@ class WP_Online_Pub {
 	 *
 	 * @type string
 	 */
-	public $plugin_url = '';
+	public static $plugin_url = '';
 
 	/**
 	 * Path to this plugin's directory.
 	 *
 	 * @type string
 	 */
-	public $plugin_path = '';
+	public static $plugin_path;
+
+	/**
+	 * Path to this plugin's directory.
+	 *
+	 * @type string
+	 */
+	public static $plugin_version;
 
 	/**
 	 * Access this plugin’s working instance
@@ -59,9 +66,19 @@ class WP_Online_Pub {
 	 */
 	public function plugin_setup() {
 
+		//Get Plugin data
+		//Get plugin Data information
+		if ( ! function_exists( 'get_plugin_data' ) ) {
+			require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+		}
+		$plugin_data = get_plugin_data( __FILE__ );
+
+		//Get Plugin Version
+		self::$plugin_version = $plugin_data['Version'];
+
 		//Set Variable
-		$this->plugin_url  = plugins_url( '', __FILE__ );
-		$this->plugin_path = plugin_dir_path( __FILE__ );
+		self::$plugin_url  = plugins_url( '', __FILE__ );
+		self::$plugin_path = plugin_dir_path( __FILE__ );
 
 		//Set Text Domain
 		$this->load_language( 'wp-onlinepub' );

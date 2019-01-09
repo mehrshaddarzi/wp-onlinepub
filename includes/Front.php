@@ -3,7 +3,16 @@
 namespace WP_OnlinePub;
 
 
+use WP_Online_Pub;
+
 class Front {
+
+	/**
+	 * Asset Script name
+	 */
+	public static $asset_name = 'user-order';
+
+
 	/**
 	 * constructor.
 	 */
@@ -11,7 +20,20 @@ class Front {
 
 		//ShortCode List Order User
 		add_shortcode( 'user-order', array( $this, 'user_order_list' ) );
+
+		//Add Script
+		add_action( 'wp_enqueue_scripts', array( $this, 'wp_enqueue_style' ) );
 	}
+
+	/**
+	 * Register Asset
+	 */
+	public function wp_enqueue_style() {
+
+		wp_register_style( self::$asset_name, WP_Online_Pub::$plugin_url . '/asset/style.css', array(), WP_Online_Pub::$plugin_version, 'all' );
+		wp_register_script( self::$asset_name, WP_Online_Pub::$plugin_url . '/asset/script.js', array( 'jquery' ), WP_Online_Pub::$plugin_version, false );
+	}
+
 
 	/**
 	 * User Order List
@@ -25,9 +47,13 @@ class Front {
 		$page_link = get_the_permalink( $page_id );
 		$user_id   = get_current_user_id();
 
+		//Push Asset
+		wp_enqueue_script( self::$asset_name );
+		wp_enqueue_style( self::$asset_name );
+
 		//Show Custom Order Detail
-		if ( isset( $_GET['order_id'] ) and is_numeric( $GET_['order_id'] ) and Helper::check_order_for_user( $_GET['order_id'], $user_id ) === true ) {
-			$text .= 'ddf';
+		if ( isset( $_GET['order_id'] ) and is_numeric( $_GET['order_id'] ) and Helper::check_order_for_user( $_GET['order_id'], $user_id ) === true ) {
+
 
 		}
 
@@ -57,7 +83,7 @@ class Front {
 ';
 
 				foreach ( $query as $row ) {
-					$entry = \GFAPI::get_entry( $row['entry_id'] );
+					$entry = Gravity_Form::get_entry( $row['entry_id'] );
 					$text  .= '
 <tr>
 <td>' . $row['id'] . '</td>

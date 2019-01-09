@@ -29,6 +29,16 @@ class Gravity_Form {
 	}
 
 	/**
+	 * Get Entry From Gravity
+	 *
+	 * @param $entry_id
+	 * @return
+	 */
+	public static function get_entry( $entry_id ) {
+		return \GFAPI::get_entry( $entry_id );
+	}
+
+	/**
 	 * Save Form To Order Tbl
 	 *
 	 * @param $entry
@@ -65,7 +75,7 @@ class Gravity_Form {
 
 			//Email to User
 			$user_mail = Helper::get_user_email( $entry['created_by'] );
-			$list      = \GFAPI::get_entry( $entry['id'] );
+			$list      = self::get_entry( $entry['id'] );
 			if ( $user_mail != "" ) {
 				$subject = "ثبت سفارش جدید به شناسه " . $order_id;
 				$content = '<p>';
