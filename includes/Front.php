@@ -2,7 +2,6 @@
 
 namespace WP_OnlinePub;
 
-
 use WP_Online_Pub;
 
 class Front {
@@ -53,6 +52,24 @@ class Front {
 
 		//Show Custom Order Detail
 		if ( isset( $_GET['order_id'] ) and is_numeric( $_GET['order_id'] ) and Helper::check_order_for_user( $_GET['order_id'], $user_id ) === true ) {
+
+			//Get Order
+			$row = $wpdb->get_row( "SELECT * FROM `z_order` WHERE `id` = {$_GET['order_id']}", ARRAY_A );
+			if ( null !== $row ) {
+				$text .= '<div class="status-order">وضعیت سفارش : ' . Helper::show_status( $row['id'] ) . '</div>';
+				$text .='
+				<div class="order-accordion">
+					<div class="title">عنوان اول</div>
+					<div class="content">محتوا این قسمت</div>
+				</div>
+				<div class="order-accordion">
+					<div class="title">عنوان اول</div>
+					<div class="content">محتوا این قسمت</div>
+				</div>
+				';
+
+
+			}
 
 
 		}
