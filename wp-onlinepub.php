@@ -69,11 +69,16 @@ class WP_Online_Pub {
 		//Load Composer
 		include_once dirname( __FILE__ ) . '/vendor/autoload.php';
 
+		//Load init Class
+		new \WP_OnlinePub\Ticket();
+		new \WP_OnlinePub\Gravity_Form();
 
 		//Test Service
 		if ( isset( $_GET['test'] ) ) {
-		 echo esc_url_raw($this->plugin_url.'/template/email.png');
-		 exit;
+			$form = GFAPI::get_form( 12 );
+			echo '<pre>';
+			print_r($form);
+			exit;
 		}
 
 
@@ -93,6 +98,11 @@ class WP_Online_Pub {
 		$brand = "نشرآنلاین";
 		$brand .= "\n";
 		$brand .= "OnlinePub.ir";
+
+		//Sms To Admin
+		if ( $to == "admin" ) {
+			$to = '09101566463';
+		}
 
 		//Template Sms
 		switch ( $template ) {
@@ -121,7 +131,6 @@ class WP_Online_Pub {
 		return false;
 	}
 
-
 	/**
 	 * Send Email
 	 *
@@ -142,7 +151,7 @@ class WP_Online_Pub {
 		//Template Arg
 		$template_arg = array(
 			'title'      => $subject,
-			'logo'       => 'http://order.onlinepub.ir/wp-content/themes/OPUB%20-System/OnlinePUB-Logo.png',
+			'logo'       => esc_url_raw( plugins_url( '', __FILE__ ) . '/template/email.png' ),
 			'content'    => $content,
 			'site_url'   => home_url(),
 			'site_title' => 'نشر آنلاین',
