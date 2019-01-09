@@ -59,7 +59,11 @@ class Front {
 				$text .= '<div class="status-order">وضعیت سفارش : ' . Helper::show_status( $row['id'] ) . '</div>';
 				$text .='
 				<div class="order-accordion">
-					<div class="title">عنوان اول</div>
+					<div class="title">
+					<div class="pull-right">عنوان اول من</div>
+					<div class="pull-left">+</div>
+					<div class="clearfix"></div>
+					</div>
 					<div class="content">محتوا این قسمت</div>
 				</div>
 				<div class="order-accordion">
