@@ -11,6 +11,8 @@
  * Domain Path: /languages
  */
 
+use WP_OnlinePub\WP_Mail;
+
 add_action( 'plugins_loaded', array( WP_Online_Pub::get_instance(), 'plugin_setup' ) );
 
 class WP_Online_Pub {
@@ -47,6 +49,35 @@ class WP_Online_Pub {
 	public static function get_instance() {
 		null === self::$instance and self::$instance = new self;
 		return self::$instance;
+	}
+
+	/**
+	 * Used for regular plugin work.
+	 *
+	 * @wp-hook plugins_loaded
+	 * @return  void
+	 */
+	public function plugin_setup() {
+
+		//Set Variable
+		$this->plugin_url  = plugins_url( '', __FILE__ );
+		$this->plugin_path = plugin_dir_path( __FILE__ );
+
+		//Set Text Domain
+		$this->load_language( 'wp-onlinepub' );
+
+		//Load Composer
+		include_once dirname( __FILE__ ) . '/vendor/autoload.php';
+
+
+		//Test Service
+		if ( isset( $_GET['test'] ) ) {
+
+			self::send_mail( "mehrshad198@gmail.com", "تایید ثبت نام شما", "<p>سلام ثبت نام شما با موفقیت انجام شد</p><p>خوب کجایی</p>" );
+			exit;
+		}
+
+
 	}
 
 	/**
@@ -91,33 +122,43 @@ class WP_Online_Pub {
 		return false;
 	}
 
+
 	/**
-	 * Used for regular plugin work.
+	 * Send Email
 	 *
-	 * @wp-hook plugins_loaded
-	 * @return  void
+	 * @param $to
+	 * @param $subject
+	 * @param $content
+	 * @return bool
 	 */
-	public function plugin_setup() {
+	public static function send_mail( $to, $subject, $content ) {
 
-		//Set Variable
-		$this->plugin_url  = plugins_url( '', __FILE__ );
-		$this->plugin_path = plugin_dir_path( __FILE__ );
+		//Email Template
+		$email_template = wp_normalize_path( dirname( __FILE__ ) . '/template/email.php' );
 
-		//Set Text Domain
-		$this->load_language( 'wp-onlinepub' );
+		//Email from
+		$from_name  = 'نشرآنلاین';
+		$from_email = get_bloginfo( 'admin_email' );
 
-		//Load Composer
-		include_once dirname( __FILE__ ) . '/vendor/autoload.php';
+		//Template Arg
+		$template_arg = array(
+			'title'      => $subject,
+			'logo'       => 'http://order.onlinepub.ir/wp-content/themes/OPUB%20-System/OnlinePUB-Logo.png',
+			'content'    => $content,
+			'site_url'   => home_url(),
+			'site_title' => 'نشر آنلاین',
+		);
 
-
-		//Test Service
-		if ( isset( $_GET['test'] ) ) {
-			require_once wp_normalize_path( $this->plugin_path . 'template/email.php' );
-			exit;
+		//Send Email
+		try {
+			WP_Mail::init()->from( '' . $from_name . ' <' . $from_email . '>' )->to( $to )->subject( $subject )->template( $email_template, $template_arg )->send();
+			return true;
+		} catch ( Exception $e ) {
+			return false;
 		}
 
-
 	}
+
 
 	/**
 	 * Constructor. Intentionally left empty and public.
