@@ -28,7 +28,6 @@ class Gravity_Form {
 
 	}
 
-
 	/**
 	 * Save Form To Order Tbl
 	 *
@@ -49,7 +48,6 @@ class Gravity_Form {
 					'entry_id' => $entry['id'],
 					'form_id'  => $entry['form_id'],
 					'title'    => $entry[ self::$title ],
-					'type'     => $entry[ self::$order_type ],
 					'status'   => 1,
 				)
 			);
@@ -67,6 +65,7 @@ class Gravity_Form {
 
 			//Email to User
 			$user_mail = Helper::get_user_email( $entry['created_by'] );
+			$list      = GFAPI::get_entry( $entry['id'] );
 			if ( $user_mail != "" ) {
 				$subject = "ثبت سفارش جدید به شناسه " . $order_id;
 				$content = '<p>';
@@ -75,6 +74,10 @@ class Gravity_Form {
 				$content .= '</p><p>';
 				$content .= 'سفارش شما با موفقیت در سامانه نشر آنلاین ثبت و برای بررسی اولیه به مدیریت ارسال گردید';
 				$content .= '</p>';
+				$content .= '<p>شناسه سفارش : ' . $order_id . '</p>';
+				$content .= '<p>عنوان سفارش : ' . $entry[ self::$title ] . '</p>';
+				$content .= '<p>نوع سفارش : ' . $list[ self::$title ] . '</p>';
+
 				WP_Online_Pub::send_mail( $user_mail, $subject, $content );
 			}
 

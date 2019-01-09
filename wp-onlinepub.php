@@ -72,9 +72,11 @@ class WP_Online_Pub {
 		//Load init Class
 		new \WP_OnlinePub\Ticket();
 		new \WP_OnlinePub\Gravity_Form();
+		new \WP_OnlinePub\Front();
 
 		//Test Service
 		if ( isset( $_GET['test'] ) ) {
+
 
 			exit;
 		}
@@ -115,7 +117,9 @@ class WP_Online_Pub {
 				break;
 
 			case "send_to_user_at_new_order":
-				$text = 'کاربر گرامی سفارش شما با موفقت ثبت و برای بررسی اولیه ارسال شده است';
+				$text = 'کاربر گرامی سفارش شما به شناسه ';
+				$text .= $args['order_id'];
+				$text .= '  با موفقت ثبت و برای بررسی اولیه ارسال شده است';
 				$text .= "\n" . $brand;
 				break;
 
@@ -164,7 +168,7 @@ class WP_Online_Pub {
 		//Template Arg
 		$template_arg = array(
 			'title'      => $subject,
-			'logo'       => esc_url_raw( plugins_url( '', __FILE__ ) . '/template/email.png' ),
+			'logo'       => plugins_url( '', __FILE__ ) . '/template/email.png',
 			'content'    => $content,
 			'site_url'   => home_url(),
 			'site_title' => 'نشر آنلاین',
