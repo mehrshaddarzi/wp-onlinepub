@@ -23,9 +23,13 @@ class Front {
 		$text      = '<div class="user-order">';
 		$page_id   = get_queried_object_id();
 		$page_link = get_the_permalink( $page_id );
-
+		$user_id   = get_current_user_id();
 
 		//Show Custom Order Detail
+		if ( isset( $_GET['order_id'] ) and is_numeric( $GET_['order_id'] ) and Helper::check_order_for_user( $_GET['order_id'], $user_id ) === true ) {
+			$text .= 'ddf';
+
+		}
 
 
 		//Show All Factor
@@ -33,8 +37,8 @@ class Front {
 
 
 			//Get List Factor
-			$user_id = 1000;
-			$query   = $wpdb->get_results( "SELECT * FROM `z_order` WHERE `user_id` = $user_id ORDER BY `id` DESC", ARRAY_A );
+
+			$query = $wpdb->get_results( "SELECT * FROM `z_order` WHERE `user_id` = $user_id ORDER BY `id` DESC", ARRAY_A );
 			if ( count( $query ) > 0 ) {
 
 				$text = '<div id="sticky-list-wrapper_12" class="sticky-list-wrapper">';
@@ -53,7 +57,7 @@ class Front {
 ';
 
 				foreach ( $query as $row ) {
-					$entry = GFAPI::get_entry( $row['entry_id'] );
+					$entry = \GFAPI::get_entry( $row['entry_id'] );
 					$text  .= '
 <tr>
 <td>' . $row['id'] . '</td>
@@ -61,13 +65,10 @@ class Front {
 <td>' . $entry[ Gravity_Form::$order_type ] . '</td>
 <td>' . $entry[ Gravity_Form::$title ] . '</td>
 <td>' . Helper::show_status( $row['status'] ) . '</td>
-<td><a href="' . add_query_arg( array( 'order_id' => $row['order_id'], ), $page_link ) . '">جزئیات و پیگیری</a></td>
+<td><a href="' . add_query_arg( array( 'order_id' => $row['id'] ), $page_link ) . '">جزئیات و پیگیری</a></td>
 </tr>
-					';
-
-
+';
 				}
-
 				$text .= '</tbody ></table ></div >';
 				$text .= '</div>';
 

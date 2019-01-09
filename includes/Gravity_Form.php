@@ -65,7 +65,7 @@ class Gravity_Form {
 
 			//Email to User
 			$user_mail = Helper::get_user_email( $entry['created_by'] );
-			$list      = GFAPI::get_entry( $entry['id'] );
+			$list      = \GFAPI::get_entry( $entry['id'] );
 			if ( $user_mail != "" ) {
 				$subject = "ثبت سفارش جدید به شناسه " . $order_id;
 				$content = '<p>';
@@ -76,7 +76,7 @@ class Gravity_Form {
 				$content .= '</p>';
 				$content .= '<p>شناسه سفارش : ' . $order_id . '</p>';
 				$content .= '<p>عنوان سفارش : ' . $entry[ self::$title ] . '</p>';
-				$content .= '<p>نوع سفارش : ' . $list[ self::$title ] . '</p>';
+				$content .= '<p>نوع سفارش : ' . $list[ self::$order_type ] . '</p>';
 
 				WP_Online_Pub::send_mail( $user_mail, $subject, $content );
 			}

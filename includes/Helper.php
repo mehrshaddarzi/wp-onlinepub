@@ -112,5 +112,21 @@ class Helper {
 		}
 	}
 
+	/**
+	 * Check Order Id For Custom User
+	 *
+	 * @param $order_id
+	 * @param $user_id
+	 * @return bool
+	 */
+	public static function check_order_for_user( $order_id, $user_id ) {
+		global $wpdb;
+		$count = $wpdb->get_var( "SELECT COUNT(*) FROM `z_order` WHERE `id` = $order_id and `user_id` = $user_id" );
+		if ( $count == 1 ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 }
