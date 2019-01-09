@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Online pub
- * Description: A Sample WordPress Plugin with autoload and PHP namespace
+ * Description: A Plugin For Shopping System in OnlinePub.Ir
  * Plugin URI:  https://realwp.net
  * Version:     1.0
  * Author:      Mehrshad darzi
