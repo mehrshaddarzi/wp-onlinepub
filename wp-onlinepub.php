@@ -14,6 +14,7 @@
 add_action( 'plugins_loaded', array( WP_Online_Pub::get_instance(), 'plugin_setup' ) );
 
 class WP_Online_Pub {
+
 	/**
 	 * Plugin instance.
 	 *
@@ -21,12 +22,14 @@ class WP_Online_Pub {
 	 * @type object
 	 */
 	protected static $instance = null;
+
 	/**
 	 * URL to this plugin's directory.
 	 *
 	 * @type string
 	 */
 	public $plugin_url = '';
+
 	/**
 	 * Path to this plugin's directory.
 	 *
@@ -47,6 +50,46 @@ class WP_Online_Pub {
 	}
 
 	/**
+	 * Send SMS
+	 *
+	 * @param $to
+	 * @param $text
+	 * @param string $template
+	 * @return bool
+	 */
+	public static function send_sms( $to, $text, $template = '' ) {
+
+		//Brand Name
+		$brand = "نشرآنلاین";
+		$brand .= "\n";
+		$brand .= "OnlinePub.ir";
+
+		//Template Sms
+		switch ( $template ) {
+			case "red":
+				echo "Your favorite color is red!";
+				break;
+			default:
+				$text = $text . "\n" . $brand;
+		}
+
+		//Send Sms
+		$url     = 'http://login.niazpardaz.ir/SMSInOutBox/SendSms';
+		$request = wp_remote_get( $url, array(
+			'username' => 'c.mhm.graphic',
+			'password' => '60441',
+			'from'     => '10001000002424',
+			'to'       => $to,
+			'text'     => $text,
+		) );
+		if ( ! is_wp_error( $request ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Used for regular plugin work.
 	 *
 	 * @wp-hook plugins_loaded
@@ -56,8 +99,12 @@ class WP_Online_Pub {
 		$this->plugin_url  = plugins_url( '/', __FILE__ );
 		$this->plugin_path = plugin_dir_path( __FILE__ );
 		$this->load_language( 'psr4-wordpress-plugin' );
-
 		spl_autoload_register( array( $this, 'autoload' ) );
+
+
+		self::send_sms( "09358510091", "ثبت نا شما با موفقیت انجام شد" );
+
+
 	}
 
 	/**
