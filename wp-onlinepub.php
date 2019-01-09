@@ -72,9 +72,8 @@ class WP_Online_Pub {
 
 		//Test Service
 		if ( isset( $_GET['test'] ) ) {
-
-			self::send_mail( "mehrshad198@gmail.com", "تایید ثبت نام شما", "<p>سلام ثبت نام شما با موفقیت انجام شد</p><p>خوب کجایی</p>" );
-			exit;
+		self::send_mail("mehrshad198@gmail.com", "ثبت نام شما", "<p>ثبت نام شما با موفقیت انجام شد</p><p>مر سی تشر</p>");
+		exit;
 		}
 
 

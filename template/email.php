@@ -34,12 +34,18 @@
             mso-table-lspace: 0pt;
             mso-table-rspace: 0pt;
             width: 100%;
+            text-align: right;
+            direction: rtl;
+            font-family: 'tahoma';
+            font-size: 12px;
         }
 
         table td {
             font-family: 'tahoma';
             font-size: 12px;
             vertical-align: top;
+            text-align: right;
+            direction: rtl;
         }
 
         /* -------------------------------------
@@ -112,7 +118,7 @@
         h3,
         h4 {
             color: #000000;
-            font-family: sans-serif;
+            font-family: tahoma;
             font-weight: 400;
             line-height: 1.4;
             margin: 0;
@@ -129,11 +135,13 @@
         p,
         ul,
         ol {
-            font-family: sans-serif;
+            font-family: tahoma;
+            text-align: right;
+            direction: rtl;
             font-size: 14px;
             font-weight: normal;
             margin: 0;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         p li,
@@ -390,7 +398,7 @@
                         </tr>
                         <tr>
                             <td class="content-block powered-by">
-                                <a href="<?php echo $site_url; ?>" target="_blank"><?php echo $site_title; ?></a>.
+                                <a href="<?php echo $site_url; ?>" target="_blank"><?php echo $site_title; ?></a>
                             </td>
                         </tr>
                     </table>
