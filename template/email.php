@@ -138,10 +138,10 @@
             font-family: tahoma;
             text-align: right;
             direction: rtl;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: normal;
             margin: 0;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
         }
 
         p li,
@@ -377,7 +377,9 @@
                             <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td>
-                                        <p align="center"><img src="<?php echo $logo; ?>"></p><br />
+                                        <p align="center">
+                                            <img src="<?php echo $logo; ?>" style="display: block;margin: 20px auto">
+                                        </p><br/>
 										<?php echo $content; ?>
                                     </td>
                                 </tr>
@@ -392,7 +394,7 @@
                 <div class="footer">
                     <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                         <tr>
-                            <td class="content-block">
+                            <td class="content-block" style="padding-bottom:0px;">
                                 <span class="apple-link">تمامی حقوق مادی و معنوی محفوظ است</span>
                             </td>
                         </tr>

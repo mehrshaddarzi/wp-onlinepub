@@ -72,8 +72,8 @@ class WP_Online_Pub {
 
 		//Test Service
 		if ( isset( $_GET['test'] ) ) {
-		self::send_mail("mehrshad198@gmail.com", "ثبت نام شما", "<p>ثبت نام شما با موفقیت انجام شد</p><p>مر سی تشر</p>");
-		exit;
+		 echo esc_url_raw($this->plugin_url.'/template/email.png');
+		 exit;
 		}
 
 
