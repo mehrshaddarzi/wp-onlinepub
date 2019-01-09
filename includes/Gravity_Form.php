@@ -32,10 +32,53 @@ class Gravity_Form {
 	 * Get Entry From Gravity
 	 *
 	 * @param $entry_id
-	 * @return
+	 * @return array
 	 */
 	public static function get_entry( $entry_id ) {
 		return \GFAPI::get_entry( $entry_id );
+	}
+
+	/**
+	 * Get List Of Entry With From Label
+	 *
+	 * @param $entry_id
+	 * @param array $hide_field_type
+	 * @param array $hide_field_id
+	 * @return array
+	 */
+	public static function get_entry_table( $entry_id, $hide_field_type = array(), $hide_field_id = array() ) {
+
+		//Create empty Object
+		$obj = array();
+
+		//Get This Entry
+		$entry = self::get_entry( $entry_id );
+
+		//Get List Of field
+		$form = \GFAPI::get_form( Gravity_Form::$order_form_id );
+		foreach ( $form['fields'] as $field ) {
+
+			$label = $field->label;
+			if ( ! empty( $label ) and isset( $entry[ $field->id ] ) and ! empty( $entry[ $field->id ] ) and ! in_array( $field->type, $hide_field_type ) and ! in_array( $field->id, $hide_field_id ) ) {
+				$value = $entry[ $field->id ];
+				if ( $field->type == "fileupload" ) {
+					$list_file = json_decode( $value );
+					$x         = 1;
+					$value     = '';
+					foreach ( $list_file as $f ) {
+						$value .= '<a href="' . $f . '" target="_blank">دریافت فایل ' . $x . ' </a>';
+						$x ++;
+						if ( $x >= count( $list_file ) ) {
+							$value .= '<br>';
+						}
+					}
+				}
+
+				$obj[] = array( "name" => esc_html( $label ), "value" => $value );
+			}
+		}
+
+		return $obj;
 	}
 
 	/**

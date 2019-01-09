@@ -3,7 +3,7 @@
  * Plugin Name: Online pub
  * Description: A Plugin For Shopping System in OnlinePub.Ir
  * Plugin URI:  https://realwp.net
- * Version:     1.0
+ * Version:     1.0.1
  * Author:      Mehrshad darzi
  * Author URI:  https://realwp.net
  * License:     MIT
@@ -90,15 +90,14 @@ class WP_Online_Pub {
 		new \WP_OnlinePub\Ticket();
 		new \WP_OnlinePub\Gravity_Form();
 		new \WP_OnlinePub\Front();
+		new \WP_OnlinePub\Ajax();
+
 
 		//Test Service
 		if ( isset( $_GET['test'] ) ) {
 
-
 			exit;
 		}
-
-
 	}
 
 	/**

@@ -71,33 +71,15 @@ class Front {
 					<tbody>
 					';
 
-				$form = \GFAPI::get_form( Gravity_Form::$order_form_id );
-				foreach ( $form['fields'] as $field ) {
-
-					$label        = $field->label;
-					$remove_field = array( 71, 67 );
-					if ( ! empty( $label ) and isset( $entry[ $field->id ] ) and ! empty( $entry[ $field->id ] ) and $field->type != "hidden" and ! in_array( $field->id, $remove_field ) ) {
-						$value = $entry[ $field->id ];
-						if ( $field->type == "fileupload" ) {
-							$list_file = json_decode( $value );
-							$x         = 1;
-							$value     = '';
-							foreach ( $list_file as $f ) {
-								$value .= '<a href="' . $f . '" target="_blank">دریافت فایل ' . $x . ' </a>';
-								$x ++;
-								if ( $x >= count( $list_file ) ) {
-									$value .= '<br>';
-								}
-							}
-						}
-
-						$text .= '
+				$entry_tbl = get_entry_table( $row['entry_id'], array( "hidden" ), array( 71, 67 ) );
+				foreach ( $entry_tbl as $k => $v ) {
+					$text .= '
 		                <tr>
-		                    <td>' . esc_html( $label ) . '</td>
-		                    <td>' . $value . '</td>
+		                    <td>' . $v['name'] . '</td>
+		                    <td>' . $v['value'] . '</td>
 		                </tr>';
-					}
 				}
+
 
 				$text .= '
 				</tbody>
@@ -106,12 +88,6 @@ class Front {
 				</div>
 				<div class="clearfix"></div>
 				';
-
-
-
-
-
-
 
 
 			}
@@ -157,6 +133,7 @@ class Front {
 </tr>
 ';
 				}
+
 				$text .= '</tbody ></table ></div >';
 				$text .= '</div>';
 
