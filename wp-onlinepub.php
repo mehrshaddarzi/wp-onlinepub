@@ -152,16 +152,26 @@ class WP_Online_Pub {
 
 			case "send_to_user_at_create_factor":
 				$text = 'کاربر گرامی , یک ';
-				if($args['factor_type'] ==1) {
-					$text .='پیش فاکتور ';
+				if ( $args['factor_type'] == 1 ) {
+					$text .= 'پیش فاکتور ';
 				} else {
-					$text .='فاکتور ';
+					$text .= 'فاکتور ';
 				}
 				$text .= "به مبلغ ";
-				$text .= number_format($args['factor_price']).' '.\WP_OnlinePub\Helper::currency().' ';
+				$text .= number_format( $args['factor_price'] ) . ' ' . \WP_OnlinePub\Helper::currency() . ' ';
 				$text .= 'برای سفارش به شناسه ';
 				$text .= $args['order_id'];
 				$text .= ' ایجاد شده است.لطفا نسبت به پرداخت آن اقدام نمایید.';
+				$text .= "\n" . $brand;
+				break;
+
+			case "send_to_user_at_edit_factor":
+				$text = 'کاربر گرامی ';
+				$text .= " مبلغ فاکتور به شناسه ";
+				$text .= $args['order_id'];
+				$text .= " به ";
+				$text .= number_format( $args['factor_price'] ) . ' ' . \WP_OnlinePub\Helper::currency() . ' ';
+				$text .= ' تغییر پیدا کرد .';
 				$text .= "\n" . $brand;
 				break;
 

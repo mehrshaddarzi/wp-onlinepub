@@ -538,6 +538,8 @@ if ( $_GET['method'] == "add" ) {
         <input type="hidden" name="content-action" value="edit-factor">
         </tbody>
     </table>
+    :: در صورت هر گونه تغییر در رقم فاکتور به کاربر اطلاع رسانی خواهد شد.
+    <br />
 	<?php
 	submit_button( "ویرایش" );
 	echo '</form>

@@ -321,6 +321,10 @@ class Factor extends \WP_List_Table {
 		//Content Action : Edit Factor
 		if ( isset( $_REQUEST['content-action'] ) and $_REQUEST['content-action'] == "edit-factor" ) {
 
+			//Get now price
+			$this_factor = Helper::get_factor( $_POST['factor_id'] );
+			$now_price   = $this_factor['price'];
+
 			//Update Factor
 			$order = Helper::get_order( $_POST['order_id'] );
 			$wpdb->update(
@@ -363,6 +367,38 @@ class Factor extends \WP_List_Table {
 				array( 'id' => $_POST['factor_id'] )
 			);
 
+			//Push Notification
+			if ( $now_price != $sum ) {
+
+				//Send Sms
+				$arg         = array( "factor_id" => $_POST['factor_id'], "factor_price" => $sum, "factor_type" => $_POST['type'], "order_id" => $_POST['order_id'], "user_name" => Helper::get_user_full_name( $order['user_id'] ) );
+				$user_mobile = Helper::get_user_mobile( $order['user_id'] );
+				if ( $user_mobile != "" ) {
+					WP_Online_Pub::send_sms( $user_mobile, '', 'send_to_user_at_edit_factor', $arg );
+				}
+
+				//Send Email
+				$user_mail = Helper::get_user_email( $order['user_id'] );
+				if ( $user_mail != "" ) {
+					$subject = "تغییر مبلغ فاکتور به شناسه  " . $_POST['factor_id'];
+
+					$content = '<p>';
+					$content .= 'کاربر گرامی ';
+					$content .= Helper::get_user_full_name( $order['user_id'] );
+					$content .= '</p><p>';
+					$content .= " مبلغ فاکتور به شناسه ";
+					$content .= $_POST['order_id'];
+					$content .= " به ";
+					$content .= number_format( $arg['factor_price'] ) . ' ' . \WP_OnlinePub\Helper::currency() . ' ';
+					$content .= ' تغییر پیدا کرد .';
+					$content .= '</p><br />';
+					$content .= '<p>با تشکر</p>';
+					$content .= '<p><a href="' . get_bloginfo( "url" ) . '">' . get_bloginfo( "name" ) . '</a></p>';
+
+					WP_Online_Pub::send_mail( $user_mail, $subject, $content );
+				}
+
+			}
 
 			wp_redirect( esc_url_raw( add_query_arg( array( 'page' => 'factor', 'alert' => 'edit-factor' ), admin_url( "admin.php" ) ) ) );
 			exit;
