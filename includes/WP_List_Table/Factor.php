@@ -203,13 +203,17 @@ class Factor extends \WP_List_Table {
 				//$actions['id'] = '<span class="text-muted">#' . $item['ID'] . '</span>';
 
 				//row actions to edit
-				$actions['edit'] = '<a href="' . add_query_arg( array( 'page' => 'factor', 'method' => 'edit', 'id' => $item['id'] ), admin_url( "admin.php" ) ) . '">' . __( 'ویرایش', 'wp-statistics-actions' ) . '</a>';
+                if($item['payment_status'] ==1) {
+	                $actions['edit'] = '<a href="' . add_query_arg( array( 'page' => 'factor', 'method' => 'edit', 'id' => $item['id'] ), admin_url( "admin.php" ) ) . '">' . __( 'ویرایش', 'wp-statistics-actions' ) . '</a>';
+                }
 
 				//Row Action to Clone
 				$actions['view'] = '<a target="_blank" href="' . add_query_arg( array( 'view_factor' => $item['id'], 'redirect' => 'admin', '_wpnonce' => wp_create_nonce( 'view_factor_access' ) ), home_url() ) . '" class="text-success">' . __( 'نمایش فاکتور', 'wp-statistics-actions' ) . '</a>';
 
 				// row actions to Delete
-				$actions['trash'] = '<a onclick="return confirm(\'آیا مطمئن هستید ؟\')"  href="' . add_query_arg( array( 'page' => 'factor', 'action' => 'delete', '_wpnonce' => wp_create_nonce( 'delete_action_nonce' ), 'del' => $item['id'] ), admin_url( "admin.php" ) ) . '">' . __( 'حذف', 'wp-statistics-actions' ) . '</a>';
+				if($item['payment_status'] ==1) {
+					$actions['trash'] = '<a onclick="return confirm(\'آیا مطمئن هستید ؟\')"  href="' . add_query_arg( array( 'page' => 'factor', 'action' => 'delete', '_wpnonce' => wp_create_nonce( 'delete_action_nonce' ), 'del' => $item['id'] ), admin_url( "admin.php" ) ) . '">' . __( 'حذف', 'wp-statistics-actions' ) . '</a>';
+				}
 
 				return $item['id'] . $this->row_actions( $actions );
 				break;

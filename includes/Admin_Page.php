@@ -304,15 +304,84 @@ class Admin_Page {
 	}
 
 	//Factor Admin Page
-	public function factor() {
-		if ( ! isset( $_GET['method'] ) ) {
+public function factor() {
+	global $wpdb;
 
-			//Show Wp List Table
-			Admin_Ui::wp_list_table( $this->factor_obj, "format-aside", get_admin_page_title(), array( 'link' => self::admin_link( "factor", array( "method" => "add" ) ), 'name' => 'ایجاد فاکتور' ), true );
-		} else {
+if ( ! isset( $_GET['method'] ) ) {
 
+	//Show Wp List Table
+	Admin_Ui::wp_list_table( $this->factor_obj, "format-aside", get_admin_page_title(), array( 'link' => self::admin_link( "factor", array( "method" => "add" ) ), 'name' => 'ایجاد فاکتور' ), true );
+} else {
+
+if ( $_GET['method'] == "add" ) {
+	?>
+    <div class="wrap wps_actions"><h1 class="wp-heading-inline">
+    <span class="dashicons dashicons-format-aside"></span> ایجاد فاکتور </h1>
+    <form action="<?php echo add_query_arg( array( 'page' => 'factor' ), admin_url( "admin.php" ) ); ?>" method="post">
+    <table class="form-table">
+        <tbody>
+        <tr class="user-role-wrap">
+            <th><label for="role">فاکتور متعلق به سفارش</label></th>
+            <td>
+                <select name="order_id">
+					<?php
+					$query = $wpdb->get_results( "SELECT * FROM `z_order` WHERE `status` < 8 ORDER BY `id` DESC", ARRAY_A );
+					foreach ( $query as $row ) {
+						echo '<option value="' . $row['id'] . '">#' . $row['id'] . ' ' . Helper::get_user_full_name( $row['user_id'] ) . ' ' . $row['title'] . '</option>';
+					}
+					?>
+                </select>
+            </td>
+        </tr>
+
+		<?php
+		for ( $x = 1; $x <= 5; $x ++ ) {
+			$v = '';
+			if ( $x == 1 ) {
+				$entry = Gravity_Form::get_entry( $row['entry_id'] );
+				$v     = $entry[78];
+			}
+			?>
+            <tr class="user-role-wrap">
+                <th><label for="role">آیتم #<?php echo $x; ?></label></th>
+                <td>
+                    <input type="text" class="regular-text" name="item[]" value="<?php echo $v; ?>">
+                </td>
+            </tr>
+			<?php
 		}
-	}
+		?>
+
+        <tr class="user-role-wrap">
+            <th><label for="role"> مبلغ به <?php echo Helper::currency(); ?></label></th>
+            <td>
+                <input type="text" class="regular-text only-numeric" name="price" value="" style="text-align: left; direction: ltr;">
+            </td>
+        </tr>
+
+        <tr class="user-role-wrap">
+            <th><label for="role">نوع فاکتور</label></th>
+            <td>
+                <select name="type">
+                    <option value="1"><?php echo Helper::get_type_factor( 1 ); ?></option>
+                    <option value="2"><?php echo Helper::get_type_factor( 2 ); ?></option>
+                </select>
+            </td>
+        </tr>
+
+        <input type="hidden" name="content-action" value="add-factor">
+        </tbody>
+    </table>
+	<?php
+	submit_button( "تغییر وضعیت" );
+	echo '</form>
+                    </div>';
+
+}
+
+
+}
+}
 
 	//Admin Notice
 	public function admin_notice_factor() {
