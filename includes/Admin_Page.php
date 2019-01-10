@@ -314,6 +314,11 @@ if ( ! isset( $_GET['method'] ) ) {
 } else {
 
 if ( $_GET['method'] == "add" ) {
+
+	if ( isset( $_GET['order_id'] ) ) {
+		$this_order = Helper::get_order( $_GET['order_id'] );
+	}
+
 	?>
     <div class="wrap wps_actions"><h1 class="wp-heading-inline">
     <span class="dashicons dashicons-format-aside"></span> ایجاد فاکتور </h1>
@@ -327,7 +332,13 @@ if ( $_GET['method'] == "add" ) {
 					<?php
 					$query = $wpdb->get_results( "SELECT * FROM `z_order` WHERE `status` < 8 ORDER BY `id` DESC", ARRAY_A );
 					foreach ( $query as $row ) {
-						echo '<option value="' . $row['id'] . '">' . $row['id'] . '# - ' . Helper::get_user_full_name( $row['user_id'] ) . ' - ' . $row['title'] . '</option>';
+						$selected = '';
+						if ( isset( $_GET['order_id'] ) ) {
+							if ( $this_order['id'] == $row['id'] ) {
+								$selected = ' selected';
+							}
+						}
+						echo '<option value="' . $row['id'] . '" ' . $selected . '>' . $row['id'] . '# - ' . Helper::get_user_full_name( $row['user_id'] ) . ' - ' . $row['title'] . '</option>';
 					}
 					?>
                 </select>
@@ -338,8 +349,13 @@ if ( $_GET['method'] == "add" ) {
 		for ( $x = 1; $x <= 5; $x ++ ) {
 			$v = '';
 			if ( $x == 1 ) {
-				$entry = Gravity_Form::get_entry( $row['entry_id'] );
-				$v     = $entry[78];
+				if ( isset( $_GET['order_id'] ) ) {
+					$this_order = Helper::get_order( $_GET['order_id'] );
+					$entry      = Gravity_Form::get_entry( $this_order['entry_id'] );
+					$v          = $entry[78];
+				} else {
+					$v = 'عنوان خدمات را وارد کنید';
+				}
 			}
 			?>
             <tr class="user-role-wrap">
@@ -349,13 +365,10 @@ if ( $_GET['method'] == "add" ) {
 						echo 'required="required"';
 					} ?>>
 
-                    &nbsp;
-                    &nbsp;
-                    &nbsp;
-                    مبلغ به <?php echo Helper::currency(); ?>
+                    &nbsp; &nbsp; &nbsp; مبلغ به <?php echo Helper::currency(); ?>
                     <input type="text" class="regular-small only-numeric" name="price[]" value="" style="text-align: left; direction: ltr;" <?php if ( $x == 1 ) {
-	                    echo 'required="required"';
-                    } ?>>
+						echo 'required="required"';
+					} ?>>
 
                 </td>
             </tr>
@@ -379,7 +392,13 @@ if ( $_GET['method'] == "add" ) {
                 <select name="new-status-order">
 					<?php
 					for ( $i = 1; $i <= 9; $i ++ ) {
-							echo '<option value="' . $i . '">' . Helper::show_status( $i ) . '</option>';
+						$selected = '';
+						if ( isset( $_GET['order_id'] ) ) {
+							if ( $this_order['status'] == $i ) {
+								$selected = ' selected';
+							}
+						}
+						echo '<option value="' . $i . '" ' . $selected . '>' . Helper::show_status( $i ) . '</option>';
 					}
 					?>
                 </select>
@@ -425,7 +444,7 @@ if ( $_GET['method'] == "add" ) {
 					Admin_Ui::wp_admin_notice( __( "تغییر وضعیت فاکتور با موفقیت انجام شد", 'wp-statistics-actions' ), "success" );
 					break;
 
-                //Change status
+				//Change status
 				case "create-factor":
 					Admin_Ui::wp_admin_notice( __( "فاکتور با موفقیت ایجاد شد", 'wp-statistics-actions' ), "success" );
 					break;
