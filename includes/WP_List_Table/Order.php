@@ -163,7 +163,7 @@ class Order extends \WP_List_Table {
 	 */
 	function get_columns() {
 		$columns = array(
-			'cb' => '<input type="checkbox" />',
+			'cb'       => '<input type="checkbox" />',
 			'order_id' => __( 'شناسه سفارش', 'wp-statistics-actions' ),
 			'date'     => __( 'تاریخ ایجاد', 'wp-statistics-actions' ),
 			'user'     => __( 'مشخصات کاربر', 'wp-statistics-actions' ),
@@ -309,8 +309,9 @@ class Order extends \WP_List_Table {
 	 */
 	public function get_sortable_columns() {
 		$sortable_columns = array(
-			'date' => array( 'date', false ),
-			'user' => array( 'user', false ),
+			'date'     => array( 'date', false ),
+			'user'     => array( 'user_id', false ),
+			'order_id' => array( 'id', false ),
 		);
 
 		return $sortable_columns;
@@ -322,7 +323,7 @@ class Order extends \WP_List_Table {
 	 */
 	public function get_bulk_actions() {
 		$actions = array(
-			'bulk-delete'     => __( 'حذف', 'wp-statistics-actions' ),
+			'bulk-delete' => __( 'حذف', 'wp-statistics-actions' ),
 		);
 
 		return $actions;
