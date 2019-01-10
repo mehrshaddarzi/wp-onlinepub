@@ -425,6 +425,12 @@ if ( $_GET['method'] == "add" ) {
 					Admin_Ui::wp_admin_notice( __( "تغییر وضعیت فاکتور با موفقیت انجام شد", 'wp-statistics-actions' ), "success" );
 					break;
 
+                //Change status
+				case "create-factor":
+					Admin_Ui::wp_admin_notice( __( "فاکتور با موفقیت ایجاد شد", 'wp-statistics-actions' ), "success" );
+					break;
+
+
 			}
 		}
 	}

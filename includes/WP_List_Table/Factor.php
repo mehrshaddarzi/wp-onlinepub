@@ -334,7 +334,7 @@ class Factor extends \WP_List_Table {
 			$sum = 0;
 			$z   = 0;
 			foreach ( $_POST['item'] as $item ) {
-				if ( trim( $item ) != "" ) {
+				if ( trim( $_POST['item'][ $z ] ) != "" and trim( $_POST['price'][ $z ] ) != "" ) {
 					$wpdb->insert(
 						'z_factor_item',
 						array(
@@ -433,6 +433,9 @@ class Factor extends \WP_List_Table {
 
 			}
 
+
+			wp_redirect( esc_url_raw( add_query_arg( array( 'page' => 'factor', 'alert' => 'create-factor' ), admin_url( "admin.php" ) ) ) );
+			exit;
 		}
 
 
