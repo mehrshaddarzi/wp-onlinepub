@@ -64,7 +64,6 @@ CREATE TABLE `z_order` (
   `entry_id` bigint(48) NOT NULL,
   `form_id` bigint(48) NOT NULL,
   `title` text CHARACTER SET utf8 NOT NULL COMMENT 'عنوان سفارش گرفته شده از گراویتی',
-  `type` int(11) NOT NULL COMMENT 'نوع سفارش گرفته شده از گرامیتی',
   `status` int(10) NOT NULL COMMENT '-در حال بررسی اولیه -صدور پیش فاکتور تایید پردخت  - تایید انجام سفارش -در حال انجام کار - ارسال برای بازبینی - صدور فاکتور تایید واریز  - اتمام پروژه'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -101,7 +100,6 @@ CREATE TABLE `z_ticket` (
   `read_admin` int(10) NOT NULL COMMENT '0noread |1=read',
   `read_user` int(10) NOT NULL COMMENT '0noread |1=read',
   `file` varchar(255) NOT NULL,
-  `meta` varchar(255) NOT NULL,
   `chat_id` int(48) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

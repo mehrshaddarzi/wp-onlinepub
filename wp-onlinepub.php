@@ -91,6 +91,7 @@ class WP_Online_Pub {
 		new \WP_OnlinePub\Gravity_Form();
 		new \WP_OnlinePub\Front();
 		new \WP_OnlinePub\Ajax();
+		new \WP_OnlinePub\Admin_Page();
 
 
 		//Test Service

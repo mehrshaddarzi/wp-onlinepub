@@ -1,7 +1,6 @@
 <?php
 
 namespace WP_OnlinePub;
-
 use WP_Online_Pub;
 
 class Front {
@@ -70,7 +69,6 @@ class Front {
 					<table class="sticky-list">
 					<tbody>
 					';
-
 				$entry_tbl = Gravity_Form::get_entry_table( $row['entry_id'], array( "hidden" ), Gravity_Form::$hidden_field_id );
 				foreach ( $entry_tbl as $k => $v ) {
 					$text .= '
@@ -79,8 +77,6 @@ class Front {
 		                    <td>' . $v['value'] . '</td>
 		                </tr>';
 				}
-
-
 				$text .= '
 				</tbody>
 				</table>
