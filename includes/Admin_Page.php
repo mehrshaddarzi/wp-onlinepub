@@ -49,6 +49,7 @@ class Admin_Page {
 			add_action( 'admin_notices', array( $this, 'admin_notice_' . $page_slug ) );
 			add_action( 'admin_init', array( $this, 'wlt_redirect_' . $page_slug ) );
 			add_action( 'admin_head', array( $this, 'wlt_script_' . $page_slug ) );
+			add_action( 'top_wp_list_table', array( $this, 'wlt_top_' . $page_slug ) );
 		}
 
 		//Remove All Notice Another Plugin
@@ -205,6 +206,60 @@ class Admin_Page {
 		}
 	}
 
+	//Top content Wp List Table
+	public function wlt_top_order() {
+		if ( self::in_page( 'order' ) and isset( $_GET['top'] ) ) {
+
+			//Top Content for Status
+			if ( $_GET['top'] == "change-status" ) {
+				?>
+                <style>
+                    .top-content {
+                        width: 100%;
+                        min-height: 150px;
+                        margin: 25px 10px;
+                        background: #fff;
+                        border-radius: 10px;
+                        padding: 20px;
+                    }
+                </style>
+                <div class="top-content">
+                <h2>تغییر وضعیت سفارش</h2>
+                <table class="form-table">
+                    <tbody>
+                    <tr class="user-role-wrap">
+                        <th><label for="role">تغییر وضعیت به</label></th>
+                        <td>
+                            <select name="new-status">
+								<?php
+								for ( $i = 1; $i <= 9; $i ++ ) {
+									echo '<option value="' . $i . '"' . selected( $_GET['status'], $i, true ) . '>' . Helper::show_status( $i ) . '</option>';
+								}
+								?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr class="user-role-wrap">
+                        <th><label for="role">اطلاع رسانی شود به کاربر ؟</label></th>
+                        <td>
+                            <select name="is-notification">
+                                <option value="yes">آری</option>
+                                <option value="no">خیر</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <input type="hidden" name="order_id" value="<?php echo $_GET['order_id']; ?>">
+                    </tbody>
+                </table>
+				<?php
+				submit_button( "تغییر وضعیت" );
+				echo '</div>';
+
+			}
+
+		}
+	}
+
 	//Redirect Process
 	public function wlt_redirect_order() {
 		//Current Page Slug
@@ -280,6 +335,13 @@ class Admin_Page {
 	//Custom Script css/Js
 	public function wlt_script_factor() {
 		if ( self::in_page( 'factor' ) ) {
+
+		}
+	}
+
+	//Top content Wp List Table
+	public function wlt_top_factor() {
+		if ( self::in_page( 'factor' ) and isset( $_GET['top'] ) ) {
 
 		}
 	}
@@ -363,6 +425,13 @@ class Admin_Page {
 		}
 	}
 
+	//Top content Wp List Table
+	public function wlt_top_payment() {
+		if ( self::in_page( 'factor' ) and isset( $_GET['top'] ) ) {
+
+		}
+	}
+
 	//Redirect Process
 	public function wlt_redirect_payment() {
 		//Current Page Slug
@@ -424,6 +493,13 @@ class Admin_Page {
 	//Custom Script css/Js
 	public function wlt_script_ticket() {
 		if ( self::in_page( 'ticket' ) ) {
+
+		}
+	}
+
+	//Top content Wp List Table
+	public function wlt_top_ticket() {
+		if ( self::in_page( 'ticket' ) and isset( $_GET['top'] ) ) {
 
 		}
 	}

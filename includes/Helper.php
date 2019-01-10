@@ -89,7 +89,7 @@ class Helper {
 				return 'صدور پیش فاکتور';
 				break;
 			case "3":
-				return 'تایید پرداخت';
+				return 'تایید پرداخت پیش فاکتور';
 				break;
 			case "4":
 				return 'تایید انجام سفارش';

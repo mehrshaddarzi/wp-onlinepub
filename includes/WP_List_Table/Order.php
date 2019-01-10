@@ -234,19 +234,19 @@ class Order extends \WP_List_Table {
 				break;
 			case 'status' :
 
-				return '<span class="text-danger">' . Helper::show_status( $item['status'] ) . '</span> <br/><a href="#" data-change-status="' . $item['status'] . '" data-order="' . $item['id'] . '">تغییر وضعیت</a>';
+				return '<span class="text-danger">' . Helper::show_status( $item['status'] ) . '</span> <br/><a href="' . Admin_Page::admin_link( 'order', array( 'top' => 'change-status', 'status' => $item['status'], 'order_id' => $item['id'] ) ) . '">تغییر وضعیت</a>';
 				break;
 			case 'factor' :
 
 				$link_show_factor = Admin_Page::admin_link( 'factor', array( "order" => $item['id'] ) );
 				$create_factor    = Admin_Page::admin_link( 'factor', array( "method" => "add", "order_id" => $item['id'] ) );
-				return '<a target="_blank" class="text-success" href="' . $link_show_factor . '">تعداد فاکتور : ' . Helper::get_number_factor_for_order( $item['id'] ) . '</a><br><a class="text-danger" target="_blank" href="' . $create_factor . '"> ایجاد فاکتور جدید</a>';
+				return '<a target="_blank" class="text-success" href="' . $link_show_factor . '">تعداد فاکتور : ' . Helper::get_number_factor_for_order( $item['id'] ) . '</a><br><a target="_blank" href="' . $create_factor . '"> ایجاد فاکتور جدید</a>';
 				break;
 			case 'ticket' :
 
 				$link_show_ticket = Admin_Page::admin_link( 'ticket', array( "order" => $item['id'] ) );
 				$create_ticket    = Admin_Page::admin_link( 'ticket', array( "method" => "add", "order_id" => $item['id'] ) );
-				return '<a target="_blank" class="text-warning" href="' . $link_show_ticket . '"> نمایش تیکت ها</a><br><a target="_blank" class="text-danger" href="' . $create_ticket . '"> ایجاد تیکت جدید</a>';
+				return '<a target="_blank" class="text-warning" href="' . $link_show_ticket . '"> نمایش تیکت ها</a><br><a target="_blank" href="' . $create_ticket . '"> ایجاد تیکت جدید</a>';
 				break;
 		}
 	}

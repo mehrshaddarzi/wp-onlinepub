@@ -40,6 +40,7 @@ class Admin_Ui {
 			}
 			?>
             <hr class="wp-header-end">
+            <?php do_action("top_wp_list_table"); ?>
             <div id="poststuff">
                 <div id="post-body" class="metabox-holder columns">
                     <div>
