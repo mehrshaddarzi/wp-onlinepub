@@ -361,12 +361,12 @@ if ( $_GET['method'] == "add" ) {
             <tr class="user-role-wrap">
                 <th><label for="role">آیتم #<?php echo $x; ?></label></th>
                 <td>
-                    <input type="text" class="regular-text" name="item[]" value="<?php echo $v; ?>" <?php if ( $x == 1 ) {
+                    <input type="text" autocomplete="off" class="regular-text" name="item[]" value="<?php echo $v; ?>" <?php if ( $x == 1 ) {
 						echo 'required="required"';
 					} ?>>
 
                     &nbsp; &nbsp; &nbsp; مبلغ به <?php echo Helper::currency(); ?>
-                    <input type="text" class="regular-small only-numeric" name="price[]" value="" style="text-align: left; direction: ltr;" <?php if ( $x == 1 ) {
+                    <input type="text" autocomplete="off" class="regular-small only-numeric" name="price[]" value="" style="text-align: left; direction: ltr;" <?php if ( $x == 1 ) {
 						echo 'required="required"';
 					} ?>>
 

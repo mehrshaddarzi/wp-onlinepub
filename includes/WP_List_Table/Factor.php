@@ -244,7 +244,11 @@ class Factor extends \WP_List_Table {
 				break;
 			case 'pay_status' :
 				$order = Helper::get_order( $item['order_id'] );
-				return Helper::get_status_factor( $item['payment_status'] ) . '<br><a href="' . Admin_Page::admin_link( 'factor', array( 'top' => 'change-payment-status', 'order_id' => $item['order_id'], 'order_status' => $order['status'], 'status' => $item['payment_status'], 'factor_id' => $item['id'] ) ) . '">تغییر وضعیت</a>';
+				$t     = Helper::get_status_factor( $item['payment_status'] ) . '<br>';
+				if ( $item['payment_status'] == 1 ) {
+					$t .= '<a href="' . Admin_Page::admin_link( 'factor', array( 'top' => 'change-payment-status', 'order_id' => $item['order_id'], 'order_status' => $order['status'], 'status' => $item['payment_status'], 'factor_id' => $item['id'] ) ) . '">تغییر وضعیت</a>';
+				}
+				return $t;
 				break;
 		}
 	}
@@ -410,7 +414,7 @@ class Factor extends \WP_List_Table {
 						 <tr>
 						 <td>' . $c . '</td>
 						 <td>' . $f_v['name'] . '</td>
-						 <td>' . number_format_i18n( $f_v['name'] ) . ' ' . Helper::currency() . '</td>
+						 <td>' . number_format_i18n( $f_v['price'] ) . ' ' . Helper::currency() . '</td>
 						    </tr>
 						    ';
 						$c ++;
