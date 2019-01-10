@@ -164,10 +164,9 @@ class Order extends \WP_List_Table {
 	function get_columns() {
 		$columns = array(
 			'cb'       => '<input type="checkbox" />',
-			'order_id' => __( 'شناسه سفارش', 'wp-statistics-actions' ),
+			'title'    => __( 'عنوان سفارش', 'wp-statistics-actions' ),
 			'date'     => __( 'تاریخ ایجاد', 'wp-statistics-actions' ),
 			'user'     => __( 'مشخصات کاربر', 'wp-statistics-actions' ),
-			'title'    => __( 'عنوان سفارش', 'wp-statistics-actions' ),
 			'status'   => __( 'وضعیت', 'wp-statistics-actions' ),
 			'desc'     => __( '', 'wp-statistics-actions' ),
 			'factor'   => __( '', 'wp-statistics-actions' ),
@@ -181,7 +180,6 @@ class Order extends \WP_List_Table {
 	 * Render the bulk edit checkbox
 	 *
 	 * @param array $item
-	 *
 	 * @return string
 	 */
 	function column_cb( $item ) {
@@ -205,27 +203,21 @@ class Order extends \WP_List_Table {
 		$unknown = '<span aria-hidden="true">—</span><span class="screen-reader-text">' . __( "Unknown", 'wp-statistics-actions' ) . '</span>';
 
 		switch ( $column_name ) {
-			case 'action_name' :
+			case 'title' :
 
 				// row actions to ID
-				$actions['id'] = '<span class="text-muted">#' . $item['ID'] . '</span>';
+				$actions['id'] = '<span class="text-muted">#شناسه سفارش ' . $item['id'] . '</span>';
 
 				// row actions to edit
-				$actions['edit'] = '<a href="' . add_query_arg( array( 'page' => WP_Statistics_Actions::admin_slug, 'method' => 'edit', 'ID' => $item['ID'] ), admin_url( "admin.php" ) ) . '">' . __( 'Edit', 'wp-statistics-actions' ) . '</a>';
-
-				// row actions to show status
-				if ( $item['action_status'] == 1 and $WP_Statistics->get_option( 'visits' ) ) {
-					$trigger           = WP_Statistics_Actions_Trigger::get_trigger_data( $item['action_trigger'] );
-					$actions['status'] = '<a data-trigger-type="' . $trigger['type'] . '" data-view-status="' . $trigger['value'] . '" href="#" class="text-success">' . __( 'Statistics', 'wp-statistics-actions' ) . '</a>';
-				}
+				//$actions['edit'] = '<a href="' . add_query_arg( array( 'page' => WP_Statistics_Actions::admin_slug, 'method' => 'edit', 'ID' => $item['ID'] ), admin_url( "admin.php" ) ) . '">' . __( 'Edit', 'wp-statistics-actions' ) . '</a>';
 
 				//Row Action to Clone
-				$actions['clone'] = '<a href="' . add_query_arg( array( 'page' => WP_Statistics_Actions::admin_slug, 'clone' => $item['ID'], '_wpnonce' => wp_create_nonce( 'clone_action_nonce' ) ), admin_url( "admin.php" ) ) . '" class="text-warning">' . __( 'Clone', 'wp-statistics-actions' ) . '</a>';
+				$actions['view'] = '<a href="' . admin_url() . '/admin.php?page=gf_entries&view=entry&id='.Gravity_Form::$order_form_id.'&lid='.$item['entry_id'].'&order=ASC&filter&paged=1&pos=0&field_id&operator" class="text-success">' . __( 'نمایش جزئیات', 'wp-statistics-actions' ) . '</a>';
 
 				// row actions to Delete
-				$actions['trash'] = '<a data-trash="yes" href="' . add_query_arg( array( 'page' => WP_Statistics_Actions::admin_slug, 'action' => 'delete', '_wpnonce' => wp_create_nonce( 'delete_action_nonce' ), 'del' => $item['ID'] ), admin_url( "admin.php" ) ) . '">' . __( 'Delete', 'wp-statistics-actions' ) . '</a>';
+				$actions['trash'] = '<a onclick="return confirm(\'آیا مطمئن هستید ؟\')" href="' . add_query_arg( array( 'page' => 'order', 'action' => 'delete', '_wpnonce' => wp_create_nonce( 'delete_action_nonce' ), 'del' => $item['id'] ), admin_url( "admin.php" ) ) . '">' . __( 'حذف', 'wp-statistics-actions' ) . '</a>';
 
-				return $item['action_name'] . $this->row_actions( $actions );
+				return $item['title'] . $this->row_actions( $actions );
 				break;
 
 			case 'date_create' :
@@ -310,8 +302,7 @@ class Order extends \WP_List_Table {
 	public function get_sortable_columns() {
 		$sortable_columns = array(
 			'date'     => array( 'date', false ),
-			'user'     => array( 'user_id', false ),
-			'order_id' => array( 'id', false ),
+			'user'     => array( 'user_id', false )
 		);
 
 		return $sortable_columns;
@@ -356,7 +347,7 @@ class Order extends \WP_List_Table {
 		?>
         <p class="search-box">
             <label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
-            <input type="search" placeholder="<?php echo __( "Action Name", 'wp-statistics-actions' ); ?>" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" autocomplete="off"/>
+            <input type="search" placeholder="<?php echo __( "جستجو عنوان سفارش", 'wp-statistics-actions' ); ?>" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" autocomplete="off"/>
 			<?php submit_button( $text, 'button', false, false, array( 'id' => 'search-submit' ) ); ?>
         </p>
 		<?php
