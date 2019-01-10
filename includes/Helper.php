@@ -171,4 +171,16 @@ class Helper {
 	}
 
 
+	/**
+	 * Get Number Factor for id
+	 *
+	 * @param $order_id
+	 * @return int
+	 */
+	public static function get_number_factor_for_order( $order_id ) {
+		global $wpdb;
+		return $wpdb->get_var( "SELECT COUNT(*) FROM `z_factor` WHERE `order_id` = $order_id" );
+	}
+
+
 }
