@@ -87,6 +87,8 @@ class Front {
 	    background: #e3e3e3;
 	    direction: rtl;
 	    font-family: "IRANSans";
+	    font-size: 13.5px !important;
+    	line-height: 30px;
 	}
 	</style>
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -98,8 +100,8 @@ class Front {
 </head>
 <body>
 ';
-echo Helper::show_factor( $_GET['view_factor'] );
-echo '
+			echo Helper::show_factor( $_GET['view_factor'] );
+			echo '
 <!-- jQuery (necessary for Bootstrap\'s JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -108,7 +110,7 @@ echo '
 </html>
 ';
 
-exit;
+			exit;
 		}
 	}
 

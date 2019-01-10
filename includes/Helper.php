@@ -343,6 +343,7 @@ class Helper {
 	 * Show Factor
 	 *
 	 * @param $factor_id
+	 * @return string
 	 */
 	public static function show_factor( $factor_id ) {
 		$result = array();
@@ -360,8 +361,9 @@ class Helper {
 		);
 
 		$result['html'] .= '
+<br /><br />
 <div class="col-md-10 col-md-offset-1">
-<div style="border:1px solid #e3e3e3; padding:12px; font-size:11px; background: #fff;">
+<div style="border:1px solid #e3e3e3; padding:12px; background: #fff;">
 <!-- Top -->							
 <div class="col-xs-9 text-right">
 <div style="margin-right:40px;">
@@ -429,7 +431,7 @@ class Helper {
 			$result['html'] .= '
 <tr>
 <td width="50" style="vertical-align:middle; text-align:center;">' . $z . '</td>
-<td style="vertical-align:middle; text-align:center; width:200px; line-height:20px;">' . $f_v['name'] . '</td>
+<td style="vertical-align:middle; text-align:center; line-height:20px;">' . $f_v['name'] . '</td>
 <td style="vertical-align:middle; text-align:center;">' . number_format_i18n( $f_v['price'] ) . '</td>
 </tr>
 ';
@@ -441,8 +443,8 @@ class Helper {
 
 		$result['html'] .= '
 <tr>
-<td colspan="5" style="vertical-align:middle; text-align:center;" class="text-danger">جمع کل فاکتور</td>
-<td colspan="3" style="vertical-align:middle; text-align:center;" class="text-danger"><b>' . number_format_i18n( $sum ) . ' ' . Helper::currency() . '</b></td>
+<td colspan="2" style="vertical-align:middle; text-align:center;" class="text-danger">جمع کل فاکتور</td>
+<td style="vertical-align:middle; text-align:center;" class="text-danger"><b>' . number_format_i18n( $sum ) . ' ' . Helper::currency() . '</b></td>
 </tr>
 </table>
 </div>
