@@ -20,6 +20,7 @@ class Order extends \WP_List_Table {
 		) );
 	}
 
+
 	/**
 	 * Handles data query and filter, sorting, and pagination.
 	 */
