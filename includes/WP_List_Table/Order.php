@@ -171,8 +171,8 @@ class Order extends \WP_List_Table {
 			'date'   => __( 'تاریخ ایجاد', 'wp-statistics-actions' ),
 			'user'   => __( 'مشخصات کاربر', 'wp-statistics-actions' ),
 			'status' => __( 'وضعیت', 'wp-statistics-actions' ),
-			'factor' => __( '', 'wp-statistics-actions' ),
-			'ticket' => __( '', 'wp-statistics-actions' ),
+			'factor' => __( 'فاکتور', 'wp-statistics-actions' ),
+			'ticket' => __( 'پشتیبانی', 'wp-statistics-actions' ),
 		);
 
 		return $columns;
@@ -222,7 +222,7 @@ class Order extends \WP_List_Table {
 				return $item['title'] . $this->row_actions( $actions );
 				break;
 
-			case 'date_create' :
+			case 'date' :
 				$date                   = date_i18n( "j F Y", strtotime( $item['date'] ) );
 				$actions['create_time'] = date_i18n( "H:i:s", strtotime( $item['date'] ) );
 
@@ -230,7 +230,7 @@ class Order extends \WP_List_Table {
 				break;
 			case 'user' :
 
-				return '<div>' . Helper::get_user_full_name( $item['user'] ) . ' <br /> ' . Helper::get_user_email( $item['user'] ) . '<br />' . Helper::get_user_email( $item['user'] ) . '</div>';
+				return '<div>' . Helper::get_user_full_name( $item['user_id'] ) . ' <br /> ' . Helper::get_user_mobile( $item['user_id'] ) . '<br />' . Helper::get_user_email( $item['user_id'] ) . '</div>';
 				break;
 			case 'status' :
 
@@ -240,13 +240,13 @@ class Order extends \WP_List_Table {
 
 				$link_show_factor = Admin_Page::admin_link( 'factor', array( "order" => $item['id'] ) );
 				$create_factor    = Admin_Page::admin_link( 'factor', array( "method" => "add", "order_id" => $item['id'] ) );
-				return '<a target="_blank" href="' . $link_show_factor . '">تعداد فاکتور : ' . Helper::get_number_factor_for_order( $item['id'] ) . '</a><br><a class="text-primary" target="_blank" href="' . $create_factor . '"> ایجاد فاکتور جدید</a>';
+				return '<a target="_blank" class="text-success" href="' . $link_show_factor . '">تعداد فاکتور : ' . Helper::get_number_factor_for_order( $item['id'] ) . '</a><br><a class="text-danger" target="_blank" href="' . $create_factor . '"> ایجاد فاکتور جدید</a>';
 				break;
 			case 'ticket' :
 
 				$link_show_ticket = Admin_Page::admin_link( 'ticket', array( "order" => $item['id'] ) );
 				$create_ticket    = Admin_Page::admin_link( 'ticket', array( "method" => "add", "order_id" => $item['id'] ) );
-				return '<a target="_blank" href="' . $link_show_ticket . '"> نمایش تیکت ها</a><br><a target="_blank" class="text-primary" href="' . $create_ticket . '"> ایجاد تیکت جدید</a>';
+				return '<a target="_blank" class="text-warning" href="' . $link_show_ticket . '"> نمایش تیکت ها</a><br><a target="_blank" class="text-danger" href="' . $create_ticket . '"> ایجاد تیکت جدید</a>';
 				break;
 		}
 	}
