@@ -140,6 +140,16 @@ class WP_Online_Pub {
 				$text .= "\n" . $brand;
 				break;
 
+			case "send_to_user_at_change_status":
+				$text = 'کاربر گرامی , وضعیت سفارش شما به شناسه ';
+				$text .= $args['order_id'];
+				$text .= ' به "';
+				$text .= $args['new_status'];
+				$text .= '"';
+				$text .= ' تغییر داده شد.';
+				$text .= "\n" . $brand;
+				break;
+
 
 			default:
 				$text = $text . "\n" . $brand;

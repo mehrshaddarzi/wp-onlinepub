@@ -197,6 +197,11 @@ class Admin_Page {
 					Admin_Ui::wp_admin_notice( __( "آیتم های انتخابی با موفقیت حذف گردید", 'wp-statistics-actions' ), "success" );
 					break;
 
+				//Change status
+				case "change-status":
+					Admin_Ui::wp_admin_notice( __( "تغییر وضعیت سفارش با موفقیت انجام شد", 'wp-statistics-actions' ), "success" );
+					break;
+
 			}
 		}
 	}
@@ -215,44 +220,36 @@ class Admin_Page {
 			//Top Content for Status
 			if ( $_GET['top'] == "change-status" ) {
 				?>
-                <style>
-                    .top-content {
-                        width: 100%;
-                        min-height: 150px;
-                        margin: 25px 10px;
-                        background: #fff;
-                        border-radius: 10px;
-                        padding: 20px;
-                    }
-                </style>
-                <div class="top-content">
+                <div class="wlt-top-content">
                 <h2>تغییر وضعیت سفارش</h2>
-                <table class="form-table">
-                    <tbody>
-                    <tr class="user-role-wrap">
-                        <th><label for="role">تغییر وضعیت به</label></th>
-                        <td>
-                            <select name="new-status">
-								<?php
-								for ( $i = 1; $i <= 9; $i ++ ) {
-									echo '<option value="' . $i . '"' . selected( $_GET['status'], $i, true ) . '>' . Helper::show_status( $i ) . '</option>';
-								}
-								?>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr class="user-role-wrap">
-                        <th><label for="role">اطلاع رسانی شود به کاربر ؟</label></th>
-                        <td>
-                            <select name="is-notification">
-                                <option value="yes">آری</option>
-                                <option value="no">خیر</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <input type="hidden" name="order_id" value="<?php echo $_GET['order_id']; ?>">
-                    </tbody>
-                </table>
+                <form action="" method="post">
+                    <table class="form-table">
+                        <tbody>
+                        <tr class="user-role-wrap">
+                            <th><label for="role">تغییر وضعیت به</label></th>
+                            <td>
+                                <select name="new-status">
+									<?php
+									for ( $i = 1; $i <= 9; $i ++ ) {
+										echo '<option value="' . $i . '"' . selected( $_GET['status'], $i, true ) . '>' . Helper::show_status( $i ) . '</option>';
+									}
+									?>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr class="user-role-wrap">
+                            <th><label for="role">اطلاع رسانی شود به کاربر ؟</label></th>
+                            <td>
+                                <select name="is-notification">
+                                    <option value="yes">آری</option>
+                                    <option value="no">خیر</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <input type="hidden" name="order_id" value="<?php echo $_GET['order_id']; ?>">
+                        </tbody>
+                    </table>
+                </form>
 				<?php
 				submit_button( "تغییر وضعیت" );
 				echo '</div>';

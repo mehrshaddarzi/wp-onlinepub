@@ -2,6 +2,7 @@
 
 namespace WP_OnlinePub\WP_List_Table;
 
+use WP_Online_Pub;
 use WP_OnlinePub\Admin_Page;
 use WP_OnlinePub\Admin_Ui;
 use WP_OnlinePub\Gravity_Form;
@@ -313,6 +314,49 @@ class Order extends \WP_List_Table {
 	 * Bulk and Row Actions
 	 */
 	public function process_bulk_action() {
+		global $wpdb;
+
+		//Content Action : Change Status Order
+		if ( isset( $_POST['new-status'] ) ) {
+
+			//change status
+			Helper::change_status_order( $_POST['order_id'], $_POST['new-status'] );
+
+			//push notification
+			if ( $_POST['is-notification'] == "yes" ) {
+
+				//Get Order Detail
+				$order = Helper::get_order( $_POST['order_id'] );
+
+				//Send Sms
+				$arg         = array( "order_id" => $_POST['order_id'], "new_status" => Helper::show_status( $_POST['new-status'] ), "user_name" => Helper::get_user_full_name( $order['user_id'] ) );
+				$user_mobile = Helper::get_user_mobile( $order['user_id'] );
+				if ( $user_mobile != "" ) {
+					WP_Online_Pub::send_sms( $user_mobile, '', 'send_to_user_at_change_status', $arg );
+				}
+
+				//Send Email
+				$user_mail = Helper::get_user_email( $order['user_id'] );
+				if ( $user_mail != "" ) {
+					$subject = "تغییر وضعیت سفارش به شناسه " . $_POST['order_id'];
+					$content = '<p>';
+					$content .= 'کاربر گرامی ';
+					$content .= Helper::get_user_full_name( $order['user_id'] );
+					$content .= '</p><p>';
+					$content .= 'سفارش شما در سامانه نشر آنلاین تغییر وضعیت داده شد.';
+					$content .= '</p>';
+					$content .= '<p>شناسه سفارش : ' . $_POST['order_id'] . '</p>';
+					$content .= '<p>وضعیت جدید : ' . Helper::show_status( $_POST['new-status'] ) . '</p>';
+
+					WP_Online_Pub::send_mail( $user_mail, $subject, $content );
+				}
+
+			}
+
+			wp_redirect( esc_url_raw( add_query_arg( array( 'page' => 'order', 'alert' => 'change-status' ), admin_url( "admin.php" ) ) ) );
+			exit;
+		}
+
 
 		// Row Action Delete
 		if ( 'delete' === $this->current_action() ) {

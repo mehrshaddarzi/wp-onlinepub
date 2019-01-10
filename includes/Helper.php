@@ -183,4 +183,23 @@ class Helper {
 	}
 
 
+	/**
+	 * Change Status order
+	 *
+	 * @param $order_id
+	 * @param $new_status
+	 */
+	public static function change_status_order( $order_id, $new_status ) {
+		global $wpdb;
+
+		$wpdb->update(
+			'z_order',
+			array( 'status' => $new_status ),
+			array( 'id' => $order_id ),
+			array( '%d' ),
+			array( '%d' )
+		);
+	}
+
+
 }

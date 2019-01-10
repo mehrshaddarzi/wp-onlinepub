@@ -1,8 +1,18 @@
 /* Dashicon logo */
 .wps_actions span.dashicons-randomize {
     font-size: 25px;
-    margin-right: 5px;
+    margin-left: 5px;
     vertical-align: -4px;
+}
+
+/* Top Content wp list table */
+.wlt-top-content {
+    width: 97%;
+    min-height: 150px;
+    margin: 25px 10px;
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
 }
 
 /* Color Style */
