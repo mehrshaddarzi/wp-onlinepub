@@ -2,7 +2,7 @@ jQuery(document).ready(function ($) {
 
     /* Loading */
     var wpsa_loading = `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="36px" height="45px" viewBox="0 0 24 30" style="enable-background:new 0 0 50 50;" xml:space="preserve"> <rect x="0" y="9.1947" width="4" height="11.6106" fill="#333" opacity="0.2"> <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0s" dur="0.6s" repeatCount="indefinite"></animate> <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="0s" dur="0.6s" repeatCount="indefinite"></animate> <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0s" dur="0.6s" repeatCount="indefinite"></animate> </rect> <rect x="8" y="8.3053" width="4" height="13.3894" fill="#333" opacity="0.2"> <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0.15s" dur="0.6s" repeatCount="indefinite"></animate> <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="0.15s" dur="0.6s" repeatCount="indefinite"></animate> <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0.15s" dur="0.6s" repeatCount="indefinite"></animate> </rect> <rect x="16" y="5.8053" width="4" height="18.3894" fill="#333" opacity="0.2"> <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0.3s" dur="0.6s" repeatCount="indefinite"></animate> <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="0.3s" dur="0.6s" repeatCount="indefinite"></animate> <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0.3s" dur="0.6s" repeatCount="indefinite"></animate> </rect> </svg>`;
-    var wpsa_btn_spinner = `<img src="` + wps_options_js.loading_img + `" class="wps_spinner_btn">`;
+    var wpsa_btn_spinner = `<img src="` + wp_options_js.loading_img + `" class="wps_spinner_btn">`;
 
     /* Only Numeric Input */
     jQuery(document).on("keypress keyup blur", ".only-numeric", function (event) {
@@ -19,21 +19,21 @@ jQuery(document).ready(function ($) {
 
         /* Show Loading Box */
         $.confirm({
-            title: wps_options_js.remove_text,
+            title: wp_options_js.remove_text,
             icon: 'fa fa-warning',
-            rtl: parseInt(wps_options_js.is_rtl),
+            rtl: parseInt(wp_options_js.is_rtl),
             closeIcon: true,
-            content: wps_options_js.sure_remove,
+            content: wp_options_js.sure_remove,
             buttons: {
                 confirm: {
-                    text: wps_options_js.btn_confirm,
+                    text: wp_options_js.btn_confirm,
                     btnClass: 'btn-red',
                     action: function () {
                         window.location.href = href;
                     }
                 },
                 cancel: {
-                    text: wps_options_js.btn_cancel,
+                    text: wp_options_js.btn_cancel,
                 }
             }
         });
@@ -50,7 +50,7 @@ jQuery(document).ready(function ($) {
         //Show Dialog Loading
         $.dialog({
             title: '',
-            rtl: parseInt(wps_options_js.is_rtl),
+            rtl: parseInt(wp_options_js.is_rtl),
             closeIcon: true,
             content: `<div class="wpsa-status-dialog"><div class="wp-loading">` + wpsa_loading + `</div></div>`,
             buttons: {},
@@ -69,7 +69,7 @@ jQuery(document).ready(function ($) {
                 $(".wpsa-status-dialog").html(data.text);
             },
             error: function () {
-                $(".wpsa-status-dialog").html(wps_options_js.error_ajax_statistics);
+                $(".wpsa-status-dialog").html(wp_options_js.error_ajax_statistics);
             }
         });
 
@@ -81,11 +81,11 @@ jQuery(document).ready(function ($) {
 
         //Show Dialog Loading
         $.dialog({
-            title: wps_options_js.add_new_action,
+            title: wp_options_js.add_new_action,
             icon: 'fa fa-random',
-            rtl: parseInt(wps_options_js.is_rtl),
+            rtl: parseInt(wp_options_js.is_rtl),
             closeIcon: true,
-            content: `<div class="wpsa-status-dialog"><p>` + wps_options_js.pls_enter_name + `</p><input type="text" name="action_name" autocomplete="off" placeholder="` + wps_options_js.act_name + `"><br><input type="submit" name="submit" id="add_new_actions" class="button button-primary" value="` + wps_options_js.lets_go + `"  /><div class="dialog_alert"></div></div><br>`,
+            content: `<div class="wpsa-status-dialog"><p>` + wp_options_js.pls_enter_name + `</p><input type="text" name="action_name" autocomplete="off" placeholder="` + wp_options_js.act_name + `"><br><input type="submit" name="submit" id="add_new_actions" class="button button-primary" value="` + wp_options_js.lets_go + `"  /><div class="dialog_alert"></div></div><br>`,
             buttons: {}
         });
 
@@ -112,7 +112,7 @@ jQuery(document).ready(function ($) {
                 window.location.href = data.link;
             },
             error: function () {
-                $(".dialog_alert").html('<div class="error"><i class="fa fa-exclamation-triangle"></i> ' + wps_options_js.error_ajax_statistics + '</div>');
+                $(".dialog_alert").html('<div class="error"><i class="fa fa-exclamation-triangle"></i> ' + wp_options_js.error_ajax_statistics + '</div>');
                 $("img.wps_spinner_btn").remove();
             }
         });

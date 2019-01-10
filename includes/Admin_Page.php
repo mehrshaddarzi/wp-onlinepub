@@ -113,9 +113,9 @@ class Admin_Page {
 			wp_enqueue_script( 'jQuery-confirm', WP_Online_Pub::$plugin_url . '/asset/admin/js/jquery-confirm.min.js', array( 'jquery' ), '3.3.0', true );
 
 			//Load init Script
-			wp_enqueue_style( 'wp-online-pub', WP_Online_Pub::$plugin_url . '/asset/admin/css/style.css', true, WP_Online_Pub::$plugin_version );
-			wp_enqueue_script( 'wp-online-pub', WP_Online_Pub::$plugin_url . '/asset/admin/js/script.js', array( 'jquery' ), WP_Online_Pub::$plugin_version, true );
-			wp_localize_script( 'wp-online-pub', 'wp_options_js', array(
+			wp_enqueue_style( 'wp-online-style', WP_Online_Pub::$plugin_url . '/asset/admin/css/style.css', true, WP_Online_Pub::$plugin_version );
+			wp_enqueue_script( 'wp-online-js', WP_Online_Pub::$plugin_url . '/asset/admin/js/script.js', array( 'jquery' ), WP_Online_Pub::$plugin_version, true );
+			wp_localize_script( 'wp-online-js', 'wp_options_js', array(
 				'ajax'        => admin_url( "admin-ajax.php" ),
 				'is_rtl'      => ( is_rtl() ? 1 : 0 ),
 				'loading_img' => admin_url( "/images/spinner.gif" ),
