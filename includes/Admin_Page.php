@@ -49,7 +49,7 @@ class Admin_Page {
 			add_action( 'admin_notices', array( $this, 'admin_notice_' . $page_slug ) );
 			add_action( 'admin_init', array( $this, 'wlt_redirect_' . $page_slug ) );
 			add_action( 'admin_head', array( $this, 'wlt_script_' . $page_slug ) );
-			add_action( 'top_wp_list_table', array( $this, 'wlt_top_' . $page_slug ) );
+			add_action( 'wlt_top_content', array( $this, 'wlt_top_' . $page_slug ) );
 		}
 
 		//Remove All Notice Another Plugin
@@ -209,7 +209,8 @@ class Admin_Page {
 	//Top content Wp List Table
 	public function wlt_top_order() {
 		if ( self::in_page( 'order' ) and isset( $_GET['top'] ) ) {
-
+            echo 'dff';
+            exit;
 			//Top Content for Status
 			if ( $_GET['top'] == "change-status" ) {
 				?>
