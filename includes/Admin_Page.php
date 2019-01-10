@@ -220,35 +220,33 @@ class Admin_Page {
 			//Top Content for Status
 			if ( $_GET['top'] == "change-status" ) {
 				?>
-                <div class="wlt-top-content">
-                <h2>تغییر وضعیت سفارش</h2>
-                <form action="" method="post">
-                    <table class="form-table">
-                        <tbody>
-                        <tr class="user-role-wrap">
-                            <th><label for="role">تغییر وضعیت به</label></th>
-                            <td>
-                                <select name="new-status">
-									<?php
-									for ( $i = 1; $i <= 9; $i ++ ) {
-										echo '<option value="' . $i . '"' . selected( $_GET['status'], $i, true ) . '>' . Helper::show_status( $i ) . '</option>';
-									}
-									?>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr class="user-role-wrap">
-                            <th><label for="role">اطلاع رسانی شود به کاربر ؟</label></th>
-                            <td>
-                                <select name="is-notification">
-                                    <option value="yes">آری</option>
-                                    <option value="no">خیر</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <input type="hidden" name="order_id" value="<?php echo $_GET['order_id']; ?>">
-                        </tbody>
-                    </table>
+                <div class="wlt-top-content"><h2>تغییر وضعیت سفارش</h2><form action="" method="post">
+                <table class="form-table">
+                    <tbody>
+                    <tr class="user-role-wrap">
+                        <th><label for="role">تغییر وضعیت به</label></th>
+                        <td>
+                            <select name="new-status">
+								<?php
+								for ( $i = 1; $i <= 9; $i ++ ) {
+									echo '<option value="' . $i . '"' . selected( $_GET['status'], $i, true ) . '>' . Helper::show_status( $i ) . '</option>';
+								}
+								?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr class="user-role-wrap">
+                        <th><label for="role">اطلاع رسانی شود به کاربر ؟</label></th>
+                        <td>
+                            <select name="is-notification">
+                                <option value="yes">آری</option>
+                                <option value="no">خیر</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <input type="hidden" name="order_id" value="<?php echo $_GET['order_id']; ?>">
+                    </tbody>
+                </table>
 				<?php
 				submit_button( "تغییر وضعیت" );
 				echo '</form></div>';
@@ -340,6 +338,59 @@ class Admin_Page {
 	//Top content Wp List Table
 	public function wlt_top_factor() {
 		if ( self::in_page( 'factor' ) and isset( $_GET['top'] ) ) {
+
+			//Top Content for Status
+			if ( $_GET['top'] == "change-payment-status" ) {
+				?>
+                <div class="wlt-top-content"><h2>تغییر وضعیت فاکتور</h2>
+                <form action="" method="post">
+                <table class="form-table">
+                    <tbody>
+                    <tr class="user-role-wrap">
+                        <th><label for="role">تغییر وضعیت به</label></th>
+                        <td>
+                            <select name="new-status-factor">
+								<?php
+								for ( $i = 1; $i <= 2; $i ++ ) {
+									echo '<option value="' . $i . '"' . selected( $_GET['status'], $i, true ) . '>' . Helper::get_status_factor( $i ) . '</option>';
+								}
+								?>
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr class="user-role-wrap">
+                        <th><label for="role">تغییر وضعیت این سفارش به</label></th>
+                        <td>
+                            <select name="new-status-order">
+								<?php
+								for ( $i = 1; $i <= 9; $i ++ ) {
+									echo '<option value="' . $i . '"' . selected( $_GET['order_status'], $i, true ) . '>' . Helper::show_status( $i ) . '</option>';
+								}
+								?>
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr class="user-role-wrap">
+                        <th><label for="role">اطلاع رسانی شود به کاربر ؟</label></th>
+                        <td>
+                            <select name="is-notification">
+                                <option value="yes">آری</option>
+                                <option value="no">خیر</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <input type="hidden" name="order_id" value="<?php echo $_GET['order_id']; ?>">
+                    <input type="hidden" name="factor_id" value="<?php echo $_GET['factor_id']; ?>">
+                    </tbody>
+                </table>
+				<?php
+				submit_button( "تغییر وضعیت" );
+				echo '</form></div>';
+
+			}
+
 
 		}
 	}

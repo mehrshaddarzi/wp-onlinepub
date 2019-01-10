@@ -3,6 +3,7 @@
 namespace WP_OnlinePub\WP_List_Table;
 
 use WP_OnlinePub\Admin_Page;
+use WP_OnlinePub\Gravity_Form;
 use WP_OnlinePub\Helper;
 
 if ( ! class_exists( 'WP_List_Table' ) ) {
@@ -94,7 +95,7 @@ class Factor extends \WP_List_Table {
 		//Check Search
 		if ( isset( $_GET['s'] ) and ! empty( $_GET['s'] ) ) {
 			$search  = sanitize_text_field( $_GET['s'] );
-			$where[] = "`action_name` LIKE '%{$search}%'";
+			$where[] = "`id` = $search";
 		}
 
 		//Check Factor For Order
@@ -196,16 +197,16 @@ class Factor extends \WP_List_Table {
 		$unknown = '<span aria-hidden="true">—</span><span class="screen-reader-text">' . __( "Unknown", 'wp-statistics-actions' ) . '</span>';
 
 		switch ( $column_name ) {
-			case 'action_name' :
+			case 'factor_id' :
 
 				// row actions to ID
 				//$actions['id'] = '<span class="text-muted">#' . $item['ID'] . '</span>';
 
 				//row actions to edit
-				$actions['edit'] = '<a href="' . add_query_arg( array( 'page' => 'factor', 'method' => 'edit', 'ID' => $item['id'] ), admin_url( "admin.php" ) ) . '">' . __( 'ویرایش', 'wp-statistics-actions' ) . '</a>';
+				$actions['edit'] = '<a href="' . add_query_arg( array( 'page' => 'factor', 'method' => 'edit', 'id' => $item['id'] ), admin_url( "admin.php" ) ) . '">' . __( 'ویرایش', 'wp-statistics-actions' ) . '</a>';
 
 				//Row Action to Clone
-				$actions['view'] = '<a href="' . add_query_arg( array( 'view_factor' => $item['id'], 'redirect' => 'admin', '_wpnonce' => wp_create_nonce( 'view_factor_access' ) ), home_url() ) . '" class="text-success">' . __( 'نمایش فاکتور', 'wp-statistics-actions' ) . '</a>';
+				$actions['view'] = '<a target="_blank" href="' . add_query_arg( array( 'view_factor' => $item['id'], 'redirect' => 'admin', '_wpnonce' => wp_create_nonce( 'view_factor_access' ) ), home_url() ) . '" class="text-success">' . __( 'نمایش فاکتور', 'wp-statistics-actions' ) . '</a>';
 
 				// row actions to Delete
 				$actions['trash'] = '<a onclick="return confirm(\'آیا مطمئن هستید ؟\')"  href="' . add_query_arg( array( 'page' => 'factor', 'action' => 'delete', '_wpnonce' => wp_create_nonce( 'delete_action_nonce' ), 'del' => $item['id'] ), admin_url( "admin.php" ) ) . '">' . __( 'حذف', 'wp-statistics-actions' ) . '</a>';
@@ -219,14 +220,14 @@ class Factor extends \WP_List_Table {
 
 				return $date . $this->row_actions( $actions );
 				break;
-			case 'user_create' :
+			case 'user' :
 
 				return '<div>' . Helper::get_user_full_name( $item['user_id'] ) . ' <br /> ' . Helper::get_user_mobile( $item['user_id'] ) . '<br />' . Helper::get_user_email( $item['user_id'] ) . '</div>';
 				break;
 			case 'order' :
 				$order = Helper::get_order( $item['order_id'] );
 
-				return '<span class="text-danger">' . $item['order_id'] . '</span> <br/><a href="' . admin_url() . 'admin.php?page=gf_entries&view=entry&id=' . Gravity_Form::$order_form_id . '&lid=' . $order['entry_id'] . '&order=ASC&filter&paged=1&pos=0&field_id&operator">جزئیات سفارش</a>';
+				return '<span class="text-danger">' . $item['order_id'] . '</span> <br/><a target="_blank" href="' . admin_url() . 'admin.php?page=gf_entries&view=entry&id=' . Gravity_Form::$order_form_id . '&lid=' . $order['entry_id'] . '&order=ASC&filter&paged=1&pos=0&field_id&operator">جزئیات سفارش</a>';
 				break;
 			case 'type' :
 
@@ -237,8 +238,8 @@ class Factor extends \WP_List_Table {
 				return number_format_i18n( $item['price'] ) . ' ' . Helper::currency();
 				break;
 			case 'pay_status' :
-
-				return Helper::get_status_factor( $item['payment_status'] ) . '<br><a href="' . Admin_Page::admin_link( 'order', array( 'top' => 'change-payment-status', 'factor_id' => $item['id'] ) ) . '">تغییر وضعیت</a>';
+				$order = Helper::get_order( $item['order_id'] );
+				return Helper::get_status_factor( $item['payment_status'] ) . '<br><a href="' . Admin_Page::admin_link( 'factor', array( 'top' => 'change-payment-status', 'order_id' => $item['order_id'], 'order_status' => $order['status'], 'status' => $item['payment_status'], 'factor_id' => $item['id'] ) ) . '">تغییر وضعیت</a>';
 				break;
 		}
 	}
@@ -295,7 +296,7 @@ class Factor extends \WP_List_Table {
 		?>
         <p class="search-box">
             <label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
-            <input type="search" placeholder="<?php echo __( "Action Name", 'wp-statistics-actions' ); ?>" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" autocomplete="off"/>
+            <input type="search" placeholder="<?php echo __( "شماره فاکتور", 'wp-statistics-actions' ); ?>" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" autocomplete="off"/>
 			<?php submit_button( $text, 'button', false, false, array( 'id' => 'search-submit' ) ); ?>
         </p>
 		<?php
