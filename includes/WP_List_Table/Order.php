@@ -327,7 +327,7 @@ class Order extends \WP_List_Table {
 
 			//change status
 			Helper::change_status_order( $_POST['order_id'], $_POST['new-status'], $is_push_notification );
-            sleep(2);
+            sleep(1);
 
 			wp_redirect( esc_url_raw( add_query_arg( array( 'page' => 'order', 'alert' => 'change-status' ), admin_url( "admin.php" ) ) ) );
 			exit;

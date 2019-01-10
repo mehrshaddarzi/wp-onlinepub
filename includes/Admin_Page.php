@@ -324,6 +324,11 @@ class Admin_Page {
 					Admin_Ui::wp_admin_notice( __( "آیتم های انتخابی با موفقیت حذف گردید", 'wp-statistics-actions' ), "success" );
 					break;
 
+				//Change status
+				case "change-status":
+					Admin_Ui::wp_admin_notice( __( "تغییر وضعیت فاکتور با موفقیت انجام شد", 'wp-statistics-actions' ), "success" );
+					break;
+
 			}
 		}
 	}
@@ -390,7 +395,6 @@ class Admin_Page {
 				echo '</form></div>';
 
 			}
-
 
 		}
 	}

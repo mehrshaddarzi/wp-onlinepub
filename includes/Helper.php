@@ -242,6 +242,25 @@ class Helper {
 	}
 
 	/**
+	 * Change Status Factor
+	 *
+	 * @param $factor_id
+	 * @param $new_status
+	 */
+	public static function change_factor_status( $factor_id, $new_status ) {
+		global $wpdb;
+
+		//Update in database
+		$wpdb->update(
+			'z_factor',
+			array( 'payment_status' => $new_status ),
+			array( 'id' => $factor_id ),
+			array( '%d' ),
+			array( '%d' )
+		);
+	}
+
+	/**
 	 * Get Type Factor
 	 *
 	 * @param int $type

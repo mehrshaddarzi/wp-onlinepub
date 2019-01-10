@@ -307,6 +307,27 @@ class Factor extends \WP_List_Table {
 	 */
 	public function process_bulk_action() {
 
+		//Content Action : Change Status Factor
+		if ( isset( $_POST['new-status-factor'] ) ) {
+
+			//push notification
+			$is_push_notification = false;
+			if ( $_POST['is-notification'] == "yes" ) {
+				$is_push_notification = true;
+			}
+
+			//Change Status Factor
+			Helper::change_factor_status( $_POST['factor_id'], $_POST['new-status-factor'] );
+
+			//change status Order
+			Helper::change_status_order( $_POST['order_id'], $_POST['new-status-order'], $is_push_notification );
+			sleep( 1 );
+
+			wp_redirect( esc_url_raw( add_query_arg( array( 'page' => 'factor', 'alert' => 'change-status' ), admin_url( "admin.php" ) ) ) );
+			exit;
+		}
+
+
 		// Row Action Delete
 		if ( 'delete' === $this->current_action() ) {
 			$nonce = esc_attr( $_REQUEST['_wpnonce'] );
