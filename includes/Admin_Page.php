@@ -65,7 +65,7 @@ class Admin_Page {
 	 * @return string
 	 */
 	public static function admin_link( $page, $args = array() ) {
-		return add_query_arg( $args, admin_url( '?page=' . $page ) );
+		return add_query_arg( $args, admin_url( 'admin.php?page=' . $page ) );
 	}
 
 	/**
@@ -79,6 +79,8 @@ class Admin_Page {
 		if ( $pagenow == "admin.php" and isset( $_GET['page'] ) and $_GET['page'] == $page_slug ) {
 			return true;
 		}
+
+		return false;
 	}
 
 	/**
@@ -209,8 +211,7 @@ class Admin_Page {
 	//Top content Wp List Table
 	public function wlt_top_order() {
 		if ( self::in_page( 'order' ) and isset( $_GET['top'] ) ) {
-            echo 'dff';
-            exit;
+
 			//Top Content for Status
 			if ( $_GET['top'] == "change-status" ) {
 				?>
