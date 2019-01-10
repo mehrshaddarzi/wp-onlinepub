@@ -428,7 +428,7 @@ class Helper {
 
 			$result['html'] .= '
 <tr>
-<td width="50" style="vertical-align:middle; text-align:center;">' . per_number( $z ) . '</td>
+<td width="50" style="vertical-align:middle; text-align:center;">' . $z . '</td>
 <td style="vertical-align:middle; text-align:center; width:200px; line-height:20px;">' . $f_v['name'] . '</td>
 <td style="vertical-align:middle; text-align:center;">' . number_format_i18n( $f_v['price'] ) . '</td>
 </tr>

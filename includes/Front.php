@@ -81,7 +81,14 @@ class Front {
 	<title>نمایش فاکتور</title>
 	<link href="' . WP_Online_Pub::$plugin_url . '/asset/bootstrap/bootstrap.min.css" rel="stylesheet">
 	<link href="' . WP_Online_Pub::$plugin_url . '/asset/bootstrap/bootstrap-rtl.min.css" rel="stylesheet">
-
+	<link href="' . WP_Online_Pub::$plugin_url . '/asset/font.css" rel="stylesheet">
+	<style>
+	body {
+	    background: #e3e3e3;
+	    direction: rtl;
+	    font-family: "IRANSans";
+	}
+	</style>
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn\'t work if you view the page via file:// -->
 	<!--[if lt IE 9]>
@@ -89,13 +96,10 @@ class Front {
 	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
 </head>
-<body>';
-
-
-			echo Helper::show_factor( $_GET['view_factor'] );
-
-
-			echo '
+<body>
+';
+echo Helper::show_factor( $_GET['view_factor'] );
+echo '
 <!-- jQuery (necessary for Bootstrap\'s JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -104,8 +108,7 @@ class Front {
 </html>
 ';
 
-
-			exit;
+exit;
 		}
 	}
 
