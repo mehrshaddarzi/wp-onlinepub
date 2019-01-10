@@ -241,4 +241,37 @@ class Helper {
 		return 'تومان';
 	}
 
+	/**
+	 * Get Type Factor
+	 *
+	 * @param int $type
+	 * @return string
+	 */
+	public static function get_type_factor( $type = 1 ) {
+		switch ( $type ) {
+			case "1":
+				return 'پیش فاکتور';
+				break;
+			case "2":
+				return 'اصل';
+				break;
+		}
+	}
+
+	/**
+	 * Get Type Factor
+	 *
+	 * @param int $status
+	 * @return string
+	 */
+	public static function get_status_factor( $status = 1 ) {
+		switch ( $status ) {
+			case "1":
+				return 'پرداخت نشده';
+				break;
+			case "2":
+				return 'پرداخت شده';
+				break;
+		}
+	}
 }

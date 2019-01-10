@@ -2,6 +2,7 @@
 
 namespace WP_OnlinePub\WP_List_Table;
 
+use WP_OnlinePub\Admin_Page;
 use WP_OnlinePub\Helper;
 
 if ( ! class_exists( 'WP_List_Table' ) ) {
@@ -198,97 +199,46 @@ class Factor extends \WP_List_Table {
 			case 'action_name' :
 
 				// row actions to ID
-				$actions['id'] = '<span class="text-muted">#' . $item['ID'] . '</span>';
+				//$actions['id'] = '<span class="text-muted">#' . $item['ID'] . '</span>';
 
-				// row actions to edit
-				$actions['edit'] = '<a href="' . add_query_arg( array( 'page' => WP_Statistics_Actions::admin_slug, 'method' => 'edit', 'ID' => $item['ID'] ), admin_url( "admin.php" ) ) . '">' . __( 'Edit', 'wp-statistics-actions' ) . '</a>';
-
-				// row actions to show status
-				if ( $item['action_status'] == 1 and $WP_Statistics->get_option( 'visits' ) ) {
-					$trigger           = WP_Statistics_Actions_Trigger::get_trigger_data( $item['action_trigger'] );
-					$actions['status'] = '<a data-trigger-type="' . $trigger['type'] . '" data-view-status="' . $trigger['value'] . '" href="#" class="text-success">' . __( 'Statistics', 'wp-statistics-actions' ) . '</a>';
-				}
+				//row actions to edit
+				$actions['edit'] = '<a href="' . add_query_arg( array( 'page' => 'factor', 'method' => 'edit', 'ID' => $item['id'] ), admin_url( "admin.php" ) ) . '">' . __( 'ویرایش', 'wp-statistics-actions' ) . '</a>';
 
 				//Row Action to Clone
-				$actions['clone'] = '<a href="' . add_query_arg( array( 'page' => WP_Statistics_Actions::admin_slug, 'clone' => $item['ID'], '_wpnonce' => wp_create_nonce( 'clone_action_nonce' ) ), admin_url( "admin.php" ) ) . '" class="text-warning">' . __( 'Clone', 'wp-statistics-actions' ) . '</a>';
+				$actions['view'] = '<a href="' . add_query_arg( array( 'view_factor' => $item['id'], 'redirect' => 'admin', '_wpnonce' => wp_create_nonce( 'view_factor_access' ) ), home_url() ) . '" class="text-success">' . __( 'نمایش فاکتور', 'wp-statistics-actions' ) . '</a>';
 
 				// row actions to Delete
-				$actions['trash'] = '<a data-trash="yes" href="' . add_query_arg( array( 'page' => WP_Statistics_Actions::admin_slug, 'action' => 'delete', '_wpnonce' => wp_create_nonce( 'delete_action_nonce' ), 'del' => $item['ID'] ), admin_url( "admin.php" ) ) . '">' . __( 'Delete', 'wp-statistics-actions' ) . '</a>';
+				$actions['trash'] = '<a onclick="return confirm(\'آیا مطمئن هستید ؟\')"  href="' . add_query_arg( array( 'page' => 'factor', 'action' => 'delete', '_wpnonce' => wp_create_nonce( 'delete_action_nonce' ), 'del' => $item['id'] ), admin_url( "admin.php" ) ) . '">' . __( 'حذف', 'wp-statistics-actions' ) . '</a>';
 
-				return $item['action_name'] . $this->row_actions( $actions );
+				return $item['id'] . $this->row_actions( $actions );
 				break;
 
-			case 'date_create' :
-				$date                   = date_i18n( "j F Y", strtotime( $item['date_create'] ) );
-				$actions['create_time'] = date_i18n( "H:i:s", strtotime( $item['date_create'] ) );
+			case 'date' :
+				$date                   = date_i18n( "j F Y", strtotime( $item['date'] ) );
+				$actions['create_time'] = date_i18n( "H:i:s", strtotime( $item['date'] ) );
 
 				return $date . $this->row_actions( $actions );
 				break;
 			case 'user_create' :
 
-				return '<span data-action-id="' . $item['ID'] . '" data-user-create="' . $item['user_create'] . '">' . WP_Statistics_Actions_Helper::get_user_fullname( $item['user_create'] ) . '</span>';
+				return '<div>' . Helper::get_user_full_name( $item['user_id'] ) . ' <br /> ' . Helper::get_user_mobile( $item['user_id'] ) . '<br />' . Helper::get_user_email( $item['user_id'] ) . '</div>';
 				break;
-			case 'trigger' :
-				$trigger = WP_Statistics_Actions_Trigger::get_trigger_data( $item['action_trigger'] );
-				if ( $trigger === false ) {
-					return $unknown;
-				} else {
-					return '<span class="text-primary">' . $trigger['name'] . '</span> <br/>' . ( $trigger['admin_link'] != "" ? '<a href="' . $trigger['admin_link'] . '" class="text-danger" target="_blank">' : '' ) . $trigger['id'] . ' : ' . number_format( $trigger['value'] ) . ( $trigger['admin_link'] != "" ? '</a>' : '' );
-				}
+			case 'order' :
+				$order = Helper::get_order( $item['order_id'] );
 
+				return '<span class="text-danger">' . $item['order_id'] . '</span> <br/><a href="' . admin_url() . 'admin.php?page=gf_entries&view=entry&id=' . Gravity_Form::$order_form_id . '&lid=' . $order['entry_id'] . '&order=ASC&filter&paged=1&pos=0&field_id&operator">جزئیات سفارش</a>';
 				break;
-			case 'action' :
+			case 'type' :
 
-				$action = WP_Statistics_Actions_Approach::get_action_data( $item['action_approach'] );
-				if ( ! isset( $action['method'] ) ) {
-					return $unknown;
-				} else {
-					return '<span class="text-success">' . WP_Statistics_Actions_Approach::get_group_name( $action['type'] ) . '</span> <br> ' . WP_Statistics_Actions_Approach::get_method_name( $action['type'], $action['method'] );
-				}
+				return '<span class="text-success">' . Helper::get_type_factor( $item['type'] ) . '</span>';
 				break;
-			case 'expiration_date' :
+			case 'price' :
 
-				if ( is_null( $item['expiration_date'] ) || empty( $item['expiration_date'] ) ) {
-					return $unknown;
-				} else {
-					$date = date_i18n( "j F Y", strtotime( $item['expiration_date'] ) );
-					$time = date_i18n( "H:i", strtotime( $item['expiration_date'] ) );
-
-					return $date . '<br>' . $time;
-				}
+				return number_format_i18n( $item['price'] ) . ' ' . Helper::currency();
 				break;
-			case 'run_date' :
+			case 'pay_status' :
 
-				if ( is_null( $item['run_date'] ) || empty( $item['run_date'] ) ) {
-					return $unknown;
-				} else {
-					$date = date_i18n( "j F Y", strtotime( $item['run_date'] ) );
-					$time = date_i18n( "H:i:s", strtotime( $item['run_date'] ) );
-
-					return $date . '<br>' . $time;
-				}
-				break;
-			case 'status' :
-
-				$status = '<div class="tooltip">';
-				if ( $item['action_status'] == 0 ) {
-					//InActivate
-					$status .= '<i class="fa fa-circle text-danger circle"></i><span class="tooltiptext">' . __( "inActive", 'wp-statistics-actions' ) . '</span></div>';
-				} elseif ( $item['action_status'] == 1 ) {
-					//Active
-					if ( $WP_Statistics->get_option( 'visits' ) ) {
-						$status .= '<a data-view-status="' . $item['ID'] . '" href="#">';
-					}
-					$status .= '<i class="fa fa-circle active_status circle"></i><span class="tooltiptext">' . __( "Active", 'wp-statistics-actions' ) . '</span>';
-					if ( $WP_Statistics->get_option( 'visits' ) ) {
-						$status .= '</a>';
-					}
-					$status .= '</div>';
-				} else {
-					//Draft
-					$status .= '<i class="fa fa-circle circle"></i><span class="tooltiptext">' . __( "Draft", 'wp-statistics-actions' ) . '</span></div>';
-				}
-				return $status;
+				return Helper::get_status_factor( $item['payment_status'] ) . '<br><a href="' . Admin_Page::admin_link( 'order', array( 'top' => 'change-payment-status', 'factor_id' => $item['id'] ) ) . '">تغییر وضعیت</a>';
 				break;
 		}
 	}
