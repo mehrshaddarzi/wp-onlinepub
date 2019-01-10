@@ -2,6 +2,8 @@
 
 namespace WP_OnlinePub\WP_List_Table;
 
+use WP_OnlinePub\Helper;
+
 if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
@@ -54,7 +56,8 @@ class Factor extends \WP_List_Table {
 	public static function get_actions( $per_page = 10, $page_number = 1 ) {
 		global $wpdb;
 
-		$tbl = $wpdb->prefix . WP_Statistics_Actions::table;
+		//$tbl = $wpdb->prefix . WP_Statistics_Actions::table;
+		$tbl = 'z_factor';
 		$sql = "SELECT * FROM `$tbl`";
 
 		//Where conditional
@@ -67,7 +70,7 @@ class Factor extends \WP_List_Table {
 		if ( ! empty( $_REQUEST['orderby'] ) ) {
 			$sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
 		} else {
-			$sql .= ' ORDER BY `ID`';
+			$sql .= ' ORDER BY `id`';
 		}
 
 		//Check Order Fields
@@ -93,15 +96,14 @@ class Factor extends \WP_List_Table {
 			$where[] = "`action_name` LIKE '%{$search}%'";
 		}
 
-		//Check Filter Method
-		if ( isset( $_GET['filter'] ) and ! empty( $_GET['filter'] ) ) {
-			$status_id = array( "active" => 1, "inactive" => 0, "draft" => 2 );
-			$where[]   = '`action_status` =' . $status_id[ sanitize_text_field( $_GET["filter"] ) ];
+		//Check Factor For Order
+		if ( isset( $_GET['order'] ) and ! empty( $_GET['order'] ) ) {
+			$where[] = '`order_id` =' . $_GET['order'];
 		}
 
 		//Check filter Creator User
 		if ( isset( $_GET['user'] ) and ! empty( $_GET['user'] ) ) {
-			$where[] = '`user_create` =' . $_GET['user'];
+			$where[] = '`user_id` =' . $_GET['user'];
 		}
 
 		return $where;
@@ -114,8 +116,9 @@ class Factor extends \WP_List_Table {
 	 */
 	public static function delete_action( $id ) {
 		global $wpdb;
-		$tbl = $wpdb->prefix . WP_Statistics_Actions::table;
-		$wpdb->delete( $tbl, array( 'ID' => $id ), array( '%d' ) );
+		Helper::remove_factor( $id );
+		//$tbl = $wpdb->prefix . WP_Statistics_Actions::table;
+		//$wpdb->delete( $tbl, array( 'ID' => $id ), array( '%d' ) );
 	}
 
 
@@ -125,7 +128,8 @@ class Factor extends \WP_List_Table {
 	 */
 	public static function record_count() {
 		global $wpdb;
-		$tbl = $wpdb->prefix . WP_Statistics_Actions::table;
+		//$tbl = $wpdb->prefix . WP_Statistics_Actions::table;
+		$tbl = 'z_factor';
 		$sql = "SELECT COUNT(*) FROM `$tbl`";
 
 		//Where conditional
@@ -141,7 +145,7 @@ class Factor extends \WP_List_Table {
 	 * Not Found Item Text
 	 */
 	public function no_items() {
-		_e( 'No actions avaliable.', 'wp-statistics-actions' );
+		_e( 'هیچ فاکتوری یافت نشد.', 'wp-statistics-actions' );
 	}
 
 	/**
@@ -150,15 +154,14 @@ class Factor extends \WP_List_Table {
 	 */
 	function get_columns() {
 		$columns = array(
-			'cb'              => '<input type="checkbox" />',
-			'action_name'     => __( 'Name', 'wp-statistics-actions' ),
-			'date_create'     => __( 'Date Create', 'wp-statistics-actions' ),
-			'user_create'     => __( 'Created By', 'wp-statistics-actions' ),
-			'trigger'         => __( 'Trigger', 'wp-statistics-actions' ),
-			'action'          => __( 'Action', 'wp-statistics-actions' ),
-			'expiration_date' => __( 'Expiration Date', 'wp-statistics-actions' ),
-			'run_date'        => __( 'Run Time', 'wp-statistics-actions' ),
-			'status'          => __( 'Status', 'wp-statistics-actions' ),
+			'cb'         => '<input type="checkbox" />',
+			'factor_id'  => __( 'شناسه فاکتور', 'wp-statistics-actions' ),
+			'date'       => __( 'تاریخ فاکتور', 'wp-statistics-actions' ),
+			'user'       => __( 'برای کاربر', 'wp-statistics-actions' ),
+			'order'      => __( 'متعلق به سفارش', 'wp-statistics-actions' ),
+			'type'       => __( 'نوع فاکتور', 'wp-statistics-actions' ),
+			'price'      => __( 'مبلغ فاکتور ' . '(' . Helper::currency() . ')', 'wp-statistics-actions' ),
+			'pay_status' => __( 'وضعیت پرداخت', 'wp-statistics-actions' )
 		);
 
 		return $columns;
@@ -173,7 +176,7 @@ class Factor extends \WP_List_Table {
 	 */
 	function column_cb( $item ) {
 		return sprintf(
-			'<input type="checkbox" name="bulk-delete[]" value="%s" />', $item['ID']
+			'<input type="checkbox" name="bulk-delete[]" value="%s" />', $item['id']
 		);
 	}
 
@@ -296,65 +299,11 @@ class Factor extends \WP_List_Table {
 	 */
 	public function get_sortable_columns() {
 		$sortable_columns = array(
-			'action_name' => array( 'action_name', true ),
-			'date_create' => array( 'date_create', false ),
-			'user_create' => array( 'user_create', false ),
+			'date' => array( 'date', false ),
+			'user' => array( 'user_id', false ),
 		);
 
 		return $sortable_columns;
-	}
-
-	/**
-	 * Show SubSub Filter
-	 */
-	protected function get_views() {
-		$views   = array();
-		$current = ( ! empty( $_REQUEST['filter'] ) ? $_REQUEST['filter'] : 'all' );
-
-		//All Actions
-		$class        = ( $current == 'all' ? ' class="current"' : '' );
-		$all_url      = remove_query_arg( array( 'filter', 's', 'paged', 'alert', 'user' ) );
-		$views['all'] = "<a href='{$all_url }' {$class} >" . __( "All", 'wp-statistics-actions' ) . " <span class=\"count\">(" . number_format( WP_Statistics_Actions_Helper::get_number_actions_tbl() ) . ")</span></a>";
-		$views_item   = array(
-			'active'   => array( "name" => __( "Active", 'wp-statistics-actions' ), "status_id" => 1 ),
-			'inactive' => array( "name" => __( "Inactive", 'wp-statistics-actions' ), "status_id" => 0 ),
-			'draft'    => array( "name" => __( "Draft", 'wp-statistics-actions' ), "status_id" => 2 )
-		);
-		foreach ( $views_item as $k => $v ) {
-			$custom_url  = add_query_arg( 'filter', $k, remove_query_arg( array( 's', 'paged', 'alert' ) ) );
-			$class       = ( $current == $k ? ' class="current"' : '' );
-			$views[ $k ] = "<a href='{$custom_url}' {$class} >" . $v['name'] . " <span class=\"count\">(" . number_format( WP_Statistics_Actions_Helper::get_number_actions_tbl( $v['status_id'] ) ) . ")</span></a>";
-		}
-
-		return $views;
-	}
-
-	/**
-	 * Advance Custom Filter
-	 *
-	 * @param $which
-	 */
-	function extra_tablenav( $which ) {
-		if ( $which == "top" ) {
-			?>
-            <div class="alignleft actions bulkactions">
-                <label for="bulk-action-selector-top" class="screen-reader-text"><?php _e( "Creator User", 'wp-statistics-actions' ); ?></label>
-                <select name="user" id="bulk-action-selector-top">
-                    <option value=""><?php _e( "Creator User", 'wp-statistics-actions' ); ?></option>
-					<?php
-					foreach ( WP_Statistics_Actions_Helper::get_list_user_created_actions() as $user_id => $user_name ) {
-						$selected = '';
-						if ( isset( $_GET['user'] ) and $_GET['user'] == $user_id ) {
-							$selected = "selected";
-						}
-						echo '<option value="' . $user_id . '" ' . $selected . '>' . $user_name . '</option>';
-					}
-					?>
-                </select>
-                <input type="submit" id="doaction" class="button action" value="<?php _e( "Filter", 'wp-statistics-actions' ); ?>">
-            </div>
-			<?php
-		}
 	}
 
 	/**
@@ -363,8 +312,7 @@ class Factor extends \WP_List_Table {
 	 */
 	public function get_bulk_actions() {
 		$actions = array(
-			'bulk-deactivate' => __( 'Deactivate', 'wp-statistics-actions' ),
-			'bulk-delete'     => __( 'Delete', 'wp-statistics-actions' ),
+			'bulk-delete' => __( 'حذف', 'wp-statistics-actions' ),
 		);
 
 		return $actions;
@@ -417,7 +365,7 @@ class Factor extends \WP_List_Table {
 			} else {
 				self::delete_action( absint( $_GET['del'] ) );
 
-				wp_redirect( esc_url_raw( add_query_arg( array( 'page' => WP_Statistics_Actions::admin_slug, 'alert' => 'delete' ), admin_url( "admin.php" ) ) ) );
+				wp_redirect( esc_url_raw( add_query_arg( array( 'page' => 'factor', 'alert' => 'delete' ), admin_url( "admin.php" ) ) ) );
 				exit;
 			}
 		}
@@ -432,21 +380,7 @@ class Factor extends \WP_List_Table {
 					self::delete_action( $id );
 				}
 
-				wp_redirect( esc_url_raw( add_query_arg( array( 'page' => WP_Statistics_Actions::admin_slug, 'alert' => 'delete' ), admin_url( "admin.php" ) ) ) );
-				exit;
-			}
-		}
-
-		//Bulk Action Deactivated
-		if ( ( isset( $_POST['action'] ) && $_POST['action'] == 'bulk-deactivate' ) ) {
-
-			$deactivate_ids = esc_sql( $_POST['bulk-delete'] );
-			if ( is_array( $deactivate_ids ) and count( $deactivate_ids ) > 0 ) {
-				foreach ( $deactivate_ids as $id ) {
-					WP_Statistics_Actions_Helper::set_action_status( $id, 0 );
-				}
-
-				wp_redirect( esc_url_raw( add_query_arg( array( 'page' => WP_Statistics_Actions::admin_slug, 'alert' => 'deactivate' ), admin_url( "admin.php" ) ) ) );
+				wp_redirect( esc_url_raw( add_query_arg( array( 'page' => 'factor', 'alert' => 'delete' ), admin_url( "admin.php" ) ) ) );
 				exit;
 			}
 		}

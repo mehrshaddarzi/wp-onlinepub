@@ -323,7 +323,7 @@ class Admin_Page {
 
 				//Delete Alert
 				case "delete":
-					//Admin_Ui::wp_admin_notice( __( "Selected item has been Deleted.", 'wp-statistics-actions' ), "success" );
+					Admin_Ui::wp_admin_notice( __( "آیتم های انتخابی با موفقیت حذف گردید", 'wp-statistics-actions' ), "success" );
 					break;
 
 			}
@@ -333,7 +333,7 @@ class Admin_Page {
 	//Custom Script css/Js
 	public function wlt_script_factor() {
 		if ( self::in_page( 'factor' ) ) {
-
+			echo '<style>table.widefat th.column-factor_id {width: 260px;}</style>';
 		}
 	}
 

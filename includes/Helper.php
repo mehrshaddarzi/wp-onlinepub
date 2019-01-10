@@ -204,7 +204,7 @@ class Helper {
 			array( '%d' )
 		);
 
-		if($is_notification ===true) {
+		if ( $is_notification === true ) {
 
 			//Get Order Detail
 			$order = Helper::get_order( $order_id );
@@ -232,6 +232,13 @@ class Helper {
 				WP_Online_Pub::send_mail( $user_mail, $subject, $content );
 			}
 		}
+	}
+
+	/**
+	 * Price currency
+	 */
+	public static function currency() {
+		return 'تومان';
 	}
 
 }
