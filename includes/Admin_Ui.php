@@ -63,5 +63,28 @@ class Admin_Ui {
 
 	}
 
+	/**
+	 * Show Admin Wordpress Ui Notice
+	 *
+	 * @param $text
+	 * @param string $model
+	 * @param bool $close_button
+	 * @param bool $echo
+	 * @param string $style_extra
+	 * @return string
+	 */
+	public static function wp_admin_notice( $text, $model = "info", $close_button = true, $echo = true, $style_extra = 'padding:12px;' ) {
+		$text = '
+        <div class="notice notice-' . $model . '' . ( $close_button === true ? " is-dismissible" : "" ) . '">
+           <div style="' . $style_extra . '">' . $text . '</div>
+        </div>
+        ';
+		if ( $echo ) {
+			echo $text;
+		} else {
+			return $text;
+		}
+	}
+
 
 }
