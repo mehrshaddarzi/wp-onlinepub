@@ -1,6 +1,7 @@
 <?php
 
 namespace WP_OnlinePub;
+
 use WP_Online_Pub;
 use WP_OnlinePub\WP_List_Table\Factor;
 use WP_OnlinePub\WP_List_Table\Order;
@@ -105,9 +106,15 @@ class Admin_Page {
 
 		//List Allow This Script
 		if ( $pagenow == "admin.php" and isset( $_GET['page'] ) and in_array( $_GET['page'], self::$pages ) ) {
-			wp_enqueue_style( 'wp-statistics-actions', plugin_dir_url( __DIR__ ) . 'assets/css/style.css', true, WP_Online_Pub::$plugin_version );
-			wp_enqueue_script( 'wp-statistics-actions', plugin_dir_url( __DIR__ ) . 'assets/js/script.js', array( 'jquery' ), WP_Online_Pub::$plugin_version, true );
-			wp_localize_script( 'wp-statistics-actions', 'wps_actions_js', array(
+
+			//Load Jquery Confirm
+			wp_enqueue_style( 'jQuery-confirm', WP_Online_Pub::$plugin_url . 'assets/admin/css/jquery-confirm.min.css', true, '3.3.0' );
+			wp_enqueue_script( 'jQuery-confirm', WP_Online_Pub::$plugin_url . 'assets/admin/js/jquery-confirm.min.js', array( 'jquery' ), '3.3.0', true );
+
+			//Load init Script
+			wp_enqueue_style( 'wp-online-pub', plugin_dir_url( __DIR__ ) . 'assets/admin/css/style.css', true, WP_Online_Pub::$plugin_version );
+			wp_enqueue_script( 'wp-online-pub', plugin_dir_url( __DIR__ ) . 'assets/admin/js/script.js', array( 'jquery' ), WP_Online_Pub::$plugin_version, true );
+			wp_localize_script( 'wp-online-pub', 'wp_options_js', array(
 				'ajax'        => admin_url( "admin-ajax.php" ),
 				'is_rtl'      => ( is_rtl() ? 1 : 0 ),
 				'loading_img' => admin_url( "/images/spinner.gif" ),
@@ -171,7 +178,7 @@ class Admin_Page {
 		if ( ! isset( $_GET['method'] ) ) {
 
 			//Show Wp List Table
-			Admin_Ui::wp_list_table( $this->order_obj, "cart", get_admin_page_title(), array(), false );
+			Admin_Ui::wp_list_table( $this->order_obj, "cart", get_admin_page_title(), array(), true );
 		} else {
 
 		}

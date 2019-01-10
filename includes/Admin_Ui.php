@@ -30,7 +30,7 @@ class Admin_Ui {
 	 */
 	public static function wp_list_table( $obj, $icon, $title, $add_new_button = array(), $search = false ) {
 		?>
-        <div class="wrap wps_actions">
+        <div class="wrap wps_actions"> <!--Change Style Next Version -->
             <h1 class="wp-heading-inline">
                 <span class="dashicons dashicons-<?php echo $icon; ?>"></span> <?php echo $title; ?>
             </h1>

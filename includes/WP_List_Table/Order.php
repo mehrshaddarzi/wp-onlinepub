@@ -2,6 +2,9 @@
 
 namespace WP_OnlinePub\WP_List_Table;
 
+use WP_OnlinePub\Gravity_Form;
+use WP_OnlinePub\Helper;
+
 if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
@@ -11,8 +14,8 @@ class Order extends \WP_List_Table {
 	/** Class constructor */
 	public function __construct() {
 		parent::__construct( array(
-			'singular' => 'action',
-			'plural'   => 'actions',
+			'singular' => 'order',
+			'plural'   => 'orders',
 			'ajax'     => false
 		) );
 	}
@@ -29,7 +32,7 @@ class Order extends \WP_List_Table {
 		$this->process_bulk_action();
 
 		//Prepare Data
-		$per_page     = $this->get_items_per_page( 'actions_per_page', 10 );
+		$per_page     = $this->get_items_per_page( 'order_per_page', 10 );
 		$current_page = $this->get_pagenum();
 		$total_items  = self::record_count();
 
@@ -54,7 +57,8 @@ class Order extends \WP_List_Table {
 	public static function get_actions( $per_page = 10, $page_number = 1 ) {
 		global $wpdb;
 
-		$tbl = $wpdb->prefix . WP_Statistics_Actions::table;
+		//$tbl = $wpdb->prefix . WP_Statistics_Actions::table;
+		$tbl = 'z_order';
 		$sql = "SELECT * FROM `$tbl`";
 
 		//Where conditional
@@ -67,7 +71,7 @@ class Order extends \WP_List_Table {
 		if ( ! empty( $_REQUEST['orderby'] ) ) {
 			$sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
 		} else {
-			$sql .= ' ORDER BY `ID`';
+			$sql .= ' ORDER BY `id`';
 		}
 
 		//Check Order Fields
@@ -90,18 +94,7 @@ class Order extends \WP_List_Table {
 		//Check Search
 		if ( isset( $_GET['s'] ) and ! empty( $_GET['s'] ) ) {
 			$search  = sanitize_text_field( $_GET['s'] );
-			$where[] = "`action_name` LIKE '%{$search}%'";
-		}
-
-		//Check Filter Method
-		if ( isset( $_GET['filter'] ) and ! empty( $_GET['filter'] ) ) {
-			$status_id = array( "active" => 1, "inactive" => 0, "draft" => 2 );
-			$where[]   = '`action_status` =' . $status_id[ sanitize_text_field( $_GET["filter"] ) ];
-		}
-
-		//Check filter Creator User
-		if ( isset( $_GET['user'] ) and ! empty( $_GET['user'] ) ) {
-			$where[] = '`user_create` =' . $_GET['user'];
+			$where[] = "`title` LIKE '%{$search}%'";
 		}
 
 		return $where;
@@ -109,13 +102,32 @@ class Order extends \WP_List_Table {
 
 	/**
 	 * Delete a action record.
-	 *
 	 * @param int $id action ID
 	 */
 	public static function delete_action( $id ) {
 		global $wpdb;
-		$tbl = $wpdb->prefix . WP_Statistics_Actions::table;
-		$wpdb->delete( $tbl, array( 'ID' => $id ), array( '%d' ) );
+
+		//Get Order Detail
+		$order = Helper::get_order( $id );
+
+		//Remove Entry Gravity
+		Gravity_Form::remove_entry( $order['entry_id'] );
+
+		//Remove all factor and Factor item
+		$query = $wpdb->get_results( "SELECT * FROM `z_factor` WHERE `order_id` = $id ORDER BY `id` DESC", ARRAY_A );
+		if ( count( $query ) > 0 ) {
+			foreach ( $query as $row ) {
+				Helper::remove_factor( $row['id'] );
+			}
+		}
+
+		//Remove All Ticket
+		Helper::remove_ticket( $id );
+
+		//Remove From Table
+		$tbl = 'z_order';
+		$wpdb->delete( $tbl, array( 'id' => $id ), array( '%d' ) );
+
 	}
 
 
@@ -125,7 +137,8 @@ class Order extends \WP_List_Table {
 	 */
 	public static function record_count() {
 		global $wpdb;
-		$tbl = $wpdb->prefix . WP_Statistics_Actions::table;
+		//$tbl = $wpdb->prefix . WP_Statistics_Actions::table;
+		$tbl = 'z_order';
 		$sql = "SELECT COUNT(*) FROM `$tbl`";
 
 		//Where conditional
@@ -141,7 +154,7 @@ class Order extends \WP_List_Table {
 	 * Not Found Item Text
 	 */
 	public function no_items() {
-		_e( 'No actions avaliable.', 'wp-statistics-actions' );
+		_e( 'هیچ سفارشی ای یافت نشد', '' );
 	}
 
 	/**
@@ -150,15 +163,15 @@ class Order extends \WP_List_Table {
 	 */
 	function get_columns() {
 		$columns = array(
-			'cb'              => '<input type="checkbox" />',
-			'action_name'     => __( 'Name', 'wp-statistics-actions' ),
-			'date_create'     => __( 'Date Create', 'wp-statistics-actions' ),
-			'user_create'     => __( 'Created By', 'wp-statistics-actions' ),
-			'trigger'         => __( 'Trigger', 'wp-statistics-actions' ),
-			'action'          => __( 'Action', 'wp-statistics-actions' ),
-			'expiration_date' => __( 'Expiration Date', 'wp-statistics-actions' ),
-			'run_date'        => __( 'Run Time', 'wp-statistics-actions' ),
-			'status'          => __( 'Status', 'wp-statistics-actions' ),
+			'cb' => '<input type="checkbox" />',
+			'order_id' => __( 'شناسه سفارش', 'wp-statistics-actions' ),
+			'date'     => __( 'تاریخ ایجاد', 'wp-statistics-actions' ),
+			'user'     => __( 'مشخصات کاربر', 'wp-statistics-actions' ),
+			'title'    => __( 'عنوان سفارش', 'wp-statistics-actions' ),
+			'status'   => __( 'وضعیت', 'wp-statistics-actions' ),
+			'desc'     => __( '', 'wp-statistics-actions' ),
+			'factor'   => __( '', 'wp-statistics-actions' ),
+			'ticket'   => __( '', 'wp-statistics-actions' ),
 		);
 
 		return $columns;
@@ -296,65 +309,11 @@ class Order extends \WP_List_Table {
 	 */
 	public function get_sortable_columns() {
 		$sortable_columns = array(
-			'action_name' => array( 'action_name', true ),
-			'date_create' => array( 'date_create', false ),
-			'user_create' => array( 'user_create', false ),
+			'date' => array( 'date', false ),
+			'user' => array( 'user', false ),
 		);
 
 		return $sortable_columns;
-	}
-
-	/**
-	 * Show SubSub Filter
-	 */
-	protected function get_views() {
-		$views   = array();
-		$current = ( ! empty( $_REQUEST['filter'] ) ? $_REQUEST['filter'] : 'all' );
-
-		//All Actions
-		$class        = ( $current == 'all' ? ' class="current"' : '' );
-		$all_url      = remove_query_arg( array( 'filter', 's', 'paged', 'alert', 'user' ) );
-		$views['all'] = "<a href='{$all_url }' {$class} >" . __( "All", 'wp-statistics-actions' ) . " <span class=\"count\">(" . number_format( WP_Statistics_Actions_Helper::get_number_actions_tbl() ) . ")</span></a>";
-		$views_item   = array(
-			'active'   => array( "name" => __( "Active", 'wp-statistics-actions' ), "status_id" => 1 ),
-			'inactive' => array( "name" => __( "Inactive", 'wp-statistics-actions' ), "status_id" => 0 ),
-			'draft'    => array( "name" => __( "Draft", 'wp-statistics-actions' ), "status_id" => 2 )
-		);
-		foreach ( $views_item as $k => $v ) {
-			$custom_url  = add_query_arg( 'filter', $k, remove_query_arg( array( 's', 'paged', 'alert' ) ) );
-			$class       = ( $current == $k ? ' class="current"' : '' );
-			$views[ $k ] = "<a href='{$custom_url}' {$class} >" . $v['name'] . " <span class=\"count\">(" . number_format( WP_Statistics_Actions_Helper::get_number_actions_tbl( $v['status_id'] ) ) . ")</span></a>";
-		}
-
-		return $views;
-	}
-
-	/**
-	 * Advance Custom Filter
-	 *
-	 * @param $which
-	 */
-	function extra_tablenav( $which ) {
-		if ( $which == "top" ) {
-			?>
-            <div class="alignleft actions bulkactions">
-                <label for="bulk-action-selector-top" class="screen-reader-text"><?php _e( "Creator User", 'wp-statistics-actions' ); ?></label>
-                <select name="user" id="bulk-action-selector-top">
-                    <option value=""><?php _e( "Creator User", 'wp-statistics-actions' ); ?></option>
-					<?php
-					foreach ( WP_Statistics_Actions_Helper::get_list_user_created_actions() as $user_id => $user_name ) {
-						$selected = '';
-						if ( isset( $_GET['user'] ) and $_GET['user'] == $user_id ) {
-							$selected = "selected";
-						}
-						echo '<option value="' . $user_id . '" ' . $selected . '>' . $user_name . '</option>';
-					}
-					?>
-                </select>
-                <input type="submit" id="doaction" class="button action" value="<?php _e( "Filter", 'wp-statistics-actions' ); ?>">
-            </div>
-			<?php
-		}
 	}
 
 	/**
@@ -363,8 +322,7 @@ class Order extends \WP_List_Table {
 	 */
 	public function get_bulk_actions() {
 		$actions = array(
-			'bulk-deactivate' => __( 'Deactivate', 'wp-statistics-actions' ),
-			'bulk-delete'     => __( 'Delete', 'wp-statistics-actions' ),
+			'bulk-delete'     => __( 'حذف', 'wp-statistics-actions' ),
 		);
 
 		return $actions;

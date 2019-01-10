@@ -11,8 +11,8 @@ class Payment extends \WP_List_Table {
 	/** Class constructor */
 	public function __construct() {
 		parent::__construct( array(
-			'singular' => 'action',
-			'plural'   => 'actions',
+			'singular' => 'payment',
+			'plural'   => 'payments',
 			'ajax'     => false
 		) );
 	}
@@ -29,7 +29,7 @@ class Payment extends \WP_List_Table {
 		$this->process_bulk_action();
 
 		//Prepare Data
-		$per_page     = $this->get_items_per_page( 'actions_per_page', 10 );
+		$per_page     = $this->get_items_per_page( 'payment_per_page', 10 );
 		$current_page = $this->get_pagenum();
 		$total_items  = self::record_count();
 

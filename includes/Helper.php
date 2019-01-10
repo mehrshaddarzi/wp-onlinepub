@@ -129,4 +129,46 @@ class Helper {
 		}
 	}
 
+
+	/**
+	 * Get Order detail by id
+	 *
+	 * @param $id
+	 * @return
+	 */
+	public static function get_order( $id ) {
+		global $wpdb;
+		return $wpdb->get_row( "SELECT * FROM `z_order` WHERE `id` = {$id}", ARRAY_A );
+	}
+
+
+	/**
+	 * Remove Factor
+	 *
+	 * @param $factor_id
+	 */
+	public static function remove_factor( $factor_id ) {
+		global $wpdb;
+		$factor = $wpdb->get_row( "SELECT * FROM `z_factor` WHERE `id` = $factor_id", ARRAY_A );
+		if ( null !== $factor ) {
+			//Remove all item from this factor
+			$wpdb->query( "DELETE FROM `z_factor_item` WHERE `factor_id` = {$factor['id']}" );
+		}
+
+		//Remove Factor
+		$wpdb->query( "DELETE FROM `z_factor` WHERE `id` = $factor_id" );
+	}
+
+
+	/**
+	 * Remove Ticket By Order id
+	 *
+	 * @param $order_id
+	 */
+	public static function remove_ticket( $order_id ) {
+		global $wpdb;
+		$wpdb->query( "DELETE FROM `z_ticket` WHERE `chat_id` = $order_id" );
+	}
+
+
 }

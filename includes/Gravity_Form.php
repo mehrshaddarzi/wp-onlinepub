@@ -44,6 +44,16 @@ class Gravity_Form {
 	}
 
 	/**
+	 * Remove Entry By id
+	 *
+	 * @param $entry_id
+	 * @return bool
+	 */
+	public static function remove_entry( $entry_id ) {
+		return \GFAPI::delete_entry( $entry_id );
+	}
+
+	/**
 	 * Get List Of Entry With From Label
 	 *
 	 * @param $entry_id
