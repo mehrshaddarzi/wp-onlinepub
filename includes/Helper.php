@@ -362,8 +362,8 @@ class Helper {
 
 		$result['html'] .= '
 <br /><br />
-<div class="col-md-10 col-md-offset-1">
-<div style="border:1px solid #e3e3e3; padding:12px; background: #fff;">
+<div class="col-md-8 col-md-offset-2">
+<div style="border:1px solid #e3e3e3; padding:12px; background: #fff; border-radius: 10px;">
 <!-- Top -->							
 <div class="col-xs-9 text-right">
 <div style="margin-right:40px;">
@@ -413,13 +413,13 @@ class Helper {
 <div class="text-right" style="border-top:1px solid #e3e3e3;margin-top: 9px;">
 <div class="text-center" style="margin-bottom:10px;margin-top: 10px;font-weight: bold;font-size: 14px;">مشخصات کالا و خدمات مورد معامله</div>
 
-<table class="table table-striped table-hover table-bordered" style="width: 100%;font-size: 11px;margin: 10px auto;">
+<table class="table table-striped table-hover table-bordered" style="width: 100%;font-size: 13px;margin: 10px auto;">
 <tr>
 <td width="50" style="vertical-align:middle; text-align:center;">ردیف</td>
 <!--<td style="vertical-align:middle; text-align:center; width:100px;">کد کالا</td>-->
-<td style="vertical-align:middle; text-align:center; width:200px;">شرح کالا یا خدمات</td>
+<td style="vertical-align:middle; text-align:center; ">شرح کالا یا خدمات</td>
 <!--<td style="vertical-align:middle; text-align:center; width:60px;">تعداد</td>-->
-<td style="vertical-align:middle; text-align:center;">مبلغ ' . Helper::currency() . ' (واحد)</td>
+<td style="vertical-align:middle; text-align:center; width:230px;">مبلغ ' . Helper::currency() . ' (واحد)</td>
 </tr>';
 
 
