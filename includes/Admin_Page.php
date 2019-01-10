@@ -42,7 +42,7 @@ class Admin_Page {
 		add_filter( 'set-screen-option', array( $this, 'set_screen' ), 10, 3 );
 
 		//Add Script to Admin Wordpress
-		//add_action( 'admin_enqueue_scripts', array( $this, 'admin_assets' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_assets' ) );
 
 		//Set Admin Notice and Custom Redirect for Per Page
 		foreach ( self::$pages as $page_slug ) {
@@ -170,7 +170,6 @@ class Admin_Page {
 		//Load WP_List_Table
 		$this->order_obj = new wlt_order();
 		$this->order_obj->prepare_items();
-
 	}
 
 	//Order Admin Page

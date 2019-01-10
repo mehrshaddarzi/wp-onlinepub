@@ -213,7 +213,7 @@ class Order extends \WP_List_Table {
 				//$actions['edit'] = '<a href="' . add_query_arg( array( 'page' => WP_Statistics_Actions::admin_slug, 'method' => 'edit', 'ID' => $item['ID'] ), admin_url( "admin.php" ) ) . '">' . __( 'Edit', 'wp-statistics-actions' ) . '</a>';
 
 				//Row Action to Clone
-				$actions['view'] = '<a href="' . admin_url() . '/admin.php?page=gf_entries&view=entry&id='.Gravity_Form::$order_form_id.'&lid='.$item['entry_id'].'&order=ASC&filter&paged=1&pos=0&field_id&operator" class="text-success">' . __( 'نمایش جزئیات', 'wp-statistics-actions' ) . '</a>';
+				$actions['view'] = '<a href="' . admin_url() . 'admin.php?page=gf_entries&view=entry&id='.Gravity_Form::$order_form_id.'&lid='.$item['entry_id'].'&order=ASC&filter&paged=1&pos=0&field_id&operator" target="_blank" class="text-success">' . __( 'نمایش جزئیات', 'wp-statistics-actions' ) . '</a>';
 
 				// row actions to Delete
 				$actions['trash'] = '<a onclick="return confirm(\'آیا مطمئن هستید ؟\')" href="' . add_query_arg( array( 'page' => 'order', 'action' => 'delete', '_wpnonce' => wp_create_nonce( 'delete_action_nonce' ), 'del' => $item['id'] ), admin_url( "admin.php" ) ) . '">' . __( 'حذف', 'wp-statistics-actions' ) . '</a>';
