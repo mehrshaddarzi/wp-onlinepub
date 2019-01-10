@@ -337,4 +337,126 @@ class Helper {
 
 		return $list;
 	}
+
+
+	/**
+	 * Show Factor
+	 *
+	 * @param $factor_id
+	 */
+	public static function show_factor( $factor_id ) {
+		$result = array();
+
+		//Factor Get
+		$factor = Helper::get_factor( $factor_id );
+
+		//Site Post
+		$site = array(
+			'logo'    => WP_Online_Pub::$plugin_url . '/template/email.png',
+			'name'    => 'نشر آنلاین',
+			'phone'   => '02149279770',
+			'email'   => 'order@onlinepub.ir',
+			'address' => 'تهران ، بلوار کشاورز ، خیابان وصال شیرازی ، پلاک 62 ، طبقه اول'
+		);
+
+		$result['html'] .= '
+<div class="col-md-10 col-md-offset-1">
+<div style="border:1px solid #e3e3e3; padding:12px; font-size:11px; background: #fff;">
+<!-- Top -->							
+<div class="col-xs-9 text-right">
+<div style="margin-right:40px;">
+<img src="' . $site['logo'] . '" alt="' . get_bloginfo( 'name' ) . '">
+</div>
+</div>
+<div class="col-xs-3 text-right" style="padding-top: 13px;">
+<div>شماره سریال : <span>' . number_format_i18n( $factor_id ) . '</span></div>
+<div>تاریخ : <span>' . date_i18n( 'Y/m/d', $factor['item'] ) . '</span></div>
+</div>
+<div class="clearfix"></div>
+					
+<!-- Forohande -->
+<div class="text-right" style="border-top:1px solid #e3e3e3;margin-top: 15px;">
+<div class="text-center" style="margin-bottom:10px;margin-top: 10px;font-weight: bold;font-size: 14px;">مشخصات فروشنده</div>
+
+<div class="col-sm-4">نام شخص حقیقی / حقوقی : <span>' . $site['name'] . '</span></div>
+<div class="col-sm-4">شماره تلفن : <span style="direction:ltr;" dir="ltr">' . $site['phone'] . '</span></div>
+<div class="col-sm-4">پست الکترونیک : <span style="direction:ltr;" dir="ltr">' . $site['email'] . '</span></div>
+<div class="clearfix"></div>
+<div style="height: 3px;"></div>
+
+<div class="col-sm-12">نشانی کامل : <span>' . $site['address'] . '</span></div>
+<div class="clearfix"></div>
+<div style="height: 3px;"></div>
+
+</div>
+<div class="clearfix"></div>	
+		
+		
+<!-- Kharidar -->		
+<div class="text-right" style="border-top:1px solid #e3e3e3;margin-top: 9px;">
+
+<div class="text-center" style="margin-bottom:10px;margin-top: 10px;font-weight: bold;font-size: 14px;">مشخصات خریدار</div>
+
+<div class="col-sm-4">نام  : <span>' . Helper::get_user_full_name( $factor['user_id'] ) . '</span></div>
+<div class="col-sm-4">شماره همراه : <span style="direction:ltr;" dir="ltr">' . Helper::get_user_mobile( $factor['user_id'] ) . '</span></div>
+<div class="col-sm-4">پست الکترونیک : <span style="direction:ltr;" dir="ltr">' . Helper::get_user_email( $factor['user_id'] ) . '</span></div>
+<div class="clearfix"></div>
+<div style="height: 3px;"></div>
+
+</div>
+<div class="clearfix"></div>					
+					
+					
+<!--List Kala -->
+<div class="text-right" style="border-top:1px solid #e3e3e3;margin-top: 9px;">
+<div class="text-center" style="margin-bottom:10px;margin-top: 10px;font-weight: bold;font-size: 14px;">مشخصات کالا و خدمات مورد معامله</div>
+
+<table class="table table-striped table-hover table-bordered" style="width: 100%;font-size: 11px;margin: 10px auto;">
+<tr>
+<td width="50" style="vertical-align:middle; text-align:center;">ردیف</td>
+<!--<td style="vertical-align:middle; text-align:center; width:100px;">کد کالا</td>-->
+<td style="vertical-align:middle; text-align:center; width:200px;">شرح کالا یا خدمات</td>
+<!--<td style="vertical-align:middle; text-align:center; width:60px;">تعداد</td>-->
+<td style="vertical-align:middle; text-align:center;">مبلغ ' . Helper::currency() . ' (واحد)</td>
+</tr>';
+
+
+		$z          = 1;
+		$sum        = 0;
+		$list_items = Helper::get_factor_items( $factor_id );
+		foreach ( $list_items as $f_k => $f_v ) {
+
+			$result['html'] .= '
+<tr>
+<td width="50" style="vertical-align:middle; text-align:center;">' . per_number( $z ) . '</td>
+<td style="vertical-align:middle; text-align:center; width:200px; line-height:20px;">' . $f_v['name'] . '</td>
+<td style="vertical-align:middle; text-align:center;">' . number_format_i18n( $f_v['price'] ) . '</td>
+</tr>
+';
+
+
+			$sum = $sum + $f_v['price'];
+			$z ++;
+		}
+
+		$result['html'] .= '
+<tr>
+<td colspan="5" style="vertical-align:middle; text-align:center;" class="text-danger">جمع کل فاکتور</td>
+<td colspan="3" style="vertical-align:middle; text-align:center;" class="text-danger"><b>' . number_format_i18n( $sum ) . ' ' . Helper::currency() . '</b></td>
+</tr>
+</table>
+</div>
+<div class="clearfix"></div>				
+</div>
+</div>
+<div class="clearfix"></div>
+';
+
+
+		$result['html'] .= '</table>';
+		$result['html'] .= '<div style="height:15px;"></div>';
+		return $result['html'];
+	}
+
+
 }
