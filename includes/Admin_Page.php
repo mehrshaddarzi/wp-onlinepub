@@ -44,10 +44,11 @@ class Admin_Page {
 		//Add Script to Admin Wordpress
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_assets' ) );
 
-		//Set Admin Notice and Custom Redirect for Per Page
+		//Set Admin Notice and Custom Redirect and Custom Js/css for Per Page
 		foreach ( self::$pages as $page_slug ) {
 			add_action( 'admin_notices', array( $this, 'admin_notice_' . $page_slug ) );
 			add_action( 'admin_init', array( $this, 'wlt_redirect_' . $page_slug ) );
+			add_action( 'admin_head', array( $this, 'wlt_script_' . $page_slug ) );
 		}
 
 		//Remove All Notice Another Plugin
@@ -108,12 +109,12 @@ class Admin_Page {
 		if ( $pagenow == "admin.php" and isset( $_GET['page'] ) and in_array( $_GET['page'], self::$pages ) ) {
 
 			//Load Jquery Confirm
-			wp_enqueue_style( 'jQuery-confirm', WP_Online_Pub::$plugin_url . 'assets/admin/css/jquery-confirm.min.css', true, '3.3.0' );
-			wp_enqueue_script( 'jQuery-confirm', WP_Online_Pub::$plugin_url . 'assets/admin/js/jquery-confirm.min.js', array( 'jquery' ), '3.3.0', true );
+			wp_enqueue_style( 'jQuery-confirm', WP_Online_Pub::$plugin_url . '/asset/admin/css/jquery-confirm.min.css', true, '3.3.0' );
+			wp_enqueue_script( 'jQuery-confirm', WP_Online_Pub::$plugin_url . '/asset/admin/js/jquery-confirm.min.js', array( 'jquery' ), '3.3.0', true );
 
 			//Load init Script
-			wp_enqueue_style( 'wp-online-pub', plugin_dir_url( __DIR__ ) . 'assets/admin/css/style.css', true, WP_Online_Pub::$plugin_version );
-			wp_enqueue_script( 'wp-online-pub', plugin_dir_url( __DIR__ ) . 'assets/admin/js/script.js', array( 'jquery' ), WP_Online_Pub::$plugin_version, true );
+			wp_enqueue_style( 'wp-online-pub', WP_Online_Pub::$plugin_url . '/asset/admin/css/style.css', true, WP_Online_Pub::$plugin_version );
+			wp_enqueue_script( 'wp-online-pub', WP_Online_Pub::$plugin_url . '/asset/admin/js/script.js', array( 'jquery' ), WP_Online_Pub::$plugin_version, true );
 			wp_localize_script( 'wp-online-pub', 'wp_options_js', array(
 				'ajax'        => admin_url( "admin-ajax.php" ),
 				'is_rtl'      => ( is_rtl() ? 1 : 0 ),
@@ -190,10 +191,17 @@ class Admin_Page {
 
 				//Delete Alert
 				case "delete":
-					//Admin_Ui::wp_admin_notice( __( "Selected item has been Deleted.", 'wp-statistics-actions' ), "success" );
+					Admin_Ui::wp_admin_notice( __( "آیتم های انتخابی با موفقیت حذف گردید", 'wp-statistics-actions' ), "success" );
 					break;
 
 			}
+		}
+	}
+
+	//Custom Script css/Js
+	public function wlt_script_order() {
+		if ( self::in_page( 'order' ) ) {
+			echo '<style>table.widefat th.column-title {width: 260px;}</style>';
 		}
 	}
 
@@ -269,6 +277,13 @@ class Admin_Page {
 		}
 	}
 
+	//Custom Script css/Js
+	public function wlt_script_factor() {
+		if ( self::in_page( 'factor' ) ) {
+
+		}
+	}
+
 	//Redirect Process
 	public function wlt_redirect_factor() {
 		//Current Page Slug
@@ -341,6 +356,13 @@ class Admin_Page {
 		}
 	}
 
+	//Custom Script css/Js
+	public function wlt_script_payment() {
+		if ( self::in_page( 'payment' ) ) {
+
+		}
+	}
+
 	//Redirect Process
 	public function wlt_redirect_payment() {
 		//Current Page Slug
@@ -395,6 +417,13 @@ class Admin_Page {
 			//Show Wp List Table
 			Admin_Ui::wp_list_table( $this->ticket_obj, "testimonial", get_admin_page_title(), array(), true );
 		} else {
+
+		}
+	}
+
+	//Custom Script css/Js
+	public function wlt_script_ticket() {
+		if ( self::in_page( 'ticket' ) ) {
 
 		}
 	}

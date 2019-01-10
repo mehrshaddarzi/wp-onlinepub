@@ -207,7 +207,7 @@ class Order extends \WP_List_Table {
 			case 'title' :
 
 				// row actions to ID
-				$actions['id'] = '<span class="text-muted">#شناسه سفارش ' . $item['id'] . '</span>';
+				$actions['id'] = '<span class="text-muted">#شناسه ' . $item['id'] . '</span>';
 
 				// row actions to edit
 				//$actions['edit'] = '<a href="' . add_query_arg( array( 'page' => WP_Statistics_Actions::admin_slug, 'method' => 'edit', 'ID' => $item['ID'] ), admin_url( "admin.php" ) ) . '">' . __( 'Edit', 'wp-statistics-actions' ) . '</a>';
@@ -368,7 +368,7 @@ class Order extends \WP_List_Table {
 			} else {
 				self::delete_action( absint( $_GET['del'] ) );
 
-				wp_redirect( esc_url_raw( add_query_arg( array( 'page' => WP_Statistics_Actions::admin_slug, 'alert' => 'delete' ), admin_url( "admin.php" ) ) ) );
+				wp_redirect( esc_url_raw( add_query_arg( array( 'page' => 'order', 'alert' => 'delete' ), admin_url( "admin.php" ) ) ) );
 				exit;
 			}
 		}
@@ -383,21 +383,7 @@ class Order extends \WP_List_Table {
 					self::delete_action( $id );
 				}
 
-				wp_redirect( esc_url_raw( add_query_arg( array( 'page' => WP_Statistics_Actions::admin_slug, 'alert' => 'delete' ), admin_url( "admin.php" ) ) ) );
-				exit;
-			}
-		}
-
-		//Bulk Action Deactivated
-		if ( ( isset( $_POST['action'] ) && $_POST['action'] == 'bulk-deactivate' ) ) {
-
-			$deactivate_ids = esc_sql( $_POST['bulk-delete'] );
-			if ( is_array( $deactivate_ids ) and count( $deactivate_ids ) > 0 ) {
-				foreach ( $deactivate_ids as $id ) {
-					WP_Statistics_Actions_Helper::set_action_status( $id, 0 );
-				}
-
-				wp_redirect( esc_url_raw( add_query_arg( array( 'page' => WP_Statistics_Actions::admin_slug, 'alert' => 'deactivate' ), admin_url( "admin.php" ) ) ) );
+				wp_redirect( esc_url_raw( add_query_arg( array( 'page' => 'order', 'alert' => 'delete' ), admin_url( "admin.php" ) ) ) );
 				exit;
 			}
 		}
