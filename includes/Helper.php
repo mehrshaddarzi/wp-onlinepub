@@ -173,6 +173,16 @@ class Helper {
 
 
 	/**
+	 * Remove Factor items
+	 *
+	 * @param $factor_id
+	 */
+	public static function remove_factor_items( $factor_id ) {
+		global $wpdb;
+		$wpdb->query( "DELETE FROM `z_factor_item` WHERE `factor_id` = {$factor_id}" );
+	}
+
+	/**
 	 * Remove Ticket By Order id
 	 *
 	 * @param $order_id

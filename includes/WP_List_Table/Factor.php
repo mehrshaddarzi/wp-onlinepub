@@ -317,6 +317,58 @@ class Factor extends \WP_List_Table {
 	public function process_bulk_action() {
 		global $wpdb;
 
+
+		//Content Action : Edit Factor
+		if ( isset( $_REQUEST['content-action'] ) and $_REQUEST['content-action'] == "edit-factor" ) {
+
+			//Update Factor
+			$order = Helper::get_order( $_POST['order_id'] );
+			$wpdb->update(
+				'z_factor',
+				array(
+					'user_id'  => $order['user_id'],
+					'order_id' => $_POST['order_id'],
+					'type'     => $_POST['type']
+				),
+				array( 'id' => $_POST['factor_id'] )
+			);
+
+			//Remove All Factor item
+			Helper::remove_factor_items( $_POST['factor_id'] );
+
+			//Set Factor item
+			$sum = 0;
+			$z   = 0;
+			foreach ( $_POST['item'] as $item ) {
+				if ( trim( $_POST['item'][ $z ] ) != "" and trim( $_POST['price'][ $z ] ) != "" ) {
+					$wpdb->insert(
+						'z_factor_item',
+						array(
+							'factor_id' => $_POST['factor_id'],
+							'item'      => $_POST['item'][ $z ],
+							'price'     => $_POST['price'][ $z ]
+						)
+					);
+					$sum = $sum + $_POST['price'][ $z ];
+				}
+				$z ++;
+			}
+
+			//Set Factor Price
+			$wpdb->update(
+				'z_factor',
+				array(
+					'price' => $sum
+				),
+				array( 'id' => $_POST['factor_id'] )
+			);
+
+
+			wp_redirect( esc_url_raw( add_query_arg( array( 'page' => 'factor', 'alert' => 'edit-factor' ), admin_url( "admin.php" ) ) ) );
+			exit;
+		}
+
+
 		//Content Action : New Factor
 		if ( isset( $_REQUEST['content-action'] ) and $_REQUEST['content-action'] == "add-factor" ) {
 

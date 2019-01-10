@@ -423,7 +423,6 @@ if ( $_GET['method'] == "add" ) {
     </div>';
 
 	}
-
 	if ( $_GET['method'] == "edit" ) {
 
 	if ( isset( $_GET['order_id'] ) ) {
@@ -482,15 +481,6 @@ if ( $_GET['method'] == "add" ) {
 
 		for ( $x = 1; $x <= 5; $x ++ ) {
 			$v = '';
-			if ( $x == 1 ) {
-				if ( isset( $_GET['order_id'] ) ) {
-					$this_order = Helper::get_order( $_GET['order_id'] );
-					$entry      = Gravity_Form::get_entry( $this_order['entry_id'] );
-					$v          = $entry[78];
-				} else {
-					$v = 'عنوان خدمات را وارد کنید';
-				}
-			}
 			?>
             <tr class="user-role-wrap">
                 <th><label for="role">آیتم #<?php echo $r; ?></label></th>
@@ -515,35 +505,36 @@ if ( $_GET['method'] == "add" ) {
             </td>
         </tr>
 
-        <tr class="user-role-wrap">
-            <th><label for="role">تغییر وضعیت این سفارش به</label></th>
-            <td>
-                <select name="new-status-order">
-					<?php
-					for ( $i = 1; $i <= 9; $i ++ ) {
-						$selected = '';
-						if ( isset( $_GET['order_id'] ) ) {
-							if ( $this_order['status'] == $i ) {
-								$selected = ' selected';
-							}
-						}
-						echo '<option value="' . $i . '" ' . $selected . '>' . Helper::show_status( $i ) . '</option>';
-					}
-					?>
-                </select>
-            </td>
-        </tr>
+        <!--        <tr class="user-role-wrap">-->
+        <!--            <th><label for="role">تغییر وضعیت این سفارش به</label></th>-->
+        <!--            <td>-->
+        <!--                <select name="new-status-order">-->
+        <!--					--><?php
+		//					for ( $i = 1; $i <= 9; $i ++ ) {
+		//						$selected = '';
+		//						if ( isset( $_GET['order_id'] ) ) {
+		//							if ( $this_order['status'] == $i ) {
+		//								$selected = ' selected';
+		//							}
+		//						}
+		//						echo '<option value="' . $i . '" ' . $selected . '>' . Helper::show_status( $i ) . '</option>';
+		//					}
+		//					?>
+        <!--                </select>-->
+        <!--            </td>-->
+        <!--        </tr>-->
 
-        <tr class="user-role-wrap">
-            <th><label for="role">اطلاع رسانی شود به کاربر ؟</label></th>
-            <td>
-                <select name="is-notification">
-                    <option value="yes">آری</option>
-                    <option value="no">خیر</option>
-                </select>
-            </td>
-        </tr>
+        <!--        <tr class="user-role-wrap">-->
+        <!--            <th><label for="role">اطلاع رسانی شود به کاربر ؟</label></th>-->
+        <!--            <td>-->
+        <!--                <select name="is-notification">-->
+        <!--                    <option value="no">خیر</option>-->
+        <!--                    <option value="yes">آری</option>-->
+        <!--                </select>-->
+        <!--            </td>-->
+        <!--        </tr>-->
 
+        <input type="hidden" name="factor_id" value="<?php echo $_GET['factor_id']; ?>">
         <input type="hidden" name="content-action" value="edit-factor">
         </tbody>
     </table>
@@ -553,7 +544,6 @@ if ( $_GET['method'] == "add" ) {
     </div>';
 
 }
-
 
 }
 }
@@ -573,9 +563,14 @@ if ( $_GET['method'] == "add" ) {
 					Admin_Ui::wp_admin_notice( __( "تغییر وضعیت فاکتور با موفقیت انجام شد", 'wp-statistics-actions' ), "success" );
 					break;
 
-				//Change status
+				//Create Factor
 				case "create-factor":
 					Admin_Ui::wp_admin_notice( __( "فاکتور با موفقیت ایجاد شد", 'wp-statistics-actions' ), "success" );
+					break;
+
+				//edit Factor
+				case "edit-factor":
+					Admin_Ui::wp_admin_notice( __( "فاکتور با موفقیت ویرایش شد", 'wp-statistics-actions' ), "success" );
 					break;
 
 			}
