@@ -1,6 +1,7 @@
 <?php
 
 namespace WP_OnlinePub;
+
 use WP_Online_Pub;
 
 class Front {
@@ -21,6 +22,9 @@ class Front {
 
 		//Add Script
 		add_action( 'wp_enqueue_scripts', array( $this, 'wp_enqueue_style' ) );
+
+		//Show Factor
+		add_action( 'wp', array( $this, 'show_factor' ) );
 	}
 
 	/**
@@ -32,6 +36,44 @@ class Front {
 		wp_register_script( self::$asset_name, WP_Online_Pub::$plugin_url . '/asset/script.js', array( 'jquery' ), WP_Online_Pub::$plugin_version, false );
 	}
 
+
+	/**
+	 * Show Factor
+	 */
+	public function show_factor() {
+		global $wpdb;
+
+		if ( isset( $_GET['view_factor'] ) and isset( $_GET['redirect'] ) and isset( $_GET['_security_code'] ) ) {
+
+			//Check Nonce
+			if ( ! wp_verify_nonce( $_GET['_security_code'], 'view_factor_access' ) ) {
+				die( __( "You are not Permission for this action.", 'wp-statistics-actions' ) );
+			}
+
+			//Security Redirec
+			if ( $_GET['redirect'] != "user" || $_GET['redirect'] != "xx-admin" ) {
+				die( __( "You are not Permission for this action.", 'wp-statistics-actions' ) );
+			}
+
+			//Check Security Factor For this User
+			if ( $_GET['redirect'] == "user" ) {
+				$user_id = get_current_user_id();
+				$count   = $wpdb->get_var( "SELECT COUNT(*) FROM `z_factor` WHERE `id` = {$_GET['view_factor']} AND `user_id` = {$user_id}" );
+				if ( $count < 1 ) {
+					die( __( "You are not Permission for this action.", 'wp-statistics-actions' ) );
+				}
+			}
+
+			//Show Factor
+			echo 'this_is';
+
+
+
+
+
+			exit;
+		}
+	}
 
 	/**
 	 * User Order List
@@ -58,7 +100,7 @@ class Front {
 				$text  .= '<div class="status-order">وضعیت سفارش : ' . Helper::show_status( $row['id'] ) . '</div>';
 				$entry = Gravity_Form::get_entry( $row['entry_id'] );
 
-				$text .= '
+				$text      .= '
 				<div class="order-accordion">
 					<div class="title">
 						<div class="pull-right">' . $entry[ Gravity_Form::$title ] . '</div>

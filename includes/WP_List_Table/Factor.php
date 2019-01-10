@@ -209,7 +209,7 @@ class Factor extends \WP_List_Table {
 				}
 
 				//Row Action to Clone
-				$actions['view'] = '<a target="_blank" href="' . add_query_arg( array( 'view_factor' => $item['id'], 'redirect' => 'admin', '_wpnonce' => wp_create_nonce( 'view_factor_access' ) ), home_url() ) . '" class="text-success">' . __( 'نمایش فاکتور', 'wp-statistics-actions' ) . '</a>';
+				$actions['view'] = '<a target="_blank" href="' . add_query_arg( array( 'view_factor' => $item['id'], 'redirect' => 'xx-admin', '_security_code' => wp_create_nonce( 'view_factor_access' ) ), home_url() ) . '" class="text-success">' . __( 'نمایش فاکتور', 'wp-statistics-actions' ) . '</a>';
 
 				// row actions to Delete
 				if ( $item['payment_status'] == 1 ) {

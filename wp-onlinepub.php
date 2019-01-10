@@ -166,7 +166,7 @@ class WP_Online_Pub {
 				break;
 
 			case "send_to_user_at_edit_factor":
-				$text = 'کاربر گرامی ';
+				$text = 'کاربر گرامی';
 				$text .= " مبلغ فاکتور به شناسه ";
 				$text .= $args['order_id'];
 				$text .= " به ";
