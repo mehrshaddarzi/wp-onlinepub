@@ -64,9 +64,14 @@ class Front {
 				}
 			}
 
+			//Check Exist Factor id
+			$count = $wpdb->get_var( "SELECT COUNT(*) FROM `z_factor` WHERE `id` = {$_GET['view_factor']}" );
+			if ( $count < 1 ) {
+				die( __( "You are not Permission for this action.", 'wp-statistics-actions' ) );
+			}
+
 			//Show Factor
-			echo '
-<!DOCTYPE html>
+			echo '<!DOCTYPE html>
 <html lang="fa">
 <head>
 	<meta charset="utf-8">
@@ -87,16 +92,17 @@ class Front {
 <body>';
 
 
-
-
+			echo Helper::show_factor( $_GET['view_factor'] );
 
 
 			echo '
-			
-			';
-
-
-
+<!-- jQuery (necessary for Bootstrap\'s JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="' . WP_Online_Pub::$plugin_url . '/asset/bootstrap/bootstrap.min.js"></script>
+</body>
+</html>
+';
 
 
 			exit;
