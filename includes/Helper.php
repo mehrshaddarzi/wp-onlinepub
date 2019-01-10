@@ -293,4 +293,28 @@ class Helper {
 				break;
 		}
 	}
+
+
+	/**
+	 * Get List Factor item
+	 *
+	 * @param $factor_id
+	 * @return array
+	 */
+	public static function get_factor_items( $factor_id ) {
+		global $wpdb;
+		$list = array();
+
+		$query = $wpdb->get_results( "SELECT * FROM `z_factor_item` WHERE `factor_id` = $factor_id ORDER BY `id` ASC", ARRAY_A );
+		if ( count( $query ) > 0 ) {
+			foreach ( $query as $row ) {
+				$list[] = array(
+					'name'  => $row['item'],
+					'price' => $row['price'],
+				);
+			}
+		}
+
+		return $list;
+	}
 }

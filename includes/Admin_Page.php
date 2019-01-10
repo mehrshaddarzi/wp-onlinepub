@@ -327,7 +327,7 @@ if ( $_GET['method'] == "add" ) {
 					<?php
 					$query = $wpdb->get_results( "SELECT * FROM `z_order` WHERE `status` < 8 ORDER BY `id` DESC", ARRAY_A );
 					foreach ( $query as $row ) {
-						echo '<option value="' . $row['id'] . '">#' . $row['id'] . ' ' . Helper::get_user_full_name( $row['user_id'] ) . ' ' . $row['title'] . '</option>';
+						echo '<option value="' . $row['id'] . '">' . $row['id'] . '# - ' . Helper::get_user_full_name( $row['user_id'] ) . ' - ' . $row['title'] . '</option>';
 					}
 					?>
                 </select>
@@ -345,19 +345,23 @@ if ( $_GET['method'] == "add" ) {
             <tr class="user-role-wrap">
                 <th><label for="role">آیتم #<?php echo $x; ?></label></th>
                 <td>
-                    <input type="text" class="regular-text" name="item[]" value="<?php echo $v; ?>">
+                    <input type="text" class="regular-text" name="item[]" value="<?php echo $v; ?>" <?php if ( $x == 1 ) {
+						echo 'required="required"';
+					} ?>>
+
+                    &nbsp;
+                    &nbsp;
+                    &nbsp;
+                    مبلغ به <?php echo Helper::currency(); ?>
+                    <input type="text" class="regular-small only-numeric" name="price[]" value="" style="text-align: left; direction: ltr;" <?php if ( $x == 1 ) {
+	                    echo 'required="required"';
+                    } ?>>
+
                 </td>
             </tr>
 			<?php
 		}
 		?>
-
-        <tr class="user-role-wrap">
-            <th><label for="role"> مبلغ به <?php echo Helper::currency(); ?></label></th>
-            <td>
-                <input type="text" class="regular-text only-numeric" name="price" value="" style="text-align: left; direction: ltr;">
-            </td>
-        </tr>
 
         <tr class="user-role-wrap">
             <th><label for="role">نوع فاکتور</label></th>
@@ -369,13 +373,36 @@ if ( $_GET['method'] == "add" ) {
             </td>
         </tr>
 
+        <tr class="user-role-wrap">
+            <th><label for="role">تغییر وضعیت این سفارش به</label></th>
+            <td>
+                <select name="new-status-order">
+					<?php
+					for ( $i = 1; $i <= 9; $i ++ ) {
+							echo '<option value="' . $i . '">' . Helper::show_status( $i ) . '</option>';
+					}
+					?>
+                </select>
+            </td>
+        </tr>
+
+        <tr class="user-role-wrap">
+            <th><label for="role">اطلاع رسانی شود به کاربر ؟</label></th>
+            <td>
+                <select name="is-notification">
+                    <option value="yes">آری</option>
+                    <option value="no">خیر</option>
+                </select>
+            </td>
+        </tr>
+
         <input type="hidden" name="content-action" value="add-factor">
         </tbody>
     </table>
 	<?php
-	submit_button( "تغییر وضعیت" );
+	submit_button( "ثبت" );
 	echo '</form>
-                    </div>';
+    </div>';
 
 }
 

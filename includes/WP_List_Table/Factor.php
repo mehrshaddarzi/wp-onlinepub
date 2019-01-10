@@ -2,6 +2,7 @@
 
 namespace WP_OnlinePub\WP_List_Table;
 
+use WP_Online_Pub;
 use WP_OnlinePub\Admin_Page;
 use WP_OnlinePub\Gravity_Form;
 use WP_OnlinePub\Helper;
@@ -203,15 +204,15 @@ class Factor extends \WP_List_Table {
 				//$actions['id'] = '<span class="text-muted">#' . $item['ID'] . '</span>';
 
 				//row actions to edit
-                if($item['payment_status'] ==1) {
-	                $actions['edit'] = '<a href="' . add_query_arg( array( 'page' => 'factor', 'method' => 'edit', 'id' => $item['id'] ), admin_url( "admin.php" ) ) . '">' . __( 'ویرایش', 'wp-statistics-actions' ) . '</a>';
-                }
+				if ( $item['payment_status'] == 1 ) {
+					$actions['edit'] = '<a href="' . add_query_arg( array( 'page' => 'factor', 'method' => 'edit', 'id' => $item['id'] ), admin_url( "admin.php" ) ) . '">' . __( 'ویرایش', 'wp-statistics-actions' ) . '</a>';
+				}
 
 				//Row Action to Clone
 				$actions['view'] = '<a target="_blank" href="' . add_query_arg( array( 'view_factor' => $item['id'], 'redirect' => 'admin', '_wpnonce' => wp_create_nonce( 'view_factor_access' ) ), home_url() ) . '" class="text-success">' . __( 'نمایش فاکتور', 'wp-statistics-actions' ) . '</a>';
 
 				// row actions to Delete
-				if($item['payment_status'] ==1) {
+				if ( $item['payment_status'] == 1 ) {
 					$actions['trash'] = '<a onclick="return confirm(\'آیا مطمئن هستید ؟\')"  href="' . add_query_arg( array( 'page' => 'factor', 'action' => 'delete', '_wpnonce' => wp_create_nonce( 'delete_action_nonce' ), 'del' => $item['id'] ), admin_url( "admin.php" ) ) . '">' . __( 'حذف', 'wp-statistics-actions' ) . '</a>';
 				}
 
@@ -310,6 +311,130 @@ class Factor extends \WP_List_Table {
 	 * Bulk and Row Actions
 	 */
 	public function process_bulk_action() {
+		global $wpdb;
+
+		//Content Action : New Factor
+		if ( isset( $_GET['content-action'] ) and $_GET['content-action'] == "add-factor" ) {
+
+			//Save To database
+			$order = Helper::get_order( $_POST['order_id'] );
+			$wpdb->insert(
+				'z_factor',
+				array(
+					'user_id'        => $order['user_id'],
+					'order_id'       => $_POST['order_id'],
+					'date'           => current_time( 'mysql' ),
+					'type'           => $_POST['type'],
+					'payment_status' => 1
+				)
+			);
+			$factor_id = $wpdb->insert_id;
+
+			//Set Factor item
+			$sum = 0;
+			$z   = 0;
+			foreach ( $_POST['item'] as $item ) {
+				if ( trim( $item ) != "" ) {
+					$wpdb->insert(
+						'z_factor_item',
+						array(
+							'factor_id' => $factor_id,
+							'item'      => $_POST['item'][ $z ],
+							'price'     => $_POST['price'][ $z ]
+						)
+					);
+					$sum = $sum + $_POST['price'][ $z ];
+				}
+				$z ++;
+			}
+
+			//Set Factor Price
+			$wpdb->update(
+				'z_factor',
+				array(
+					'price' => $sum
+				),
+				array( 'id' => $factor_id )
+			);
+
+			//change Order Status
+			Helper::change_status_order( $_POST['order_id'], $_POST['new-status-order'], false );
+
+			//Push Notification
+			if ( $_POST['is-notification'] == "yes" ) {
+
+				//Send Sms
+				$arg         = array( "factor_id" => $factor_id, "factor_price" => $sum, "factor_type" => $_POST['type'], "order_id" => $_POST['order_id'], "new_status" => Helper::show_status( $_POST['new-status-order'] ), "user_name" => Helper::get_user_full_name( $order['user_id'] ) );
+				$user_mobile = Helper::get_user_mobile( $order['user_id'] );
+				if ( $user_mobile != "" ) {
+					WP_Online_Pub::send_sms( $user_mobile, '', 'send_to_user_at_create_factor', $arg );
+				}
+
+				//Send Email
+				$user_mail = Helper::get_user_email( $order['user_id'] );
+				if ( $user_mail != "" ) {
+					$subject = "فاکتور به شناسه  " . $factor_id;
+
+					$content = '<p>';
+					$content .= 'کاربر گرامی ';
+					$content .= Helper::get_user_full_name( $order['user_id'] );
+					$content .= '</p><p>';
+					if ( $arg['factor_type'] == 1 ) {
+						$content .= 'پیش فاکتور ';
+					} else {
+						$content .= 'فاکتور ';
+					}
+					$content .= "به مبلغ ";
+					$content .= number_format( $arg['factor_price'] ) . ' ' . \WP_OnlinePub\Helper::currency() . ' ';
+					$content .= 'برای سفارش به شناسه ';
+					$content .= $arg['order_id'];
+					$content .= ' ایجاد شده است.لطفا نسبت به پرداخت آن اقدام نمایید.';
+					$content .= '</p><br /><p>';
+					$content .= '
+					<table>
+					    <thead>
+                        <tr>
+                        <th> #</th>
+                        <th> توضیحات</th>
+                        <th> مبلغ ' . \WP_OnlinePub\Helper::currency() . '</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        ';
+
+					$c          = 1;
+					$list_items = Helper::get_factor_items( $factor_id );
+					foreach ( $list_items as $f_k => $f_v ) {
+
+						$content .= '
+						 <tr>
+						 <td>' . $c . '</td>
+						 <td>' . $f_v['name'] . '</td>
+						 <td>' . number_format_i18n( $f_v['name'] ) . ' ' . Helper::currency() . '</td>
+						    </tr>
+						    ';
+						$c ++;
+					}
+
+					$content .= '
+                    <tr>
+                    <td colspan="2" >جمع کل</td>
+                    <td>' . number_format_i18n( $sum ) . ' ' . Helper::currency() . '</td>
+                    </tr>
+                    </tbody>
+					</table>
+					';
+					$content .= '</p><br />';
+					$content .= '<p>با تشکر</p>';
+					$content .= '<p><a href="' . get_bloginfo( "url" ) . '">' . get_bloginfo( "name" ) . '</a></p>';
+
+					WP_Online_Pub::send_mail( $user_mail, $subject, $content );
+				}
+
+			}
+
+		}
+
 
 		//Content Action : Change Status Factor
 		if ( isset( $_POST['new-status-factor'] ) ) {
