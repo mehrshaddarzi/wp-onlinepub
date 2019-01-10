@@ -2,6 +2,8 @@
 
 namespace WP_OnlinePub;
 
+use WP_Online_Pub;
+
 class Helper {
 
 	/**
@@ -188,10 +190,12 @@ class Helper {
 	 *
 	 * @param $order_id
 	 * @param $new_status
+	 * @param bool $is_notification
 	 */
-	public static function change_status_order( $order_id, $new_status ) {
+	public static function change_status_order( $order_id, $new_status, $is_notification = false ) {
 		global $wpdb;
 
+		//Update in database
 		$wpdb->update(
 			'z_order',
 			array( 'status' => $new_status ),
@@ -199,7 +203,35 @@ class Helper {
 			array( '%d' ),
 			array( '%d' )
 		);
-	}
 
+		if($is_notification ===true) {
+
+			//Get Order Detail
+			$order = Helper::get_order( $order_id );
+
+			//Send Sms
+			$arg         = array( "order_id" => $order_id, "new_status" => Helper::show_status( $new_status ), "user_name" => Helper::get_user_full_name( $order['user_id'] ) );
+			$user_mobile = Helper::get_user_mobile( $order['user_id'] );
+			if ( $user_mobile != "" ) {
+				WP_Online_Pub::send_sms( $user_mobile, '', 'send_to_user_at_change_status', $arg );
+			}
+
+			//Send Email
+			$user_mail = Helper::get_user_email( $order['user_id'] );
+			if ( $user_mail != "" ) {
+				$subject = "تغییر وضعیت سفارش به شناسه " . $order_id;
+				$content = '<p>';
+				$content .= 'کاربر گرامی ';
+				$content .= Helper::get_user_full_name( $order['user_id'] );
+				$content .= '</p><p>';
+				$content .= 'سفارش شما در سامانه نشر آنلاین تغییر وضعیت داده شد.';
+				$content .= '</p>';
+				$content .= '<p>شناسه سفارش : ' . $order_id . '</p>';
+				$content .= '<p>وضعیت جدید : ' . Helper::show_status( $new_status ) . '</p>';
+
+				WP_Online_Pub::send_mail( $user_mail, $subject, $content );
+			}
+		}
+	}
 
 }

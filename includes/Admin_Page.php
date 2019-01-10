@@ -249,10 +249,9 @@ class Admin_Page {
                         <input type="hidden" name="order_id" value="<?php echo $_GET['order_id']; ?>">
                         </tbody>
                     </table>
-                </form>
 				<?php
 				submit_button( "تغییر وضعیت" );
-				echo '</div>';
+				echo '</form></div>';
 
 			}
 
