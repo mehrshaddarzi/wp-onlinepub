@@ -143,6 +143,16 @@ class Helper {
 		return $wpdb->get_row( "SELECT * FROM `z_order` WHERE `id` = {$id}", ARRAY_A );
 	}
 
+	/**
+	 * Get Factor Detail By id
+	 *
+	 * @param $id
+	 * @return array
+	 */
+	public static function get_factor( $id ) {
+		global $wpdb;
+		return $wpdb->get_row( "SELECT * FROM `z_factor` WHERE `id` = {$id}", ARRAY_A );
+	}
 
 	/**
 	 * Remove Factor

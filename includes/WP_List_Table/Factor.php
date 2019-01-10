@@ -205,7 +205,7 @@ class Factor extends \WP_List_Table {
 
 				//row actions to edit
 				if ( $item['payment_status'] == 1 ) {
-					$actions['edit'] = '<a href="' . add_query_arg( array( 'page' => 'factor', 'method' => 'edit', 'id' => $item['id'] ), admin_url( "admin.php" ) ) . '">' . __( 'ویرایش', 'wp-statistics-actions' ) . '</a>';
+					$actions['edit'] = '<a href="' . add_query_arg( array( 'page' => 'factor', 'method' => 'edit', 'factor_id' => $item['id'], 'order_id' => $item['order_id'] ), admin_url( "admin.php" ) ) . '">' . __( 'ویرایش', 'wp-statistics-actions' ) . '</a>';
 				}
 
 				//Row Action to Clone

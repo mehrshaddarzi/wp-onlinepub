@@ -417,9 +417,138 @@ if ( $_GET['method'] == "add" ) {
 
         <input type="hidden" name="content-action" value="add-factor">
         </tbody>
+    </table>    <?php
+	submit_button( "ثبت" );
+	echo '</form>
+    </div>';
+
+	}
+
+	if ( $_GET['method'] == "edit" ) {
+
+	if ( isset( $_GET['order_id'] ) ) {
+		$this_order = Helper::get_order( $_GET['order_id'] );
+	}
+
+	?>
+    <div class="wrap wps_actions"><h1 class="wp-heading-inline">
+    <span class="dashicons dashicons-format-aside"></span> ویرایش فاکتور </h1>
+    <form action="<?php echo add_query_arg( array( 'page' => 'factor' ), admin_url( "admin.php" ) ); ?>" method="post">
+    <table class="form-table">
+        <tbody>
+        <tr class="user-role-wrap">
+            <th><label for="role">فاکتور متعلق به سفارش</label></th>
+            <td>
+                <select name="order_id">
+					<?php
+					$query = $wpdb->get_results( "SELECT * FROM `z_order` WHERE `status` < 8 ORDER BY `id` DESC", ARRAY_A );
+					foreach ( $query as $row ) {
+						$selected = '';
+						if ( isset( $_GET['order_id'] ) ) {
+							if ( $this_order['id'] == $row['id'] ) {
+								$selected = ' selected';
+							}
+						}
+						echo '<option value="' . $row['id'] . '" ' . $selected . '>' . $row['id'] . '# - ' . Helper::get_user_full_name( $row['user_id'] ) . ' - ' . $row['title'] . '</option>';
+					}
+					?>
+                </select>
+            </td>
+        </tr>
+
+		<?php
+		$list_item   = Helper::get_factor_items( $_GET['factor_id'] );
+		$this_factor = Helper::get_factor( $_GET['factor_id'] );
+		$r           = 1;
+		foreach ( $list_item as $f_key => $f_val ) {
+			?>
+            <tr class="user-role-wrap">
+                <th><label for="role">آیتم #<?php echo $r; ?></label></th>
+                <td>
+                    <input type="text" autocomplete="off" class="regular-text" name="item[]" value="<?php echo $f_val['name']; ?>" <?php if ( $r == 1 ) {
+						echo 'required="required"';
+					} ?>>
+
+                    &nbsp; &nbsp; &nbsp; مبلغ به <?php echo Helper::currency(); ?>
+                    <input type="text" autocomplete="off" class="regular-small only-numeric" name="price[]" value="<?php echo $f_val['price']; ?>" style="text-align: left; direction: ltr;" <?php if ( $r == 1 ) {
+						echo 'required="required"';
+					} ?>>
+
+                </td>
+            </tr>
+			<?php
+			$r ++;
+		}
+
+		for ( $x = 1; $x <= 5; $x ++ ) {
+			$v = '';
+			if ( $x == 1 ) {
+				if ( isset( $_GET['order_id'] ) ) {
+					$this_order = Helper::get_order( $_GET['order_id'] );
+					$entry      = Gravity_Form::get_entry( $this_order['entry_id'] );
+					$v          = $entry[78];
+				} else {
+					$v = 'عنوان خدمات را وارد کنید';
+				}
+			}
+			?>
+            <tr class="user-role-wrap">
+                <th><label for="role">آیتم #<?php echo $r; ?></label></th>
+                <td>
+                    <input type="text" autocomplete="off" class="regular-text" name="item[]" value="<?php echo $v; ?>">
+                    &nbsp; &nbsp; &nbsp; مبلغ به <?php echo Helper::currency(); ?>
+                    <input type="text" autocomplete="off" class="regular-small only-numeric" name="price[]" value="" style="text-align: left; direction: ltr;">
+                </td>
+            </tr>
+			<?php
+			$r ++;
+		}
+		?>
+
+        <tr class="user-role-wrap">
+            <th><label for="role">نوع فاکتور</label></th>
+            <td>
+                <select name="type">
+                    <option value="1" <?php selected( $this_factor['type'], 1, true ); ?>><?php echo Helper::get_type_factor( 1 ); ?></option>
+                    <option value="2" <?php selected( $this_factor['type'], 2, true ); ?>><?php echo Helper::get_type_factor( 2 ); ?></option>
+                </select>
+            </td>
+        </tr>
+
+        <tr class="user-role-wrap">
+            <th><label for="role">تغییر وضعیت این سفارش به</label></th>
+            <td>
+                <select name="new-status-order">
+					<?php
+					for ( $i = 1; $i <= 9; $i ++ ) {
+						$selected = '';
+						if ( isset( $_GET['order_id'] ) ) {
+							if ( $this_order['status'] == $i ) {
+								$selected = ' selected';
+							}
+						}
+						echo '<option value="' . $i . '" ' . $selected . '>' . Helper::show_status( $i ) . '</option>';
+					}
+					?>
+                </select>
+            </td>
+        </tr>
+
+        <tr class="user-role-wrap">
+            <th><label for="role">اطلاع رسانی شود به کاربر ؟</label></th>
+            <td>
+                <select name="is-notification">
+                    <option value="yes">آری</option>
+                    <option value="no">خیر</option>
+                </select>
+            </td>
+        </tr>
+
+        <input type="hidden" name="content-action" value="edit-factor">
+        </tbody>
     </table>
 	<?php
-	submit_button( "ثبت" );
+	submit_button( "ویرایش" );
 	echo '</form>
     </div>';
 
