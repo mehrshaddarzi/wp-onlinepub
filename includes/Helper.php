@@ -419,7 +419,7 @@ class Helper {
 <!--<td style="vertical-align:middle; text-align:center; width:100px;">کد کالا</td>-->
 <td style="vertical-align:middle; text-align:center; ">شرح کالا یا خدمات</td>
 <!--<td style="vertical-align:middle; text-align:center; width:60px;">تعداد</td>-->
-<td style="vertical-align:middle; text-align:center; width:230px;">مبلغ ' . Helper::currency() . ' (واحد)</td>
+<td style="vertical-align:middle; text-align:center; width:230px;">مبلغ ' . Helper::currency() . '</td>
 </tr>';
 
 
