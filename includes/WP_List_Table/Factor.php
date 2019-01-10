@@ -314,7 +314,7 @@ class Factor extends \WP_List_Table {
 		global $wpdb;
 
 		//Content Action : New Factor
-		if ( isset( $_GET['content-action'] ) and $_GET['content-action'] == "add-factor" ) {
+		if ( isset( $_REQUEST['content-action'] ) and $_REQUEST['content-action'] == "add-factor" ) {
 
 			//Save To database
 			$order = Helper::get_order( $_POST['order_id'] );

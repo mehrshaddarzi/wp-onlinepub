@@ -430,7 +430,6 @@ if ( $_GET['method'] == "add" ) {
 					Admin_Ui::wp_admin_notice( __( "فاکتور با موفقیت ایجاد شد", 'wp-statistics-actions' ), "success" );
 					break;
 
-
 			}
 		}
 	}
