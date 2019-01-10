@@ -3,10 +3,10 @@
 namespace WP_OnlinePub;
 
 use WP_Online_Pub;
-use WP_OnlinePub\WP_List_Table\Factor as factor;
-use WP_OnlinePub\WP_List_Table\Order as order;
-use WP_OnlinePub\WP_List_Table\Payment as payment;
-use WP_OnlinePub\WP_List_Table\Ticket as ticket;
+use WP_OnlinePub\WP_List_Table\Factor as wlt_factor;
+use WP_OnlinePub\WP_List_Table\Order as wlt_order;
+use WP_OnlinePub\WP_List_Table\Payment as wlt_payment;
+use WP_OnlinePub\WP_List_Table\Ticket as wlt_ticket;
 
 class Admin_Page {
 
@@ -168,7 +168,7 @@ class Admin_Page {
 		add_screen_option( $option, $args );
 
 		//Load WP_List_Table
-		$this->order_obj = new order();
+		$this->order_obj = new wlt_order();
 		$this->order_obj->prepare_items();
 
 	}
@@ -240,7 +240,7 @@ class Admin_Page {
 		add_screen_option( $option, $args );
 
 		//Load WP_List_Table
-		$this->factor_obj = new factor();
+		$this->factor_obj = new wlt_factor();
 		$this->factor_obj->prepare_items();
 
 	}
@@ -312,7 +312,7 @@ class Admin_Page {
 		add_screen_option( $option, $args );
 
 		//Load WP_List_Table
-		$this->payment_obj = new payment();
+		$this->payment_obj = new wlt_payment();
 		$this->payment_obj->prepare_items();
 
 	}
@@ -384,7 +384,7 @@ class Admin_Page {
 		add_screen_option( $option, $args );
 
 		//Load WP_List_Table
-		$this->ticket_obj = new ticket();
+		$this->ticket_obj = new wlt_ticket();
 		$this->ticket_obj->prepare_items();
 
 	}
