@@ -30,7 +30,7 @@ class Payment {
 	public function SendZarinPal() {
 		global $wpdb;
 
-		if ( isset( $_GET['payment_factor'] ) and isset( $_GET['_pay_code'] ) ) {
+		if ( isset( $_GET['payment_factor'] ) and isset( $_GET['order'] ) and isset( $_GET['_pay_code'] ) ) {
 
 			//Check Security Code
 			if ( ! wp_verify_nonce( $_GET['_pay_code'], 'payment_factor_price' ) ) {
@@ -38,7 +38,7 @@ class Payment {
 			}
 
 			//Set Url Back
-			$url_back = add_query_arg( array( 'check_payment_status' => 'yes' ), get_the_permalink( WP_Online_Pub::$option['user_panel'] ) );
+			$url_back = add_query_arg( array( 'check_payment_status' => 'yes', 'order' => $_GET['order'] ), get_the_permalink( WP_Online_Pub::$option['user_panel'] ) );
 
 			//Check Validation request
 			$user_id   = get_current_user_id();
@@ -123,10 +123,10 @@ class Payment {
 
 	public function ReceiveZarinPal() {
 		global $wpdb;
-		if ( isset( $_GET['payment_factor'] ) and isset( $_GET['pay_id'] ) and isset( $_GET['Status'] ) ) { //Status For Check from ZarinPal
+		if ( isset( $_GET['payment_factor'] ) and isset( $_GET['pay_id'] ) and isset( $_GET['order'] ) and isset( $_GET['Status'] ) ) { //Status For Check from ZarinPal
 
 			//Setup Url Back
-			$url_back    = add_query_arg( array( 'check_payment_status' => 'yes', 'payment_factor' => $_GET['payment_factor'], 'pay_id' => $_GET['pay_id'] ), get_the_permalink( WP_Online_Pub::$option['user_panel'] ) );
+			$url_back    = add_query_arg( array( 'check_payment_status' => 'yes', 'order' => $_GET['order'], 'payment_factor' => $_GET['payment_factor'], 'pay_id' => $_GET['pay_id'] ), get_the_permalink( WP_Online_Pub::$option['user_panel'] ) );
 			$this_factor = Helper::get_factor( $_GET['payment_factor'] );
 
 			//include Soap
@@ -215,7 +215,7 @@ class Payment {
 
 						WP_Online_Pub::send_mail( $user_mail, $subject, $content );
 					}
-					sleep(1);
+					sleep( 1 );
 
 					//Sms for Admin
 					WP_Online_Pub::send_sms( 'admin', '', 'send_to_admin_at_new_online_pay', $arg );

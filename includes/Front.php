@@ -112,7 +112,7 @@ class Front {
 			if ( $factor['payment_status'] == 1 ) {
 
 				echo 'شما میتوانید از طریق دو روش زیر فاکتور را پرداخت نمایید :';
-				echo '<a style="display: block;margin: 30px auto;   width: 50%;" href="' . add_query_arg( array( 'payment_factor' => $factor['id'], '_pay_code' => wp_create_nonce( 'payment_factor_price' ) ), home_url() ) . '" class="btn btn-danger">پرداخت آنلاین با کارت های عضو سیستم شتاب</a>';
+				echo '<a style="display: block;margin: 30px auto;   width: 50%;" href="' . add_query_arg( array( 'payment_factor' => $factor['id'], 'order' => $factor['order_id'], '_pay_code' => wp_create_nonce( 'payment_factor_price' ) ), home_url() ) . '" class="btn btn-danger">پرداخت آنلاین با کارت های عضو سیستم شتاب</a>';
 				echo 'و یا مبلغ را به یکی از حساب های بانکی زیر واریز نموده و سپس فرم را تکمیل کنید.';
 				echo '<br>';
 				for ( $i = 1; $i <= 2; $i ++ ) {
