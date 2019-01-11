@@ -783,11 +783,125 @@ if ( $_GET['method'] == "add" ) {
 
 	//Ticket Admin Page
 	public function ticket() {
+		global $wpdb;
+
 		if ( ! isset( $_GET['method'] ) ) {
 
 			//Show Wp List Table
-			Admin_Ui::wp_list_table( $this->ticket_obj, "testimonial", get_admin_page_title(), array(), true );
+			Admin_Ui::wp_list_table( $this->ticket_obj, "testimonial", get_admin_page_title(), array( 'link' => self::admin_link( "ticket", array( "method" => "add" ) ), 'name' => 'ایجاد تیکت' ), true );
 		} else {
+
+			if ( $_GET['method'] == "add" ) {
+
+				echo '
+				<div class="wrap wps_actions"><h1 class="wp-heading-inline">
+                <span class="dashicons dashicons-testimonial"></span> ایجاد تیکت </h1>
+                <form action="' . add_query_arg( array( 'page' => 'ticket' ), admin_url( "admin.php" ) ) . '" method="post">
+                <table class="form-table">
+                           	<tbody>
+	
+
+	<tr class="form-field">
+		<th scope="row"><label for="user_login"> ارسال به کاربر <span class="text-danger">*</span></label></th>
+		<td>
+		<select type="text" name="select_user" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);" style="width: 300px;" class="form-control rtl input-group">
+         ';
+
+				$first_user = 0;
+				$x          = 0;
+				foreach ( get_users() as $user ) {
+					//Check User Have A Order
+					$count = $wpdb->get_var( "SELECT COUNT(*) FROM `z_order` WHERE `user_id` =" . $user->ID );
+					if ( $count > 0 ) {
+						echo '<option value="' . self::admin_link( 'ticket', array( 'method' => 'add', 'user_id' => $user->ID ) ) . '">' . Helper::get_user_full_name( $user->ID ) . '</option>';
+					}
+
+					if ( $x == 0 ) {
+						$first_user = $user->ID;
+					}
+					$x ++;
+				}
+
+				$user = $first_user;
+				if ( isset( $_GET['user_id'] ) ) {
+					$user = $_GET['user_id'];
+				}
+
+				echo '
+    </select>
+    </td>
+	</tr>
+	
+	<tr class="form-field">
+		<th scope="row"><label for="user_login">مربوط به سفارش <span class="text-danger">*</span></label></th>
+		<td>
+		<input type="hidden" name="user_id" value="' . $user . '">
+		<select type="text" name="chat_id" style="width: 300px;" class="form-control rtl input-group">
+       ';
+
+
+				$query = $wpdb->get_results( "SELECT * FROM `z_order` WHERE `user_id` = $user ORDER BY `id` DESC", ARRAY_A );
+				foreach ( $query as $row ) {
+					echo '<option value="' . $row['id'] . '">#' . $row['id'] . ' - ' . $row['title'] . '</option>';
+				}
+
+				echo '
+    </select>
+    </td>
+	</tr>
+	';
+				?>
+	
+	<tr class="form-field">
+		<th scope="row"><label for="user_login"> عنوان پیام <span class="text-danger">*</span></label></th>
+		<td>
+		<input type="text" name="ticket_title" style="width: 300px;" class="form-control rtl input-group" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('لطفا فیلد را پر کنید')" required="required">
+        <span style="display: block;font-size: 11px;margin-top: 6px;color: #828282;display:block;">لطفا به فارسی تایپ کنید</span>
+        </td>
+	</tr>
+                    <?php
+
+                    echo '
+	<tr class="form-field">
+		<th scope="row"><label for="user_login"> متن پیام <span class="text-danger">*</span></label></th>
+		<td>';
+
+		$content = '';
+		$editor_id = 'ticket_comment';
+		$settings = array( 'media_buttons' => false , 'textarea_rows' => 8 );
+		wp_editor( $content, $editor_id, $settings );
+
+		// <textarea style="font-size: 12px; min-height:150px; width: 300px;" name="ticket_comment" class="form-control rtl input-group" oninput="setCustomValidity(\\'\\')" oninvalid="this.setCustomValidity(\\'لطفا فیلد را پر کنید\\')" required="required"></textarea>
+		echo '
+        </td>
+	</tr>
+	
+	
+	<tr class="form-field">
+		<th scope="row"><label for="user_login"> فایل ضمیمه <span class="text-danger"></span></label></th>
+		<td>
+        <input type="file" id="ticket_attachment" name="ticket_attachment" class="form-control ltr input-group filestyle" data-file="input-file">
+        <span style="display: block;font-size: 11px;margin-top: 6px;color: #828282;display:block;">حداکثر حجم فایل : 5 مگابایت , پسوند های قابل قبول شامل Zip,jpg,pdf</span>
+        </td>
+	</tr>
+	
+	
+	<tr class="form-field">
+		<td>
+		<input class="btn btn-default" id="send-user-ticket" value="ارسال تیکت" type="submit" style="font-size:11px;">
+
+        </td>
+	</tr>
+	
+
+	</tbody>
+                           
+               </table>
+               </form>
+               </div>            
+            ';
+			}
+
 
 		}
 	}
