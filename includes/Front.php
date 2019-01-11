@@ -133,13 +133,56 @@ class Front {
 		/**=======================================================================================
 		 * Page Notice
 		 *----------------------------------------------------------------------------------------*/
-//		$text .='
-//		<div class="alert-notice">
-//		پیام با موفقیت ارسال شد
-//		</div>
-//		';
+
+		//New Ticket
+		if ( isset( $_POST['add_new_ticket'] ) ) {
+
+			//Save To database
+			$attachment = "";
+			if ( $_FILES['ticket_attachment']['name'] !== '' ) {
+				$attachment = self::wp_upload_file( 'ticket_attachment' );
+			}
+
+			//No error Sentto Db
+			$wpdb->insert(
+				"z_ticket",
+				array(
+					'user_id'     => get_current_user_id(),
+					'title'       => trim( $_POST['ticket_title'] ),
+					'create_date' => current_time( 'mysql' ),
+					'comment'     => $_POST['ticket_comment'],
+					'sender'      => 'user',
+					'read_admin'  => 0,
+					'read_user'   => 1,
+					'file'        => $attachment,
+					'chat_id'     => $_POST['add_new_ticket'],
+				)
+			);
 
 
+			//*******************************************Push Notification To Admin
+			//Send Sms
+			$arg         = array( "order_id" => $_POST['add_new_ticket'], "user_name" => Helper::get_user_full_name( get_current_user_id() ) );
+			WP_Online_Pub::send_sms( 'admin', '', 'send_to_admin_at_ticket_from_user', $arg );
+
+			//Send Email
+			$subject = "تیکت جدید کاربر سفارش  " . $_POST['chat_id'];
+			$content = '<p>';
+			$content .= 'مدیر گرامی ، کاربر با نام ';
+			$content .= Helper::get_user_full_name(  get_current_user_id() );
+			$content .= 'برای سفارش با شناسه ';
+			$content .= $_POST['add_new_ticket'];
+			$content .= ' یک تیکت ارسال کرده است. ';
+			$content .= '</p>';
+			$content .= '<p>متن  : </p>';
+			$content .= '<p>' . stripslashes( $_POST['ticket_comment'] ) . '</p>';
+			$content .= '<br /><br />';
+			$content .= '<p>با تشکر</p>';
+			$content .= '<p><a href="' . get_bloginfo( "url" ) . '">' . get_bloginfo( "name" ) . '</a></p>';
+			WP_Online_Pub::send_mail( 'admin', $subject, $content );
+
+			$text .= '<div class="alert-notice"> کاربر گرامی پیام شما با موفقیت برای کارشناسان ارسال گردید و بزودی بررسی خواهد شد.</div>';
+		}
 
 
 		/**=======================================================================================

@@ -191,6 +191,15 @@ class WP_Online_Pub {
 				$text .= "\n" . $brand;
 				break;
 
+			case "send_to_admin_at_ticket_from_user":
+				$text = 'مدیر گرامی ، کاربر با نام ';
+				$text .= $args['user_name'];
+				$text .= " برای سفارش با شناسه ";
+				$text .= $args['order_id'];
+				$text .= " یک تیکت ارسال کرده است. ";
+				$text .= "\n" . $brand;
+				break;
+
 
 			default:
 				$text = $text . "\n" . $brand;
@@ -231,7 +240,8 @@ class WP_Online_Pub {
 
 		//Set To Admin
 		if ( $to == "admin" ) {
-			$to = 'opub.ir@gmail.com';
+			//$to = 'opub.ir@gmail.com';
+			$to = 'mehrshad198@gmail.com';
 		}
 
 		//Email from

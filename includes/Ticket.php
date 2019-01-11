@@ -334,6 +334,7 @@ class Ticket {
 <div class="form-group form-inline">
 <label></label>
 <br />
+<input type="hidden" name="add_new_ticket" value="' . $chat_id . '">
 <input class="btn btn-default" id="send-user-ticket" value="ارسال تیکت" type="submit" style="font-size:11px;">
 </div>
 
