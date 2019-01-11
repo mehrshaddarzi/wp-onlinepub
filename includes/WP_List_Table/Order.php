@@ -200,7 +200,7 @@ class Order extends \WP_List_Table {
 	 * @return mixed
 	 */
 	public function column_default( $item, $column_name ) {
-		global $WP_Statistics;
+		global $wpdb;
 
 		//Default unknown Column Value
 		$unknown = '<span aria-hidden="true">—</span><span class="screen-reader-text">' . __( "Unknown", 'wp-statistics-actions' ) . '</span>';
@@ -245,9 +245,17 @@ class Order extends \WP_List_Table {
 				break;
 			case 'ticket' :
 
-				$link_show_ticket = Admin_Page::admin_link( 'ticket', array( "order" => $item['id'] ) );
-				$create_ticket    = Admin_Page::admin_link( 'ticket', array( "method" => "add", "order_id" => $item['id'] ) );
-				return '<a target="_blank" class="text-warning" href="' . $link_show_ticket . '"> نمایش تیکت ها</a><br><a target="_blank" href="' . $create_ticket . '"> ایجاد تیکت جدید</a>';
+				$create_ticket    = Admin_Page::admin_link( 'ticket', array( "method" => "add", "user_id" => $item['user_id'], "order_id" => $item['id'] ) );
+
+				$count_ticket = $wpdb->get_var( "SELECT COUNT(*) FROM `z_ticket` WHERE `chat_id` =" . $row['id'] );
+				if ( $count_ticket >0 ) {
+					return '<a target="_blank" class="text-warning" href="' . Admin_Page::admin_link( 'ticket', array( "method" => "view", "chat_id" => $item['id'] ) ) . '">نمایش گفتگو </a><br>';
+
+				} else {
+					return '<a target="_blank" href="' . $create_ticket . '"> ایجاد تیکت جدید</a>';
+
+				}
+
 				break;
 		}
 	}
@@ -327,7 +335,7 @@ class Order extends \WP_List_Table {
 
 			//change status
 			Helper::change_status_order( $_POST['order_id'], $_POST['new-status'], $is_push_notification );
-            sleep(1);
+			sleep( 1 );
 
 			wp_redirect( esc_url_raw( add_query_arg( array( 'page' => 'order', 'alert' => 'change-status' ), admin_url( "admin.php" ) ) ) );
 			exit;

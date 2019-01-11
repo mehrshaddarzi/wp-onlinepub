@@ -857,7 +857,12 @@ if ( $_GET['method'] == "add" ) {
 				        $name = '#' . $row['id'] . ' - ' . $row['title'].' - '.' گفتگو وجود دارد ';
 				    }
 
-				    echo '<option value="' . $row['id'] . '"'.$disable.'>'.$name.'</option>';
+				    $select = '';
+					    if(isset($_GET['order_id']) and $_GET['order_id'] ==$user->ID) {
+					        $select = ' selected';
+					    }
+
+				    echo '<option value="' . $row['id'] . '"'.$disable.''.$select.'>'.$name.'</option>';
 				}
 
 				echo '
@@ -928,7 +933,6 @@ if ( $_GET['method'] == "add" ) {
 			}
 
 			if($_GET['method'] =="view") {
-
 
 			    //Send REplyf
 			    if(isset($_POST['reply_ticket'])) {

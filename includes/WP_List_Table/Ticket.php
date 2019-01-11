@@ -184,7 +184,7 @@ class Ticket extends \WP_List_Table {
 			case 'user' :
 
 				// row actions to edit
-				$actions['view'] = '<a class="text-success" href="' . add_query_arg( array( 'page' => 'ticket', 'method' => 'view', 'chat_id' => $item['chat_id'] ), admin_url( "admin.php" ) ) . '">' . __( 'نمایش', 'wp-statistics-actions' ) . '</a>';
+				$actions['view'] = '<a class="text-success" href="' . add_query_arg( array( 'page' => 'ticket', 'method' => 'view', 'chat_id' => $item['chat_id'] ), admin_url( "admin.php" ) ) . '">' . __( 'نمایش گفتگو', 'wp-statistics-actions' ) . '</a>';
 
 				// row actions to Delete
 				$actions['trash'] = '<a onclick="return confirm(\'آیا مطمئن هستید ؟\')"  href="' . add_query_arg( array( 'page' => 'ticket', 'action' => 'delete', '_wpnonce' => wp_create_nonce( 'delete_action_nonce' ), 'del' => $item['chat_id'] ), admin_url( "admin.php" ) ) . '">' . __( 'حذف', 'wp-statistics-actions' ) . '</a>';
