@@ -209,6 +209,16 @@ class WP_Online_Pub {
 				$text .= "\n" . $brand;
 				break;
 
+			case "send_to_admin_at_new_fish":
+				$text = 'مدیر گرامی ، کاربر با نام ';
+				$text .= $args['user_name'];
+				$text .= " برای فاکتور با شناسه ";
+				$text .= $args['factor_id'];
+				$text .= " یک فیش بانکی اضافه کرد. ";
+				$text .= "\n" . $brand;
+				break;
+
+
 
 			default:
 				$text = $text . "\n" . $brand;

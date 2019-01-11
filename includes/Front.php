@@ -24,6 +24,9 @@ class Front {
 
 		//Show Factor
 		add_action( 'wp', array( $this, 'show_factor' ) );
+
+		//Add Fish Banki
+		add_action( 'wp', array( $this, 'add_fish_bank' ) );
 	}
 
 	/**
@@ -35,6 +38,17 @@ class Front {
 		wp_register_script( self::$asset_name, WP_Online_Pub::$plugin_url . '/asset/script.js', array( 'jquery' ), WP_Online_Pub::$plugin_version, false );
 	}
 
+
+	/**
+	 * Add Fish Banki
+	 */
+	public function add_fish_bank() {
+		global $wpdb;
+
+
+
+
+	}
 
 	/**
 	 * Show Factor
@@ -80,6 +94,7 @@ class Front {
 	<title>نمایش فاکتور</title>
 	<link href="' . WP_Online_Pub::$plugin_url . '/asset/bootstrap/bootstrap.min.css" rel="stylesheet">
 	<link href="' . WP_Online_Pub::$plugin_url . '/asset/bootstrap/bootstrap-rtl.min.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 	<link href="' . WP_Online_Pub::$plugin_url . '/asset/font.css" rel="stylesheet">
 	<style>
 	body {
@@ -100,6 +115,61 @@ class Front {
 <body>
 ';
 			echo Helper::show_factor( $_GET['view_factor'] );
+
+			echo '
+<div class="col-md-8 col-md-offset-2 hidden-print">
+<div class="col-sm-8">
+<div style="line-height: 40px;">
+';
+
+			$factor = Helper::get_factor( $_GET['view_factor'] );
+			if ( $factor['payment_status'] == 1 ) {
+
+				echo 'شما میتوانید از طریق دو روش زیر فاکتور را پرداخت نمایید :';
+				echo '<a style="display: block;margin: 30px auto;   width: 50%;" href="' . add_query_arg( array( 'payment_factor' => $factor['id'], '_pay_code' => wp_create_nonce( 'payment_factor_price' ) ), home_url() ) . '" class="btn btn-danger">پرداخت آنلاین با کارت های عضو سیستم شتاب</a>';
+				echo 'و یا مبلغ را به یکی از حساب های بانکی زیر واریز نموده و سپس فرم را تکمیل کنید.';
+				echo '<br>';
+				for ( $i = 1; $i <= 2; $i ++ ) {
+					if ( WP_Online_Pub::$option[ 'acc_' . $i ] != "" ) {
+						echo '<span class="text-primary">' . WP_Online_Pub::$option[ 'acc_' . $i ] . '</span><br>';
+					}
+				}
+
+				echo '
+<div style="width:40%">
+<form action="'.get_the_permalink(WP_Online_Pub::$option['user_panel']).'" method="post" onsubmit="return confirm(\'آیا از صحت اطلاعات اطمینان حاصل دارید ?\');">
+<input type="hidden" name="add_new_fish_bank" value="' . wp_create_nonce( 'add_fish_security' ) . '">
+<input type="hidden" name="factor_id" value="' . $_GET['view_factor'] . '">
+  <div class="form-group">
+    <label for="exampleInputEmail1">شماره فیش واریزی</label>
+    <input type="text" class="form-control" style="text-align: left; direction:ltr;" name="fish_bank" required="required" />
+  </div>
+   <div class="form-group">
+    <label for="exampleInputEmail1">تاریخ واریز</label>
+    <input type="text" class="form-control" name="date_bank" style="text-align: left; direction:ltr;" value="' . date_i18n( "Y-m", time() ) . '-xx" required="required" />
+  </div>
+  <button type="submit" class="btn btn-warning">ارسال اطلاعات</button>
+</form>
+</div>
+<br><br>
+';
+
+
+			}
+
+
+			echo '	
+	</div>	
+</div>
+<div class="col-sm-4 text-left">
+<button class="btn btn-default"  onClick="window.print()" type="submit"><i class="fa fa-print"></i> پرینت فاکتور</button>
+</div>
+<div class="clearfix"></div>
+	
+	</div>
+	';
+
+
 			echo '
 <!-- jQuery (necessary for Bootstrap\'s JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -126,7 +196,7 @@ class Front {
 		$user_id   = get_current_user_id();
 
 		//Custom Css
-		$text .='
+		$text .= '
 		<style>
 		.profile-content-inside .sidebar-profile {
    		 	display: none !important;
@@ -144,6 +214,55 @@ class Front {
 		/**=======================================================================================
 		 * Page Notice
 		 *----------------------------------------------------------------------------------------*/
+
+		//Add Fish Bank
+		if ( isset( $_POST['add_new_fish_bank'] ) and isset( $_POST['fish_bank'] ) and isset( $_POST['factor_id'] ) and isset( $_POST['date_bank'] ) ) {
+
+			//Check Nonce
+			if ( ! wp_verify_nonce( $_POST['add_new_fish_bank'], 'add_fish_security' ) ) {
+				die( __( "You are not Permission for this action.", 'wp-statistics-actions' ) );
+			}
+
+			//SaveToDB
+			$comment = array(
+				'fish' => $_POST['fish_bank'],
+				'date' => $_POST['date_bank']
+			);
+			$factor  = Helper::get_factor( $_POST['factor_id'] );
+			$wpdb->insert(
+				'z_payment',
+				array(
+					'user_id'   => get_current_user_id(),
+					'type'      => 2,
+					'status'    => 1,
+					'factor_id' => $_POST['factor_id'],
+					'price'     => $factor['price'],
+					'date'      => current_time( 'mysql' ),
+					'comment'   => serialize( $comment )
+				)
+			);
+
+			//*******************************************Push Notification To Admin
+			//Send Sms
+			$arg = array( "factor_id" => $_POST['factor_id'], "user_name" => Helper::get_user_full_name( get_current_user_id() ) );
+			WP_Online_Pub::send_sms( 'admin', '', 'send_to_admin_at_new_fish', $arg );
+
+			//Send Email
+			$subject = "فیش جدید برای فاکتور  " . $_POST['factor_id'];
+			$content = '<p>';
+			$content .= 'مدیر گرامی ، کاربر با نام ';
+			$content .= Helper::get_user_full_name( get_current_user_id() );
+			$content .= 'برای فاکتور با شناسه ';
+			$content .= $_POST['factor_id'];
+			$content .= ' یک فیش ارسال کرده است. ';
+			$content .= '</p>';
+			$content .= '<br /><br />';
+			$content .= '<p>با تشکر</p>';
+			$content .= '<p><a href="' . get_bloginfo( "url" ) . '">' . get_bloginfo( "name" ) . '</a></p>';
+			WP_Online_Pub::send_mail( 'admin', $subject, $content );
+
+			$text .= '<div class="admin_notice suc"> اطلاعات فیش بانکی شما با موفقیت ثبت گردید.</div>';
+		}
 
 		//New Ticket
 		if ( isset( $_POST['add_new_ticket'] ) ) {
@@ -172,14 +291,14 @@ class Front {
 
 			//*******************************************Push Notification To Admin
 			//Send Sms
-			$arg         = array( "order_id" => $_POST['add_new_ticket'], "user_name" => Helper::get_user_full_name( get_current_user_id() ) );
+			$arg = array( "order_id" => $_POST['add_new_ticket'], "user_name" => Helper::get_user_full_name( get_current_user_id() ) );
 			WP_Online_Pub::send_sms( 'admin', '', 'send_to_admin_at_ticket_from_user', $arg );
 
 			//Send Email
 			$subject = "تیکت جدید کاربر برای سفارش  " . $_POST['chat_id'];
 			$content = '<p>';
 			$content .= 'مدیر گرامی ، کاربر با نام ';
-			$content .= Helper::get_user_full_name(  get_current_user_id() );
+			$content .= Helper::get_user_full_name( get_current_user_id() );
 			$content .= 'برای سفارش با شناسه ';
 			$content .= $_POST['add_new_ticket'];
 			$content .= ' یک تیکت ارسال کرده است. ';
@@ -420,7 +539,7 @@ class Front {
 			if ( count( $query ) > 0 ) {
 
 				$text = '<div id="sticky-list-wrapper_12" class="sticky-list-wrapper" style="font-size: 14px;">';
-				$text .='
+				$text .= '
 					<style>
 					.profile-content-inside .sidebar-profile {
 			            display: none !important;
@@ -453,7 +572,7 @@ class Front {
 <td>' . $entry[ Gravity_Form::$order_type ] . '</td>
 <td>' . $entry[ Gravity_Form::$title ] . '</td>
 <td>' . Helper::show_status( $row['status'] ) . '</td>
-<td><a href="' . add_query_arg( array( 'order_id' => $row['id'] ), $page_link ) . '">جزئیات و پیگیری</a></td>
+<td><a href="' . add_query_arg( array( 'order' => $row['id'] ), $page_link ) . '">جزئیات و پیگیری</a></td>
 </tr>
 ';
 				}

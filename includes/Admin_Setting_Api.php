@@ -98,7 +98,19 @@ class Admin_Setting_Api {
 					'name'  => 'acc_2',
 					'label' => __( 'اطلاعات حساب دو', 'wedevs' ),
 					'type'  => 'textarea'
-				)
+				),
+				array(
+					'name'    => 'zarinpal',
+					'label'   => __( 'کد مرچنت زرین پال', 'wedevs' ),
+					'type'    => 'text',
+					'default' => ''
+				),
+				array(
+					'name'    => 'user_panel',
+					'label'   => __( 'برگه لیست فاکتور کاربران', 'wedevs' ),
+					'type'    => 'pages',
+					'default' => ''
+				),
 			)
 		);
 
