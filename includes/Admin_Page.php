@@ -931,18 +931,60 @@ if ( $_GET['method'] == "add" ) {
 
 
 		$chat_id = $_GET['chat_id'];
-		echo '<div style="padding:30px; padding-top:8px;">
+		echo '
+
+<div class="wrap wps_actions"><h1 class="wp-heading-inline">
+                <span class="dashicons dashicons-testimonial"></span> متن گفتگو </h1>
+
+<div style="padding:30px; padding-top:8px;">
             <style>
             .log span { color:#d72626 !important; display:inline !important; }
             label { width: 100px;}
             .buttonText { font-size:11px; }
             label[for=ticket_attachment] { width:130px; }
             .media-body p { padding:0px; }
+            .clearfix {
+            clear:both;
+            }
+            .media-object {
+  display: block;
+}
+.media-object.img-thumbnail {
+  max-width: none;
+}
+.media-right,
+.media > .pull-right {
+  padding-left: 10px;
+}
+.media-left,
+.media > .pull-left {
+  padding-right: 10px;
+}
+.media-left,
+.media-right,
+.media-body {
+  display: table-cell;
+  vertical-align: top;
+}
+.media-middle {
+  vertical-align: middle;
+}
+.media-bottom {
+  vertical-align: bottom;
+}
+.media-heading {
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+.media-list {
+  padding-left: 0;
+  list-style: none;
+}
             </style>
             ';
 
 		//List chat
-		$query = $wpdb->get_results( "SELECT * FROM  `" . self::$tbl_prefix . "ticket` WHERE `chat_id` = $chat_id ORDER BY `id` ASC", ARRAY_A );
+		$query = $wpdb->get_results( "SELECT * FROM  `z_ticket` WHERE `chat_id` = $chat_id ORDER BY `id` ASC", ARRAY_A );
 			if (  count( $query ) > 0  ) {
 
 			echo '
@@ -1071,7 +1113,7 @@ if ( $_GET['method'] == "add" ) {
 		}
 
 
-		echo '</div>';
+		echo '</div></div>';
 
 			}
 
