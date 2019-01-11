@@ -20,11 +20,16 @@ class ComposerStaticInit3c99706ab5a1686dace3c6abd04f5530
         ),
     );
 
+    public static $classMap = array (
+        'WeDevs_Settings_API' => __DIR__ . '/..' . '/tareq1988/wordpress-settings-api-class/src/class.settings-api.php',
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit3c99706ab5a1686dace3c6abd04f5530::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit3c99706ab5a1686dace3c6abd04f5530::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit3c99706ab5a1686dace3c6abd04f5530::$classMap;
 
         }, null, ClassLoader::class);
     }

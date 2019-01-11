@@ -1035,7 +1035,7 @@ echo '
 
 				//attachment
 				if($item['file'] !=="") {
-					$attachment = '<p class="text-left font-11"><a href="'.wp_get_attachment_url( $item['file'] ).'" target="_blank" '.($item['sender'] =="user" ? 'class="text-primary"' : 'style="color:#fff"').'><i class="fa fa-download"></i> '. basename ( get_attached_file( $item['file'] ) ).'</a></p>';
+					$attachment = '<p class="text-left font-11"><a href="'.wp_get_attachment_url( $item['file'] ).'" target="_blank" '.($item['sender'] =="user" ? 'class="text-primary"' : 'style="color:#fff"').' dir="ltr"><i class="fa fa-download"></i> '. basename ( get_attached_file( $item['file'] ) ).'</a></p>';
 				}
 
 				//Readded All commet for User

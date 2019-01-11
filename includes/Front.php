@@ -126,6 +126,18 @@ class Front {
 		$page_link = get_the_permalink( $page_id );
 		$user_id   = get_current_user_id();
 
+		//Custom Css
+		$text .='
+		<style>
+		.profile-content-inside .sidebar-profile {
+   		 	display: none !important;
+		}
+		.profile-content-inside .content-profile {
+    		width: 100% !important;
+		}
+		</style>
+		';
+
 		//Push Asset
 		wp_enqueue_script( self::$asset_name );
 		wp_enqueue_style( self::$asset_name );
@@ -158,7 +170,6 @@ class Front {
 					'chat_id'     => $_POST['add_new_ticket'],
 				)
 			);
-
 
 			//*******************************************Push Notification To Admin
 			//Send Sms

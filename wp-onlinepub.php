@@ -47,6 +47,11 @@ class WP_Online_Pub {
 	public static $plugin_version;
 
 	/**
+	 * Plugin Option Store
+	 */
+	public static $option;
+
+	/**
 	 * Access this plugin’s working instance
 	 *
 	 * @wp-hook plugins_loaded
@@ -85,6 +90,10 @@ class WP_Online_Pub {
 
 		//Load Composer
 		include_once dirname( __FILE__ ) . '/vendor/autoload.php';
+
+		//set plugin option
+		new \WP_OnlinePub\Admin_Setting_Api();
+		self::$option = get_option( \WP_OnlinePub\Admin_Setting_Api::$option_name );
 
 		//Load init Class
 		new \WP_OnlinePub\Ticket();
