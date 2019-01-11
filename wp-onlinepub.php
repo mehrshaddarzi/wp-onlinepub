@@ -105,7 +105,7 @@ class WP_Online_Pub {
 
 		//Test Service
 		if ( isset( $_GET['test'] ) ) {
-			print_r( self::$option );
+
 			exit;
 		}
 	}
@@ -129,7 +129,7 @@ class WP_Online_Pub {
 		//Sms To Admin
 		if ( $to == "admin" ) {
 			//$to = '09101566463';
-			$to = '09358510091';
+			$to = self::$option['modir_mobile'];
 		}
 
 		//Template Sms
@@ -250,7 +250,7 @@ class WP_Online_Pub {
 		//Set To Admin
 		if ( $to == "admin" ) {
 			//$to = 'opub.ir@gmail.com';
-			$to = 'mehrshad198@gmail.com';
+			$to = self::$option['modir_email'];
 		}
 
 		//Email from

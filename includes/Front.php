@@ -420,7 +420,7 @@ class Front {
 			$query = $wpdb->get_results( "SELECT * FROM `z_order` WHERE `user_id` = $user_id ORDER BY `id` DESC", ARRAY_A );
 			if ( count( $query ) > 0 ) {
 
-				$text = '<div id="sticky-list-wrapper_12" class="sticky-list-wrapper" style="font-size: 14px;">';
+				$text .= '<div id="sticky-list-wrapper_12" class="sticky-list-wrapper" style="font-size: 14px;">';
 				$text .= '<table class="sticky-list">
 <thead>
 <tr>
