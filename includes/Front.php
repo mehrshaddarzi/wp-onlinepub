@@ -130,6 +130,7 @@ class Front {
 		wp_enqueue_script( self::$asset_name );
 		wp_enqueue_style( self::$asset_name );
 
+
 		/**=======================================================================================
 		 * Show Order Page
 		 *----------------------------------------------------------------------------------------*/
@@ -138,9 +139,8 @@ class Front {
 			//Get Order
 			$row = $wpdb->get_row( "SELECT * FROM `z_order` WHERE `id` = {$_GET['order_id']}", ARRAY_A );
 			if ( null !== $row ) {
-				$text  .= '<div class="status-order">وضعیت سفارش : ' . Helper::show_status( $row['id'] ) . '</div>';
+				$text  .= '<div class="status-order">وضعیت سفارش : ' . Helper::show_status( $row['status'] ) . '</div>';
 				$entry = Gravity_Form::get_entry( $row['entry_id'] );
-
 
 				//Show Order Detail
 				$text      .= '
@@ -170,7 +170,6 @@ class Front {
 				<div class="clearfix"></div>
 				';
 
-
 				//Pish Factor
 				$text  .= '
 				<div class="order-accordion">
@@ -181,7 +180,7 @@ class Front {
 					</div>
 					<div class="content">
 					';
-				$query = $wpdb->get_results( "SELECT * FROM `z_factor` WHERE `order_id` = {$_GET['order_id']} and `type` = 10 ORDER BY `id` DESC", ARRAY_A );
+				$query = $wpdb->get_results( "SELECT * FROM `z_factor` WHERE `order_id` = {$_GET['order_id']} and `type` = 1 ORDER BY `id` DESC", ARRAY_A );
 				if ( count( $query ) > 0 ) {
 
 					$text .= '
@@ -204,15 +203,15 @@ class Front {
 						if ( $row['payment_status'] == 2 ) {
 							$payment_inf = $wpdb->get_row( "SELECT * FROM `z_payment` WHERE `factor_id` = {$row['id']} and `status` = 2", ARRAY_A );
 							if ( null !== $payment_inf ) {
-								$status = 'پرداخت بصورت : ';
-								$status .= Helper::get_type_payment( $payment_inf['type'] );
+								$status  = 'پرداخت بصورت : ';
+								$status  .= Helper::get_type_payment( $payment_inf['type'] );
 								$comment = Helper::get_serialize( $payment_inf['comment'] );
 								if ( $row['type'] == 1 ) {
 									if ( isset( $comment['payid'] ) ) {
 										$status .= '<br /><span>شناسه پرداخت : ' . Helper::show_value( $comment['payid'] ) . '</span>';
 									}
 								} else {
-									$status .= '<br /><span>شماره فیش واریزی : ' . Helper::show_value($comment['fish'] ). '</span><br /><br /><span>تاریخ پرداخت : ' . Helper::show_value($comment['date']) . '</span><br />';
+									$status .= '<br /><span>شماره فیش واریزی : ' . Helper::show_value( $comment['fish'] ) . '</span><br /><span>تاریخ پرداخت : ' . Helper::show_value( $comment['date'] ) . '</span><br />';
 								}
 							}
 						}
@@ -223,8 +222,8 @@ class Front {
 					<td>' . $row['id'] . '</td>
 					<td>' . date_i18n( "j F Y ساعت H:i", strtotime( $row['date'] ) ) . '</td>
 					<td>' . number_format( $row['price'] ) . ' ' . Helper::currency() . '</td>
-					<td>'.$status.'</td>
-					<td><a href="'.add_query_arg( array( 'view_factor' => $row['id'], 'redirect' => 'user', '_security_code' => wp_create_nonce( 'view_factor_access' ) ), home_url() ) .'" target="_blank">'.($row['payment_status'] == 2 ? 'مشاهده فاکتور' : 'مشاهده و پرداخت فاکتور').'</a></td>
+					<td>' . $status . '</td>
+					<td><a href="' . add_query_arg( array( 'view_factor' => $row['id'], 'redirect' => 'user', '_security_code' => wp_create_nonce( 'view_factor_access' ) ), home_url() ) . '" target="_blank">' . ( $row['payment_status'] == 2 ? 'مشاهده فاکتور' : 'مشاهده و پرداخت فاکتور' ) . '</a></td>
 					</tr>
 					';
 
@@ -245,6 +244,103 @@ class Front {
 				';
 
 
+				//Online Chat
+				$unread           = '';
+				$count_unread_msg = $wpdb->get_var( "SELECT COUNT(*) FROM `z_ticket` WHERE `chat_id` = {$_GET['order_id']} and `sender` = 'admin' and `read_user` =0" );
+				if ( $count_unread_msg > 0 ) {
+					$unread = '<div class="unread_ticket">' . $count_unread_msg . '</div>';
+				}
+
+				$text .= '
+				<div class="order-accordion">
+					<div class="title">
+						<div class="pull-right">پیام ها ' . $unread . '</div>
+						<div class="pull-left">+</div>
+						<div class="clearfix"></div>
+					</div>
+					<div class="content">';
+
+				echo Ticket::instance()->showchat( $_GET['order_id'] );
+
+				$text .= '
+				</div>
+				</div>
+				<div class="clearfix"></div>
+				';
+
+
+				//Factor
+				$text  .= '
+				<div class="order-accordion">
+					<div class="title">
+						<div class="pull-right">فاکتور</div>
+						<div class="pull-left">+</div>
+						<div class="clearfix"></div>
+					</div>
+					<div class="content">
+					';
+				$query = $wpdb->get_results( "SELECT * FROM `z_factor` WHERE `order_id` = {$_GET['order_id']} and `type` = 2 ORDER BY `id` DESC", ARRAY_A );
+				if ( count( $query ) > 0 ) {
+
+					$text .= '
+					<table class="sticky-list">
+					<tbody>
+					<tr>
+					<td>ردیف</td>
+					<td>شماره فاکتور</td>
+					<td>تاریخ ایجاد</td>
+					<td>مبلغ (' . Helper::currency() . ')</td>
+					<td>وضعیت پرداخت</td>
+					<td></td>
+					</tr>
+					';
+					$z    = 1;
+					foreach ( $query as $row ) {
+
+						//Show Factor Status
+						$status = '-';
+						if ( $row['payment_status'] == 2 ) {
+							$payment_inf = $wpdb->get_row( "SELECT * FROM `z_payment` WHERE `factor_id` = {$row['id']} and `status` = 2", ARRAY_A );
+							if ( null !== $payment_inf ) {
+								$status  = 'پرداخت بصورت : ';
+								$status  .= Helper::get_type_payment( $payment_inf['type'] );
+								$comment = Helper::get_serialize( $payment_inf['comment'] );
+								if ( $row['type'] == 1 ) {
+									if ( isset( $comment['payid'] ) ) {
+										$status .= '<br /><span>شناسه پرداخت : ' . Helper::show_value( $comment['payid'] ) . '</span>';
+									}
+								} else {
+									$status .= '<br /><span>شماره فیش واریزی : ' . Helper::show_value( $comment['fish'] ) . '</span><br /><span>تاریخ پرداخت : ' . Helper::show_value( $comment['date'] ) . '</span><br />';
+								}
+							}
+						}
+
+						$text .= '
+					<tr>
+					<td>' . $z . '</td>
+					<td>' . $row['id'] . '</td>
+					<td>' . date_i18n( "j F Y ساعت H:i", strtotime( $row['date'] ) ) . '</td>
+					<td>' . number_format( $row['price'] ) . ' ' . Helper::currency() . '</td>
+					<td>' . $status . '</td>
+					<td><a href="' . add_query_arg( array( 'view_factor' => $row['id'], 'redirect' => 'user', '_security_code' => wp_create_nonce( 'view_factor_access' ) ), home_url() ) . '" target="_blank">' . ( $row['payment_status'] == 2 ? 'مشاهده فاکتور' : 'مشاهده و پرداخت فاکتور' ) . '</a></td>
+					</tr>
+					';
+
+						$z ++;
+					}
+
+					$text .= '
+					</tbody>
+					</table>
+					';
+				} else {
+					$text .= '<div style="text-align: center;">هیچ فاکتوری برای این سفارش ایجاد نشده است.</div>';
+				}
+				$text .= '
+				</div>
+				</div>
+				<div class="clearfix"></div>
+				';
 			}
 
 
@@ -261,7 +357,7 @@ class Front {
 			$query = $wpdb->get_results( "SELECT * FROM `z_order` WHERE `user_id` = $user_id ORDER BY `id` DESC", ARRAY_A );
 			if ( count( $query ) > 0 ) {
 
-				$text = '<div id="sticky-list-wrapper_12" class="sticky-list-wrapper">';
+				$text = '<div id="sticky-list-wrapper_12" class="sticky-list-wrapper" style="font-size: 14px;">';
 				$text .= '<table class="sticky-list">
 <thead>
 <tr>

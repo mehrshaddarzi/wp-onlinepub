@@ -210,12 +210,14 @@ class Ticket {
 	/*
 	 * Show chat
 	 */
-	public function showchat() {
+	public function showchat( $chat_id = false ) {
 		global $wpdb;
-		if ( isset( $_POST ) && defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		//if ( isset( $_POST ) && defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			$result = array();
 
-			$chat_id = $_POST['chat_id'];
+			if ( $chat_id === false ) {
+				$chat_id = $_POST['chat_id'];
+			}
 
 			$export = '<div style="padding:30px; padding-top:8px;">
             <style>
@@ -233,7 +235,7 @@ class Ticket {
 
 			//List chat
 			$query = $wpdb->get_results( "SELECT * FROM  `" . self::$tbl_prefix . "ticket` WHERE `chat_id` = $chat_id ORDER BY `id` ASC", ARRAY_A );
-			if (  count( $query ) > 0  ) {
+			if ( count( $query ) > 0 ) {
 
 				$export .= '
 	<div style="margin-top:20px; margin-bottom:10px; border-bottom:1px solid #e3e3e3; padding-bottom:5px;">
@@ -342,11 +344,12 @@ class Ticket {
 
 
 			$export         .= '</div>';
-			$result['html'] = $export;
-			wp_send_json( $result );
-			exit;
-		}
-		die();
+			return $export;
+			//$result['html'] = $export;
+			//wp_send_json( $result );
+			//exit;
+		//}
+		//die();
 	}
 
 	/*
@@ -397,8 +400,8 @@ class Ticket {
 
 					$export .= '
                         <tr>
-                        <td style="vertical-align:middle; text-align:center;">' .  $x . '</td>
-                        <td style="vertical-align:middle; text-align:center;">' .$item['chat_id'] . '</td>
+                        <td style="vertical-align:middle; text-align:center;">' . $x . '</td>
+                        <td style="vertical-align:middle; text-align:center;">' . $item['chat_id'] . '</td>
                         <td style="vertical-align:middle; text-align:center;"><span class="">' . date_i18n( 'Y/m/d ساعت H:i:s', $item['create_date'] ) . '</span></td>
                         <td style="vertical-align:middle; text-align:center;"><span style="cursor: pointer" class="text-primary" data-show-ticket="' . $item['chat_id'] . '">' . $item['title'] . '</span></td>
                         <td style="vertical-align:middle; text-align:center;"><span class="text-warning">' . Ticket::instance()->vaziat_ticket( $item['chat_id'], "user" ) . '</span></td>
@@ -412,7 +415,7 @@ class Ticket {
 			}
 
 
-	$export .= '
+			$export .= '
 	<div style="margin-top:20px; margin-bottom:10px; border-bottom:1px solid #e3e3e3; padding-bottom:5px;">
 	<i class="fa fa-list-alt"></i> ارسال تیکت
 	</div>';
