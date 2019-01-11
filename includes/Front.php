@@ -140,7 +140,7 @@ class Front {
 			//Save To database
 			$attachment = "";
 			if ( $_FILES['ticket_attachment']['name'] !== '' ) {
-				$attachment = self::wp_upload_file( 'ticket_attachment' );
+				$attachment = Ticket::wp_upload_file( 'ticket_attachment' );
 			}
 
 			//No error Sentto Db
