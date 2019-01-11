@@ -69,13 +69,13 @@ class Admin_Setting_Api {
 
 		$sections = array(
 			array(
-				'id'    => 'basic',
+				'id'    => self::$option_name,
 				'title' => __( 'تنظیمات افزونه', 'wedevs' )
 			),
 		);
 
 		$fields = array(
-			'basic' => array(
+			self::$option_name => array(
 				array(
 					'name'    => 'modir_mobile',
 					'label'   => __( 'شماره همراه مدیر', 'wedevs' ),

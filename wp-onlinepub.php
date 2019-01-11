@@ -105,7 +105,7 @@ class WP_Online_Pub {
 
 		//Test Service
 		if ( isset( $_GET['test'] ) ) {
-
+			print_r( self::$option );
 			exit;
 		}
 	}
