@@ -11,7 +11,6 @@ class Front {
 	 */
 	public static $asset_name = 'user-order';
 
-
 	/**
 	 * constructor.
 	 */
@@ -120,11 +119,6 @@ class Front {
 	public function user_order_list() {
 		global $wpdb;
 
-		if(isset($_GET['order_id'])) {
-			echo 'gfgf';
-			exit;
-		}
-
 		//Create Empty Text Object
 		$text      = '<div class="user-order">';
 		$page_id   = get_queried_object_id();
@@ -203,10 +197,10 @@ class Front {
 		/**=======================================================================================
 		 * Show Order Page
 		 *----------------------------------------------------------------------------------------*/
-		if ( isset( $_GET['order_id'] ) and is_numeric( $_GET['order_id'] ) and Helper::check_order_for_user( $_GET['order_id'], $user_id ) === true ) {
+		if ( isset( $_GET['order'] ) and is_numeric( $_GET['order'] ) and Helper::check_order_for_user( $_GET['order'], $user_id ) === true ) {
 
 			//Get Order
-			$row = $wpdb->get_row( "SELECT * FROM `z_order` WHERE `id` = {$_GET['order_id']}", ARRAY_A );
+			$row = $wpdb->get_row( "SELECT * FROM `z_order` WHERE `id` = {$_GET['order']}", ARRAY_A );
 			if ( null !== $row ) {
 				$text  .= '<div class="status-order">وضعیت سفارش : ' . Helper::show_status( $row['status'] ) . '</div>';
 				$entry = Gravity_Form::get_entry( $row['entry_id'] );
@@ -249,7 +243,7 @@ class Front {
 					</div>
 					<div class="content">
 					';
-				$query = $wpdb->get_results( "SELECT * FROM `z_factor` WHERE `order_id` = {$_GET['order_id']} and `type` = 1 ORDER BY `id` DESC", ARRAY_A );
+				$query = $wpdb->get_results( "SELECT * FROM `z_factor` WHERE `order_id` = {$_GET['order']} and `type` = 1 ORDER BY `id` DESC", ARRAY_A );
 				if ( count( $query ) > 0 ) {
 
 					$text .= '
@@ -315,7 +309,7 @@ class Front {
 
 				//Online Chat
 				$unread           = '';
-				$count_unread_msg = $wpdb->get_var( "SELECT COUNT(*) FROM `z_ticket` WHERE `chat_id` = {$_GET['order_id']} and `sender` = 'admin' and `read_user` =0" );
+				$count_unread_msg = $wpdb->get_var( "SELECT COUNT(*) FROM `z_ticket` WHERE `chat_id` = {$_GET['order']} and `sender` = 'admin' and `read_user` =0" );
 				if ( $count_unread_msg > 0 ) {
 					$unread = '<div class="unread_ticket">' . $count_unread_msg . '</div>';
 				}
@@ -329,7 +323,7 @@ class Front {
 					</div>
 					<div class="content">';
 
-				$text .= Ticket::instance()->showchat( $_GET['order_id'] );
+				$text .= Ticket::instance()->showchat( $_GET['order'] );
 
 				$text .= '
 				</div>
@@ -347,7 +341,7 @@ class Front {
 					</div>
 					<div class="content">
 					';
-				$query = $wpdb->get_results( "SELECT * FROM `z_factor` WHERE `order_id` = {$_GET['order_id']} and `type` = 2 ORDER BY `id` DESC", ARRAY_A );
+				$query = $wpdb->get_results( "SELECT * FROM `z_factor` WHERE `order_id` = {$_GET['order']} and `type` = 2 ORDER BY `id` DESC", ARRAY_A );
 				if ( count( $query ) > 0 ) {
 
 					$text .= '
@@ -418,7 +412,7 @@ class Front {
 		/**=======================================================================================
 		 * Show Factor List
 		 *----------------------------------------------------------------------------------------*/
-		if ( ! isset( $_GET['order_id'] ) ) {
+		if ( ! isset( $_GET['order'] ) ) {
 
 
 			//Get List Factor
