@@ -166,7 +166,7 @@ class Front {
 			WP_Online_Pub::send_sms( 'admin', '', 'send_to_admin_at_ticket_from_user', $arg );
 
 			//Send Email
-			$subject = "تیکت جدید کاربر سفارش  " . $_POST['chat_id'];
+			$subject = "تیکت جدید کاربر برای سفارش  " . $_POST['chat_id'];
 			$content = '<p>';
 			$content .= 'مدیر گرامی ، کاربر با نام ';
 			$content .= Helper::get_user_full_name(  get_current_user_id() );
@@ -181,9 +181,8 @@ class Front {
 			$content .= '<p><a href="' . get_bloginfo( "url" ) . '">' . get_bloginfo( "name" ) . '</a></p>';
 			WP_Online_Pub::send_mail( 'admin', $subject, $content );
 
-			$text .= '<div class="alert-notice"> کاربر گرامی پیام شما با موفقیت برای کارشناسان ارسال گردید و بزودی بررسی خواهد شد.</div>';
+			$text .= '<div class="admin_notice suc"> کاربر گرامی پیام شما با موفقیت برای کارشناسان ارسال گردید و بزودی بررسی خواهد شد.</div>';
 		}
-
 
 		/**=======================================================================================
 		 * Show Order Page
