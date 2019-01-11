@@ -243,6 +243,7 @@ class Payment extends \WP_List_Table {
                                   <span>شماره فیش واریزی : ' . $comment['fish'] . '</span><br />
                                   <span>تاریخ پرداخت : ' . $comment['date'] . '</span><br />
                                 ';
+
 						}
 					}
 				}

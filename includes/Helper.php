@@ -373,6 +373,7 @@ class Helper {
 	}
 
 
+
 	/**
 	 * Get List Factor item
 	 *
