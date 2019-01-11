@@ -134,3 +134,20 @@ label[for=ticket_attachment] { width:130px; }
     padding-left: 0;
     list-style: none;
 }
+
+/* Admin Notice */
+.admin_notice {
+    padding: 25px;
+    border-radius: 10px;
+    color: #fff;
+    margin: 10px;
+    margin-bottom: 30px;
+    font-size: 17px;
+}
+
+.suc {
+    background: #00a263;
+}
+.err {
+    background: #c30008;
+}

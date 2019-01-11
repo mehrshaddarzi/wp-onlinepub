@@ -213,13 +213,13 @@ class Ticket {
 	public function showchat( $chat_id = false ) {
 		global $wpdb;
 		//if ( isset( $_POST ) && defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-			$result = array();
+		$result = array();
 
-			if ( $chat_id === false ) {
-				$chat_id = $_POST['chat_id'];
-			}
+		if ( $chat_id === false ) {
+			$chat_id = $_POST['chat_id'];
+		}
 
-			$export = '<div style="padding:30px; padding-top:8px;">
+		$export = '<div style="padding:30px; padding-top:8px;">
             <style>
             .log span { color:#d72626 !important; display:inline !important; }
             label { width: 100px;}
@@ -229,54 +229,54 @@ class Ticket {
             </style>
             ';
 
-			//BackTo Page
-			//$export .= '<div class="text-left text-danger" id="back_to_main_ticket" style="cursor: pointer;">بازگشت <i class="fa fa-arrow-left"></i></div>';
+		//BackTo Page
+		//$export .= '<div class="text-left text-danger" id="back_to_main_ticket" style="cursor: pointer;">بازگشت <i class="fa fa-arrow-left"></i></div>';
 
 
-			//List chat
-			$query = $wpdb->get_results( "SELECT * FROM  `" . self::$tbl_prefix . "ticket` WHERE `chat_id` = $chat_id ORDER BY `id` ASC", ARRAY_A );
-			if ( count( $query ) > 0 ) {
+		//List chat
+		$query = $wpdb->get_results( "SELECT * FROM  `" . self::$tbl_prefix . "ticket` WHERE `chat_id` = $chat_id ORDER BY `id` ASC", ARRAY_A );
+		if ( count( $query ) > 0 ) {
 
-				$export .= '
-	<div style="margin-top:20px; margin-bottom:10px; border-bottom:1px solid #e3e3e3; padding-bottom:5px;">
+			$export .= '
+	<div style="margin-top:4px; margin-bottom:10px; border-bottom:1px solid #e3e3e3; padding-bottom:5px;">
 	<i class="fa fa-inbox"></i> تاریخچه گفتگو &nbsp;<span class="text-muted">(عنوان : ' . Ticket::instance()->GetTitleticker( $chat_id ) . ')</span>
 </div>';
 
-				foreach ( $query as $item ) {
+			foreach ( $query as $item ) {
 
-					//Type
-					$attachment = '';
-					$class      = 'right';
-					$icon       = "user";
-					if ( $item['sender'] == "admin" ) {
-						$icon  = "admin";
-						$class = 'left';
-					}
+				//Type
+				$attachment = '';
+				$class      = 'right';
+				$icon       = "user";
+				if ( $item['sender'] == "admin" ) {
+					$icon  = "admin";
+					$class = 'left';
+				}
 
-					$thumbnil = '
+				$thumbnil = '
                   <div class="media-' . $class . '" style="padding:0px;">
                   <img class="media-object" style="margin-' . ( $item['sender'] == "admin" ? "right" : "left" ) . ': 10px;" src="' . self::$asset . '/asset/chat/' . $icon . '_chat.png" alt="#">
                   </div>
                     ';
 
-					//attachment
-					if ( $item['file'] !== "" ) {
-						$attachment = '<p class="text-left font-11"><a href="' . wp_get_attachment_url( $item['file'] ) . '" target="_blank" ' . ( $item['sender'] == "user" ? 'class="text-primary"' : 'style="color:#fff"' ) . '><i class="fa fa-download"></i> ' . basename( get_attached_file( $item['file'] ) ) . '</a></p>';
-					}
+				//attachment
+				if ( $item['file'] !== "" ) {
+					$attachment = '<p class="text-left font-11"><a href="' . wp_get_attachment_url( $item['file'] ) . '" target="_blank" ' . ( $item['sender'] == "user" ? 'class="text-primary"' : 'style="color:#fff"' ) . '><i class="fa fa-download"></i> ' . basename( get_attached_file( $item['file'] ) ) . '</a></p>';
+				}
 
-					//Readded All commet for User
-					$wpdb->update(
-						self::$tbl_prefix . "ticket",
-						array(
-							'read_user' => 1
-						),
-						array( 'id' => $item['id'] )
-					);
+				//Readded All commet for User
+				$wpdb->update(
+					self::$tbl_prefix . "ticket",
+					array(
+						'read_user' => 1
+					),
+					array( 'id' => $item['id'] )
+				);
 
-					$export .= '
-                    <div class="media" style="width:85%; float:' . ( $item['sender'] == "admin" ? "left" : "right" ) . ';">
+				$export .= '
+                    <div class="media" style="margin-bottom: 15px; width:85%; float:' . ( $item['sender'] == "admin" ? "left" : "right" ) . ';">
                   ' . ( $item['sender'] == "user" ? $thumbnil : "" ) . '
-                  <div class="media-body" style="' . ( $item['sender'] == "user" ? 'width: 95%;' : "" ) . 'padding-right: 15px;background: ' . ( $item['sender'] == "user" ? '#fff' : "#25ae88; color:#fff;" ) . ';padding: 10px;border-radius: 5px;padding-left: 15px;">
+                  <div class="media-body" style="width: 95%; padding-right: 15px;background: ' . ( $item['sender'] == "user" ? '#f2f2f2' : "#25ae88; color:#fff;" ) . ';padding: 10px;border-radius: 5px;padding-left: 15px;">
                     <p class="rtl text-right font-11 ' . ( $item['sender'] == "user" ? 'text-danger' : "" ) . '">ارسال شده در تاریخ ' . date_i18n( 'Y/m/d ساعت H:i:s', $item['create_date'] ) . '</p>
                     <p class="rtl text-right font-11">' . $item['comment'] . '</p>
                     ' . $attachment . '
@@ -286,44 +286,46 @@ class Ticket {
                 <div class="clearfix"></div>
                     ';
 
-				}
-
-				$export .= '<div style="height:15px;"></div>';
 			}
 
+			$export .= '<div style="height:15px;"></div>';
+		}
+
+		if ( count( $query ) > 0 ) {
 			$export .= '
-	<div style="margin-top:20px; margin-bottom:10px; border-bottom:1px solid #e3e3e3; padding-bottom:5px;">
-	<i class="fa fa-list-alt"></i> ارسال پاسخ
-	</div>';
+			<div style="margin-top:20px; margin-bottom:10px; border-bottom:1px solid #e3e3e3; padding-bottom:5px;">
+			<i class="fa fa-list-alt"></i> ارسال پاسخ
+			</div>';
+		}
 
-			//check ticket is close
-			if ( Ticket::instance()->is_close_ticket( $chat_id ) === false ) {
 
-				$export .= '
+		//check ticket is close
+		if ( Ticket::instance()->is_close_ticket( $chat_id ) === false ) {
+
+			$export .= '
 <div class="loading-form-login"></div>
 <div class="login-chilan">
 <div class="group-input">
 
 <form method="post" action="#" enctype="multipart/form-data" id="send_ticket">
-
 <input type="hidden" name="chat_id" value="' . $chat_id . '">
 
-<div class="form-group form-inline" style="display: none">
-<label>عنوان پیام  <span class="text-danger">*</span></label>
+<div class="form-group form-inline" style="' . ( count( $query ) > 0 ? 'display: none' : '' ) . '">
+<label style="vertical-align: top; width: 120px;display: inline-block;">عنوان پیام </label>
 <input type="hidden" name="ticket_title" value="">
 </div>
 
 
 <div class="form-group form-inline">
-<label>متن پیام  <span class="text-danger">*</span></label>
-<textarea style="font-size: 12px; min-height:150px; width: 300px;" name="ticket_comment" class="form-control rtl input-group" oninput="setCustomValidity(\'\')" oninvalid="this.setCustomValidity(\'لطفا فیلد را پر کنید\')" required="required"></textarea>
+<label style="vertical-align: top; width: 120px;display: inline-block;">متن پیام </label>
+<textarea style="    border: 1px solid #d6d6d6; font-size: 12px; min-height:150px; width: 320px;" name="ticket_comment" class="form-control rtl input-group" oninput="setCustomValidity(\'\')" oninvalid="this.setCustomValidity(\'لطفا فیلد را پر کنید\')" required="required"></textarea>
 </div>
 
 
 <div class="form-group form-inline">
-<label>فایل ضمیمه </label>
+<label style="vertical-align: top;    width: 120px;display: inline-block;">فایل ضمیمه </label>
 <input type="file" id="ticket_attachment" name="ticket_attachment" class="form-control ltr input-group filestyle" data-file="input-file">
-<span style="margin-right:10px;" class="font-11">
+<span style="margin-right:10px; font-size: 11px; display:block; color: #635555;" class="font-11">
 حداکثر حجم فایل : 5 مگابایت , پسوند های قابل قبول شامل Zip,jpg,pdf
 </span>
 
@@ -331,6 +333,7 @@ class Ticket {
 
 <div class="form-group form-inline">
 <label></label>
+<br />
 <input class="btn btn-default" id="send-user-ticket" value="ارسال تیکت" type="submit" style="font-size:11px;">
 </div>
 
@@ -338,16 +341,16 @@ class Ticket {
 
 </div>
 </div>';
-			} else {
-				$export .= "<div style='margin-top:10px;'>این گفتگو بسته شده است</div>";
-			}
+		} else {
+			$export .= "<div style='margin-top:10px;'>این گفتگو بسته شده است</div>";
+		}
 
 
-			$export         .= '</div>';
-			return $export;
-			//$result['html'] = $export;
-			//wp_send_json( $result );
-			//exit;
+		$export .= '</div>';
+		return $export;
+		//$result['html'] = $export;
+		//wp_send_json( $result );
+		//exit;
 		//}
 		//die();
 	}
