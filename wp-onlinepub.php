@@ -238,16 +238,9 @@ class WP_Online_Pub {
 				$text .= "\n" . $brand;
 				break;
 
-
-
-
-
-
 			default:
 				$text = $text . "\n" . $brand;
 		}
-
-		//replace text
 
 		//Send Sms
 		$url     = 'http://login.niazpardaz.ir/SMSInOutBox/SendSms';
