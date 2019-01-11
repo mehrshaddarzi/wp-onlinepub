@@ -260,7 +260,7 @@ class Front {
 					</div>
 					<div class="content">';
 
-				echo Ticket::instance()->showchat( $_GET['order_id'] );
+				$text .= Ticket::instance()->showchat( $_GET['order_id'] );
 
 				$text .= '
 				</div>

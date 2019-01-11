@@ -230,7 +230,7 @@ class Ticket {
             ';
 
 			//BackTo Page
-			$export .= '<div class="text-left text-danger" id="back_to_main_ticket" style="cursor: pointer;">بازگشت <i class="fa fa-arrow-left"></i></div>';
+			//$export .= '<div class="text-left text-danger" id="back_to_main_ticket" style="cursor: pointer;">بازگشت <i class="fa fa-arrow-left"></i></div>';
 
 
 			//List chat
@@ -255,7 +255,7 @@ class Ticket {
 
 					$thumbnil = '
                   <div class="media-' . $class . '" style="padding:0px;">
-                  <img class="media-object" style="margin-' . ( $item['sender'] == "admin" ? "right" : "left" ) . ': 10px;" src="' . self::$asset . '/chat/' . $icon . '_chat.png" alt="#">
+                  <img class="media-object" style="margin-' . ( $item['sender'] == "admin" ? "right" : "left" ) . ': 10px;" src="' . self::$asset . '/asset/chat/' . $icon . '_chat.png" alt="#">
                   </div>
                     ';
 
