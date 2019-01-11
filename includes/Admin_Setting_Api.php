@@ -8,6 +8,7 @@ class Admin_Setting_Api {
 	 * Plugin Option name
 	 */
 	public static $option_name = 'wp_online_pub_opt';
+	public $setting;
 
 	/**
 	 * The single instance of the class.
@@ -51,13 +52,12 @@ class Admin_Setting_Api {
 	 * Display the plugin settings options page
 	 */
 	public function wedevs_plugin_page() {
-		$settings_api = new \WeDevs_Settings_API();
 
 		echo '<div class="wrap">';
 		settings_errors();
 
-		$settings_api->show_navigation();
-		$settings_api->show_forms();
+		$this->setting->show_navigation();
+		$this->setting->show_forms();
 
 		echo '</div>';
 	}
@@ -102,14 +102,14 @@ class Admin_Setting_Api {
 			)
 		);
 
-		$settings_api = new \WeDevs_Settings_API();
+		$this->setting = new \WeDevs_Settings_API();
 
 		//set sections and fields
-		$settings_api->set_sections( $sections );
-		$settings_api->set_fields( $fields );
+		$this->setting->set_sections( $sections );
+		$this->setting->set_fields( $fields );
 
 		//initialize them
-		$settings_api->admin_init();
+		$this->setting->admin_init();
 	}
 
 
