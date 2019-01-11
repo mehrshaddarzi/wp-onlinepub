@@ -187,7 +187,7 @@ class Payment extends \WP_List_Table {
 		switch ( $column_name ) {
 			case 'user' :
 
-				$actions['id'] = '<span class="text-muted">#' . $item['id'] . '</span>';
+				$actions['id'] = '<span class="text-muted">' . $item['id'] . '#</span>';
 
 				// row actions to Delete
 				if ( $item['status'] == 1 ) {

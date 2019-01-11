@@ -813,7 +813,17 @@ if ( $_GET['method'] == "add" ) {
 
 				//Delete Alert
 				case "delete":
-					//Admin_Ui::wp_admin_notice( __( "Selected item has been Deleted.", 'wp-statistics-actions' ), "success" );
+					Admin_Ui::wp_admin_notice( __( "آیتم با موفقیت حذف گردید", 'wp-statistics-actions' ), "success" );
+					break;
+
+				//close Alert
+				case "close":
+					Admin_Ui::wp_admin_notice( __( "تیکت بسته شد", 'wp-statistics-actions' ), "success" );
+					break;
+
+				//close Alert
+				case "open":
+					Admin_Ui::wp_admin_notice( __( "تیکت باز شد", 'wp-statistics-actions' ), "success" );
 					break;
 
 			}
