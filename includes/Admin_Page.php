@@ -930,57 +930,77 @@ if ( $_GET['method'] == "add" ) {
 			if($_GET['method'] =="view") {
 
 
-		$chat_id = $_GET['chat_id'];
-		echo '
+			    //Send REplyf
+			    if(isset($_POST['reply_ticket'])) {
 
+
+			        //Save Ticket
+                    $attachment = "";
+                    if ( $_FILES['ticket_attachment']['name'] !== '' ) {
+                        $attachment = Ticket::wp_upload_file( 'ticket_attachment' );
+                    }
+
+                    //No error Sentto Db
+                    $wpdb->insert(
+                        "z_ticket",
+                        array(
+                            'user_id'     => $_POST['user_id'],
+                            'title'       => trim( $_POST['ticket_title'] ),
+                            'create_date' => current_time( 'mysql' ),
+                            'comment'     => stripslashes( $_POST['ticket_comment'] ),
+                            'sender'      => 'admin',
+                            'read_admin'  => 1,
+                            'read_user'   => 0,
+                            'file'        => $attachment,
+                            'chat_id'     => $_POST['chat_id'],
+                        )
+                    );
+
+
+                    //Push Noticiation
+                    if ( $_POST['is-notification'] == "yes" ) {
+
+                        //Send Sms
+                        $arg         = array( "order_id" => $_POST['chat_id'], "user_name" => Helper::get_user_full_name( $_POST['user_id'] ) );
+                        $user_mobile = Helper::get_user_mobile( $_POST['user_id'] );
+                        if ( $user_mobile != "" ) {
+                            WP_Online_Pub::send_sms( $user_mobile, '', 'send_to_user_at_reply_ticket', $arg );
+                        }
+
+                        //Send Email
+                        $user_mail = Helper::get_user_email( $_POST['user_id'] );
+                        if ( $user_mail != "" ) {
+                            $subject = "پاسخ به گفتگو برای سفارش  " . $_POST['chat_id'];
+                            $content = '<p>';
+                            $content .= 'کاربر گرامی ';
+                            $content .= Helper::get_user_full_name( $_POST['user_id'] );
+                            $content .= '</p><p>';
+                            $content .= "کارشناس به گفتگو ی شما یک پاسخ جدید داده است در سامانه نشر آنلاین. لطفا مشاهده کنید و نسبت به پاسخ آن اقدام نمایید. ";
+                            $content .= '<p>متن پاسخ : </p>';
+                            $content .= '<p>' . stripslashes( $_POST['ticket_comment'] ) . '</p>';
+                            $content .= '<br /><br />';
+                            $content .= '<p>با تشکر</p>';
+                            $content .= '<p><a href="' . get_bloginfo( "url" ) . '">' . get_bloginfo( "name" ) . '</a></p>';
+
+                            WP_Online_Pub::send_mail( $user_mail, $subject, $content );
+                        }
+
+                    }
+                    sleep( 1 );
+
+
+			        //Show Notic
+			        	Admin_Ui::wp_admin_notice( __( "پاسخ با موفیت ارسال شد", 'wp-statistics-actions' ), "success" );
+			    }
+
+
+
+		$chat_id = $_GET['chat_id'];
+echo '
 <div class="wrap wps_actions"><h1 class="wp-heading-inline">
-                <span class="dashicons dashicons-testimonial"></span> متن گفتگو </h1>
+<span class="dashicons dashicons-testimonial"></span> متن گفتگو </h1>
 
 <div style="padding:30px; padding-top:8px;">
-            <style>
-            .log span { color:#d72626 !important; display:inline !important; }
-            label { width: 100px;}
-            .buttonText { font-size:11px; }
-            label[for=ticket_attachment] { width:130px; }
-            .media-body p { padding:0px; }
-            .clearfix {
-            clear:both;
-            }
-            .media-object {
-  display: block;
-}
-.media-object.img-thumbnail {
-  max-width: none;
-}
-.media-right,
-.media > .pull-right {
-  padding-left: 10px;
-}
-.media-left,
-.media > .pull-left {
-  padding-right: 10px;
-}
-.media-left,
-.media-right,
-.media-body {
-  display: table-cell;
-  vertical-align: top;
-}
-.media-middle {
-  vertical-align: middle;
-}
-.media-bottom {
-  vertical-align: bottom;
-}
-.media-heading {
-  margin-top: 0;
-  margin-bottom: 5px;
-}
-.media-list {
-  padding-left: 0;
-  list-style: none;
-}
-            </style>
             ';
 
 		//List chat
@@ -988,7 +1008,7 @@ if ( $_GET['method'] == "add" ) {
 			if (  count( $query ) > 0  ) {
 
 			echo '
-	<div style="margin-top:20px; margin-bottom:10px; border-bottom:1px solid #e3e3e3; padding-bottom:5px;">
+	<div style="margin-top:20px; margin-bottom:35px; border-bottom:1px solid #e3e3e3; padding-bottom:5px;">
 	<i class="fa fa-inbox"></i> تاریخچه گفتگو &nbsp;<span class="text-muted">(عنوان : '.Ticket::instance()->GetTitleticker($chat_id).')</span>
 	</div>';
 
@@ -1025,9 +1045,9 @@ if ( $_GET['method'] == "add" ) {
 
 
 				echo '
-                    <div class="media" style="width:85%; float:'.($item['sender'] =="user" ? "left" : "right").';">
+                    <div class="media" style="width:85%; margin-bottom: 15px; float:'.($item['sender'] =="user" ? "left" : "right").';">
                   '.($item['sender'] =="admin" ? $thumbnil : "").'
-                  <div class="media-body" style="'.($item['sender'] =="admin" ? 'width: 95%;' : "").'padding-right: 15px;background: '.($item['sender'] =="user" ? '#fff' : "#25ae88; color:#fff;").';padding: 10px;border-radius: 5px;padding-left: 15px;">
+                  <div class="media-body" style="width: 95%; padding-right: 15px;background: '.($item['sender'] =="user" ? '#fff' : "#25ae88; color:#fff;").';padding: 10px;border-radius: 5px;padding-left: 15px;">
                     <p class="rtl text-right font-11 '.($item['sender'] =="user" ? 'text-danger' : "").'">ارسال شده در تاریخ '.date_i18n('Y/m/d ساعت H:i:s',$item['create_date'] ).($item['sender'] =="user" ? ' توسط '.Helper::get_user_full_name($item['user_id']) : '').'</p> 
                     <p class="rtl text-right font-11">'.$item['comment'].'</p>
                     '.$attachment.'

@@ -183,6 +183,14 @@ class WP_Online_Pub {
 				$text .= "\n" . $brand;
 				break;
 
+			case "send_to_user_at_reply_ticket":
+				$text = 'کاربر گرامی';
+				$text .= " یک پاسخ جدید توسط کارشناس برای سفارش با شناسه ";
+				$text .= $args['order_id'];
+				$text .= " در سامانه نشر آنلاین ارسال شده است.لطفا مشاهده کنید و به آن پاسخ دهید ";
+				$text .= "\n" . $brand;
+				break;
+
 
 			default:
 				$text = $text . "\n" . $brand;
