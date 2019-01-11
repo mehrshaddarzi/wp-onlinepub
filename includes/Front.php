@@ -120,6 +120,11 @@ class Front {
 	public function user_order_list() {
 		global $wpdb;
 
+		if(isset($_GET['order_id'])) {
+			echo 'gfgf';
+			exit;
+		}
+
 		//Create Empty Text Object
 		$text      = '<div class="user-order">';
 		$page_id   = get_queried_object_id();
