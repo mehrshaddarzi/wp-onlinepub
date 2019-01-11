@@ -543,6 +543,11 @@ class Factor extends \WP_List_Table {
 			//Change Status Factor
 			Helper::change_factor_status( $_POST['factor_id'], $_POST['new-status-factor'] );
 
+			//change Status Payment
+			if ( isset( $_POST['payment_id'] ) ) {
+				Helper::change_payment_status( $_POST['payment_id'], $_POST['new-status-factor'] );
+			}
+
 			//change status Order
 			Helper::change_status_order( $_POST['order_id'], $_POST['new-status-order'], $is_push_notification );
 			sleep( 1 );

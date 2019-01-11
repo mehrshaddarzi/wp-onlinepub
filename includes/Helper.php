@@ -281,6 +281,25 @@ class Helper {
 	}
 
 	/**
+	 * Change Payment Status
+	 *
+	 * @param $payment_id
+	 * @param $new_status
+	 */
+	public static function change_payment_status( $payment_id, $new_status ) {
+			global $wpdb;
+
+			//Update in database
+			$wpdb->update(
+				'z_payment',
+				array( 'status' => $new_status ),
+				array( 'id' => $payment_id ),
+				array( '%d' ),
+				array( '%d' )
+			);
+	}
+
+	/**
 	 * Get Type Factor
 	 *
 	 * @param int $type

@@ -187,6 +187,8 @@ class Payment extends \WP_List_Table {
 		switch ( $column_name ) {
 			case 'user' :
 
+				$actions['id'] = '<span class="text-muted">#' . $item['id'] . '</span>';
+
 				// row actions to Delete
 				if ( $item['status'] == 1 ) {
 					$actions['trash'] = '<a onclick="return confirm(\'آیا مطمئن هستید ؟\')" href="' . add_query_arg( array( 'page' => 'payment', 'action' => 'delete', '_wpnonce' => wp_create_nonce( 'delete_action_nonce' ), 'del' => $item['id'] ), admin_url( "admin.php" ) ) . '">' . __( 'حذف مشخصات این پرداخت', 'wp-statistics-actions' ) . '</a>';
@@ -218,7 +220,7 @@ class Payment extends \WP_List_Table {
 				$t   = Helper::get_payment_status( $item['status'] ) . '<br>';
 				$p_d = Helper::get_order_by_payment( $item['id'] );
 				if ( $item['status'] == 1 ) {
-					$t .= '<a target="_blank" href="' . Admin_Page::admin_link( 'factor', array( 'top' => 'change-payment-status', 'order_id' => $p_d['order']['id'], 'order_status' => $p_d['order']['status'], 'status' => $p_d['factor']['payment_status'], 'factor_id' => $item['factor_id'] ) ) . '">تغییر وضعیت</a>';
+					$t .= '<a target="_blank" href="' . Admin_Page::admin_link( 'factor', array( 'top' => 'change-payment-status', 'order_id' => $p_d['order']['id'], 'order_status' => $p_d['order']['status'], 'status' => $p_d['factor']['payment_status'], 'factor_id' => $item['factor_id'], 'payment_id' => $item['id'] ) ) . '">تغییر وضعیت</a>';
 				}
 				return $t;
 				break;

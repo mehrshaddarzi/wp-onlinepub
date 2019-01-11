@@ -537,9 +537,7 @@ if ( $_GET['method'] == "add" ) {
         <input type="hidden" name="factor_id" value="<?php echo $_GET['factor_id']; ?>">
         <input type="hidden" name="content-action" value="edit-factor">
         </tbody>
-    </table>
-    :: در صورت هر گونه تغییر در رقم فاکتور به کاربر اطلاع رسانی خواهد شد.
-    <br />
+    </table>:: در صورت هر گونه تغییر در رقم فاکتور به کاربر اطلاع رسانی خواهد شد.<br/>
 	<?php
 	submit_button( "ویرایش" );
 	echo '</form>
@@ -632,6 +630,11 @@ if ( $_GET['method'] == "add" ) {
                             </select>
                         </td>
                     </tr>
+					<?php
+					if ( isset( $_GET['payment_id'] ) ) {
+						echo '<input type="hidden" name="payment_id" value="' . $_GET['payment_id'] . '">';
+					}
+					?>
                     <input type="hidden" name="order_id" value="<?php echo $_GET['order_id']; ?>">
                     <input type="hidden" name="factor_id" value="<?php echo $_GET['factor_id']; ?>">
                     </tbody>
@@ -697,7 +700,7 @@ if ( $_GET['method'] == "add" ) {
 		if ( ! isset( $_GET['method'] ) ) {
 
 			//Show Wp List Table
-			Admin_Ui::wp_list_table( $this->payment_obj, "slides", get_admin_page_title(), array(), false );
+			Admin_Ui::wp_list_table( $this->payment_obj, "slides", get_admin_page_title(), array(), true );
 		} else {
 
 		}
