@@ -913,7 +913,7 @@ if ( $_GET['method'] == "add" ) {
 	<tr class="form-field">
 		<td>
 		<input type="hidden" name="add_ticket" value="yes">
-		<input class="btn btn-default" id="send-user-ticket" value="ارسال تیکت" type="submit" style="font-size:11px;">
+		<input class="button button-primary" id="send-user-ticket" value="ارسال تیکت" type="submit" style="font-size:11px;">
 
         </td>
 	</tr>
@@ -925,6 +925,154 @@ if ( $_GET['method'] == "add" ) {
                </form>
                </div>            
             ';
+			}
+
+			if($_GET['method'] =="view") {
+
+
+		$chat_id = $_GET['chat_id'];
+		echo '<div style="padding:30px; padding-top:8px;">
+            <style>
+            .log span { color:#d72626 !important; display:inline !important; }
+            label { width: 100px;}
+            .buttonText { font-size:11px; }
+            label[for=ticket_attachment] { width:130px; }
+            .media-body p { padding:0px; }
+            </style>
+            ';
+
+		//List chat
+		$query = $wpdb->get_results( "SELECT * FROM  `" . self::$tbl_prefix . "ticket` WHERE `chat_id` = $chat_id ORDER BY `id` ASC", ARRAY_A );
+			if (  count( $query ) > 0  ) {
+
+			echo '
+	<div style="margin-top:20px; margin-bottom:10px; border-bottom:1px solid #e3e3e3; padding-bottom:5px;">
+	<i class="fa fa-inbox"></i> تاریخچه گفتگو &nbsp;<span class="text-muted">(عنوان : '.Ticket::instance()->GetTitleticker($chat_id).')</span>
+	</div>';
+
+			foreach($query as $item) {
+
+				//Type
+				$attachment = '';
+				$class = 'left';
+				$icon = "user";
+				if($item['sender'] =="admin") {
+					$icon = "admin";
+					$class= 'right';
+				}
+
+				$thumbnil = '
+                    <div class="media-'.$class.'" style="padding:0px;">
+                   <img class="media-object" style="margin-'.($item['sender'] =="user" ? "right" : "left").': 10px;" src="'.WP_Online_Pub::$plugin_url.'/asset/chat/'.$icon.'_chat.png" alt="#">
+                  </div>
+                    ';
+
+				//attachment
+				if($item['file'] !=="") {
+					$attachment = '<p class="text-left font-11"><a href="'.wp_get_attachment_url( $item['file'] ).'" target="_blank" '.($item['sender'] =="user" ? 'class="text-primary"' : 'style="color:#fff"').'><i class="fa fa-download"></i> '. basename ( get_attached_file( $item['file'] ) ).'</a></p>';
+				}
+
+				//Readded All commet for User
+				$wpdb->update(
+						"z_ticket",
+						array(
+							'read_admin' => 1
+						),
+						array( 'id' => $item['id'] )
+				);
+
+
+				echo '
+                    <div class="media" style="width:85%; float:'.($item['sender'] =="user" ? "left" : "right").';">
+                  '.($item['sender'] =="admin" ? $thumbnil : "").'
+                  <div class="media-body" style="'.($item['sender'] =="admin" ? 'width: 95%;' : "").'padding-right: 15px;background: '.($item['sender'] =="user" ? '#fff' : "#25ae88; color:#fff;").';padding: 10px;border-radius: 5px;padding-left: 15px;">
+                    <p class="rtl text-right font-11 '.($item['sender'] =="user" ? 'text-danger' : "").'">ارسال شده در تاریخ '.date_i18n('Y/m/d ساعت H:i:s',$item['create_date'] ).($item['sender'] =="user" ? ' توسط '.Helper::get_user_full_name($item['user_id']) : '').'</p> 
+                    <p class="rtl text-right font-11">'.$item['comment'].'</p>
+                    '.$attachment.'
+                  </div>
+                  '.($item['sender'] =="user" ? $thumbnil : "").'
+                </div>
+                <div class="clearfix"></div>
+                    ';
+
+
+				$user_id = $item['user_id'];
+			}
+
+			echo '<div style="height:15px;"></div>';
+		}
+
+		echo '
+	<div style="margin-top:20px; margin-bottom:10px; border-bottom:1px solid #e3e3e3; padding-bottom:5px;">
+	<i class="fa fa-list-alt"></i> ارسال پاسخ
+	</div>';
+
+		//check ticket is close
+		if(Ticket::instance()->is_close_ticket($chat_id) ===false) {
+
+			echo '
+<form method="post" action="" enctype="multipart/form-data" id="send_ticket">
+<table class="form-table">
+	<tbody>
+	
+	<input type="hidden" name="chat_id" value="'.$chat_id.'">
+	<input type="hidden" name="user_id" value="'.$user_id.'">
+	<input type="hidden" name="ticket_title" value="">
+	
+	<tr class="form-field">
+		<th scope="row"><label for="user_login"> متن پیام <span class="text-danger">*</span></label></th>
+		<td>';
+
+			$content = '';
+			$editor_id = 'ticket_comment';
+			$settings = array( 'media_buttons' => false , 'textarea_rows' => 8 );
+			wp_editor( $content, $editor_id, $settings );
+
+			// <textarea style="font-size: 12px; min-height:150px; width: 300px;" name="ticket_comment" class="form-control rtl input-group" oninput="setCustomValidity(\'\')" oninvalid="this.setCustomValidity(\'لطفا فیلد را پر کنید\')" required="required"></textarea>
+			echo '
+        </td>
+	</tr>
+	
+	
+	<tr class="form-field">
+		<th scope="row"><label for="user_login"> فایل ضمیمه <span class="text-danger">*</span></label></th>
+		<td>
+        <input type="file" id="ticket_attachment" name="ticket_attachment" class="form-control ltr input-group filestyle" data-file="input-file">
+        <span style="display: block;font-size: 11px;margin-top: 6px;color: #828282;display:block;">حداکثر حجم فایل : 5 مگابایت , پسوند های قابل قبول شامل Zip,jpg,pdf</span>
+        </td>
+	</tr>
+	
+	<tr class="user-role-wrap">
+                        <th><label for="role">اطلاع رسانی شود به کاربر ؟</label></th>
+                        <td>
+                            <select name="is-notification">
+                                <option value="yes">آری</option>
+                                <option value="no">خیر</option>
+                            </select>
+                        </td>
+    </tr>
+	
+	
+	<tr class="form-field">
+		<td>
+		<input type="hidden" name="reply_ticket" value="yes">
+		<input class="button button-primary" id="send-user-ticket" value="ارسال پاسخ" type="submit" style="font-size:11px;">
+
+        </td>
+	</tr>
+	
+
+	</tbody>
+</table>
+</form>';
+
+		} else {
+			echo "<div style='margin-top:25px;'>این گفتگو بسته شده است</div>";
+		}
+
+
+		echo '</div>';
+
 			}
 
 

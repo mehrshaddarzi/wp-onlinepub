@@ -211,7 +211,7 @@ class Ticket extends \WP_List_Table {
 				$t .= '</span>';
 				$t .= '<br>';
 
-				if ( \WP_OnlinePub\Ticket::get_instance()->is_close_ticket( $item['chat_id'] ) === false ) {
+				if ( \WP_OnlinePub\Ticket::instance()->is_close_ticket( $item['chat_id'] ) === false ) {
 					$t .= '<a href="' . add_query_arg( array( 'page' => 'ticket', 'action_close_ticket' => $item['chat_id'] ), admin_url( "admin.php" ) ) . '">بستن تیکت</a>';
 				} else {
 					$t .= '<a href="' . add_query_arg( array( 'page' => 'ticket', 'action_open_ticket' => $item['chat_id'] ), admin_url( "admin.php" ) ) . '">باز کردن تیکت</a>';
