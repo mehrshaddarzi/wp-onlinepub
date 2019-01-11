@@ -3,7 +3,7 @@
  * Plugin Name: Online pub
  * Description: A Plugin For Shopping System in OnlinePub.Ir
  * Plugin URI:  https://realwp.net
- * Version:     1.0.1
+ * Version:     2.0.0
  * Author:      Mehrshad darzi
  * Author URI:  https://realwp.net
  * License:     MIT
@@ -101,13 +101,12 @@ class WP_Online_Pub {
 		new \WP_OnlinePub\Front();
 		new \WP_OnlinePub\Ajax();
 		new \WP_OnlinePub\Admin_Page();
-
+		new \WP_OnlinePub\Payment();
 
 		//Test Service
-		if ( isset( $_GET['test'] ) ) {
-
-			exit;
-		}
+		//if ( isset( $_GET['test'] ) ) {
+		//	exit;
+		//}
 	}
 
 	/**
@@ -217,6 +216,30 @@ class WP_Online_Pub {
 				$text .= " یک فیش بانکی اضافه کرد. ";
 				$text .= "\n" . $brand;
 				break;
+
+			case "send_to_user_at_pay_online_factor":
+				$text = 'کاربر گرامی';
+				$text .= " فاکتور با شناسه ";
+				$text .= $args['factor_id'];
+				$text .= " و مبلغ ";
+				$text .= $args['factor_price'].' '.\WP_OnlinePub\Helper::currency();
+				$text .= " با موفقیت پرداخت و تایید شد .";
+				$text .= "\n" . $brand;
+				break;
+
+			case "send_to_admin_at_new_online_pay":
+				$text = 'مدیر گرامی ، کاربر با نام ';
+				$text .= $args['user_name'];
+				$text .= " برای فاکتور با شناسه ";
+				$text .= $args['factor_id'];
+				$text .= " یک پرداخت آنلاین موفق به مبلغ ";
+				$text .= $args['factor_price'].' '.\WP_OnlinePub\Helper::currency();
+				$text .= " انجام داده است.  ";
+				$text .= "\n" . $brand;
+				break;
+
+
+
 
 
 

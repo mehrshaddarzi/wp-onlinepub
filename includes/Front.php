@@ -24,9 +24,6 @@ class Front {
 
 		//Show Factor
 		add_action( 'wp', array( $this, 'show_factor' ) );
-
-		//Add Fish Banki
-		add_action( 'wp', array( $this, 'add_fish_bank' ) );
 	}
 
 	/**
@@ -38,17 +35,6 @@ class Front {
 		wp_register_script( self::$asset_name, WP_Online_Pub::$plugin_url . '/asset/script.js', array( 'jquery' ), WP_Online_Pub::$plugin_version, false );
 	}
 
-
-	/**
-	 * Add Fish Banki
-	 */
-	public function add_fish_bank() {
-		global $wpdb;
-
-
-
-
-	}
 
 	/**
 	 * Show Factor
@@ -137,7 +123,7 @@ class Front {
 
 				echo '
 <div style="width:40%">
-<form action="'.get_the_permalink(WP_Online_Pub::$option['user_panel']).'" method="post" onsubmit="return confirm(\'آیا از صحت اطلاعات اطمینان حاصل دارید ?\');">
+<form action="' . add_query_arg( array( 'order' => $factor['order_id'] ), get_the_permalink( WP_Online_Pub::$option['user_panel'] ) ) . '" method="post" onsubmit="return confirm(\'آیا از صحت اطلاعات اطمینان حاصل دارید ?\');">
 <input type="hidden" name="add_new_fish_bank" value="' . wp_create_nonce( 'add_fish_security' ) . '">
 <input type="hidden" name="factor_id" value="' . $_GET['view_factor'] . '">
   <div class="form-group">
@@ -153,19 +139,15 @@ class Front {
 </div>
 <br><br>
 ';
-
-
 			}
 
-
 			echo '	
-	</div>	
+</div>	
 </div>
 <div class="col-sm-4 text-left">
 <button class="btn btn-default"  onClick="window.print()" type="submit"><i class="fa fa-print"></i> پرینت فاکتور</button>
 </div>
 <div class="clearfix"></div>
-	
 	</div>
 	';
 
@@ -215,6 +197,25 @@ class Front {
 		 * Page Notice
 		 *----------------------------------------------------------------------------------------*/
 
+		//Show Status Of Payment
+		if ( isset( $_GET['check_payment_status'] ) and isset( $_GET['payment_factor'] ) and isset( $_GET['pay_id'] ) ) {
+
+			$get_payment = Helper::get_payment( $_GET['pay_id'] );
+			if ( $get_payment !== null ) {
+				if ( $get_payment['status'] == 2 ) {
+					$comment = Helper::get_serialize( $get_payment['comment'] );
+					$text    .= '<div class="admin_notice suc"> 
+					پرداخت شما با موفقیت انجام شد.
+					<br />
+					شناسه پرداخت : 
+					' . $comment['payid'] . '
+					</div>';
+				} else {
+					$text .= '<div class="admin_notice err"> پرداخت شما موفقیت آمیز نبوده است.لطفا دوباره تلاش کنید.</div>';
+				}
+			}
+		}
+
 		//Add Fish Bank
 		if ( isset( $_POST['add_new_fish_bank'] ) and isset( $_POST['fish_bank'] ) and isset( $_POST['factor_id'] ) and isset( $_POST['date_bank'] ) ) {
 
@@ -252,7 +253,7 @@ class Front {
 			$content = '<p>';
 			$content .= 'مدیر گرامی ، کاربر با نام ';
 			$content .= Helper::get_user_full_name( get_current_user_id() );
-			$content .= 'برای فاکتور با شناسه ';
+			$content .= ' برای فاکتور با شناسه ';
 			$content .= $_POST['factor_id'];
 			$content .= ' یک فیش ارسال کرده است. ';
 			$content .= '</p>';

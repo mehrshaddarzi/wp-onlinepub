@@ -226,9 +226,6 @@ class Payment extends \WP_List_Table {
 				break;
 			case 'comment' :
 
-				if ( $item['status'] == 1 ) {
-					return $unknown;
-				} else {
 					if ( $item['comment'] == "" ) {
 						return $unknown;
 					} else {
@@ -246,7 +243,7 @@ class Payment extends \WP_List_Table {
                                 ';
 						}
 					}
-				}
+
 
 				break;
 		}
