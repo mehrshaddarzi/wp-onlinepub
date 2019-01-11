@@ -19,8 +19,8 @@ class Admin_Setting_Api {
 		 * Set Admin Setting
 		 * @see https://tareq.co/2012/06/wordpress-settings-api-php-class/
 		 */
-		add_action( 'admin_init', 'wedevs_admin_init' );
-		add_action( 'admin_menu', 'wedevs_admin_menu' );
+		add_action( 'admin_init', array( $this, 'wedevs_admin_init' ) );
+		add_action( 'admin_menu', array( $this, 'wedevs_admin_menu' ) );
 
 
 	}
@@ -62,27 +62,27 @@ class Admin_Setting_Api {
 		$fields = array(
 			'basic' => array(
 				array(
-					'name' => 'modir_mobile',
-					'label' => __('شماره همراه مدیر', 'wedevs'),
-					'desc' => __('شماره همراه مدیر برای اطلاع رسانی', 'wedevs'),
-					'type' => 'text',
+					'name'    => 'modir_mobile',
+					'label'   => __( 'شماره همراه مدیر', 'wedevs' ),
+					'desc'    => __( 'شماره همراه مدیر برای اطلاع رسانی', 'wedevs' ),
+					'type'    => 'text',
 					'default' => ''
 				),
 				array(
-					'name' => 'modir_email',
-					'label' => __('ایمیل مدیر', 'wedevs'),
-					'desc' => __('ایمیل مدیر برای اطلاع رسانی', 'wedevs'),
-					'type' => 'text'
+					'name'  => 'modir_email',
+					'label' => __( 'ایمیل مدیر', 'wedevs' ),
+					'desc'  => __( 'ایمیل مدیر برای اطلاع رسانی', 'wedevs' ),
+					'type'  => 'text'
 				),
 				array(
-					'name' => 'acc_1',
-					'label' => __('اطلاعات حساب یک', 'wedevs'),
-					'type' => 'textarea'
+					'name'  => 'acc_1',
+					'label' => __( 'اطلاعات حساب یک', 'wedevs' ),
+					'type'  => 'textarea'
 				),
 				array(
-					'name' => 'acc_2',
-					'label' => __('اطلاعات حساب دو', 'wedevs'),
-					'type' => 'textarea'
+					'name'  => 'acc_2',
+					'label' => __( 'اطلاعات حساب دو', 'wedevs' ),
+					'type'  => 'textarea'
 				)
 			)
 		);
