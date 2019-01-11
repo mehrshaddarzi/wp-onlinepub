@@ -149,6 +149,7 @@ class Admin_Page {
 		$factor  = add_submenu_page( self::$admin_page_slug, __( 'فاکتورها', '' ), __( 'فاکتورها', '' ), 'manage_options', 'factor', array( $this, 'factor' ) );
 		$payment = add_submenu_page( self::$admin_page_slug, __( 'پرداخت ها', '' ), __( 'پرداخت ها', '' ), 'manage_options', 'payment', array( $this, 'payment' ) );
 		$ticket  = add_submenu_page( self::$admin_page_slug, __( 'تیکت ها', '' ), __( 'تیکت ها', '' ), 'manage_options', 'ticket', array( $this, 'ticket' ) );
+		add_submenu_page( Admin_Page::$admin_page_slug, __( 'تنظیمات', '' ), __( 'تنظیمات', '' ), 'manage_options', 'onlinepub_option', array( 'Admin_Setting_Api', 'wedevs_plugin_page' ) );
 
 		//Set Load Action For WP_List_Table
 		add_action( "load-$order", array( $this, 'screen_option_order' ) );

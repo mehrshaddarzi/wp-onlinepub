@@ -20,7 +20,7 @@ class Admin_Setting_Api {
 		 * @see https://tareq.co/2012/06/wordpress-settings-api-php-class/
 		 */
 		add_action( 'admin_init', array( $this, 'wedevs_admin_init' ) );
-		add_action( 'admin_menu', array( $this, 'wedevs_admin_menu' ) );
+		//add_action( 'admin_menu', array( $this, 'wedevs_admin_menu' ) );
 
 
 	}
@@ -29,7 +29,7 @@ class Admin_Setting_Api {
 	 * Register the plugin page
 	 */
 	public function wedevs_admin_menu() {
-		add_submenu_page( Admin_Page::$admin_page_slug, __( 'تنظیمات', '' ), __( 'تنظیمات', '' ), 'manage_options', 'wp_onlinepub_option', array( $this, 'wedevs_plugin_page' ) );
+		//add_submenu_page( Admin_Page::$admin_page_slug, __( 'تنظیمات', '' ), __( 'تنظیمات', '' ), 'manage_options', 'wp_onlinepub_option', array( $this, 'wedevs_plugin_page' ) );
 	}
 
 	/**
