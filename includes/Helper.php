@@ -321,7 +321,21 @@ class Helper {
 	 * @return mixed
 	 */
 	public static function get_payment_status( $status = 1 ) {
-		return self::get_payment_status( $status );
+		return self::get_status_factor( $status );
+	}
+
+
+	/**
+	 * Show Value
+	 * @param $value
+	 * @return string
+	 */
+	public static function show_value( $value ) {
+		if ( empty( $value ) ) {
+			return "-";
+		}
+
+		return $value;
 	}
 
 	/**
@@ -371,7 +385,6 @@ class Helper {
 			'order'   => self::get_order( $order_id )
 		);
 	}
-
 
 
 	/**

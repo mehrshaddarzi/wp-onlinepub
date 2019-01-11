@@ -180,7 +180,6 @@ class Payment extends \WP_List_Table {
 	 * @return mixed
 	 */
 	public function column_default( $item, $column_name ) {
-		global $WP_Statistics;
 
 		//Default unknown Column Value
 		$unknown = '<span aria-hidden="true">—</span><span class="screen-reader-text">' . __( "Unknown", 'wp-statistics-actions' ) . '</span>';
@@ -190,15 +189,15 @@ class Payment extends \WP_List_Table {
 
 				// row actions to Delete
 				if ( $item['status'] == 1 ) {
-					$actions['trash'] = '<a onclick="return confirm(\'آیا مطمئن هستید ؟\')" href="' . add_query_arg( array( 'page' => 'payment', 'action' => 'delete', '_wpnonce' => wp_create_nonce( 'delete_action_nonce' ), 'del' => $item['id'] ), admin_url( "admin.php" ) ) . '">' . __( 'حذف', 'wp-statistics-actions' ) . '</a>';
+					$actions['trash'] = '<a onclick="return confirm(\'آیا مطمئن هستید ؟\')" href="' . add_query_arg( array( 'page' => 'payment', 'action' => 'delete', '_wpnonce' => wp_create_nonce( 'delete_action_nonce' ), 'del' => $item['id'] ), admin_url( "admin.php" ) ) . '">' . __( 'حذف مشخصات این پرداخت', 'wp-statistics-actions' ) . '</a>';
 				}
 
 				return '<div>' . Helper::get_user_full_name( $item['user_id'] ) . ' <br /> ' . Helper::get_user_mobile( $item['user_id'] ) . '<br />' . Helper::get_user_email( $item['user_id'] ) . '</div>' . $this->row_actions( $actions );
 				break;
 
 			case 'date' :
-				$date                   = date_i18n( "j F Y", strtotime( $item['date_create'] ) );
-				$actions['create_time'] = date_i18n( "H:i:s", strtotime( $item['date_create'] ) );
+				$date                   = date_i18n( "j F Y", strtotime( $item['date'] ) );
+				$actions['create_time'] = date_i18n( "H:i:s", strtotime( $item['date'] ) );
 
 				return $date . $this->row_actions( $actions );
 				break;
@@ -235,15 +234,14 @@ class Payment extends \WP_List_Table {
 						if ( $item['type'] == 1 ) {
 							if ( isset( $comment['payid'] ) ) {
 								return '
-                                  <span>شناسه پرداخت : ' . $comment['payid'] . '</span>
+                                  <span>شناسه پرداخت : ' . Helper::show_value( $comment['payid'] ) . '</span>
                                 ';
 							}
 						} else {
 							return '
-                                  <span>شماره فیش واریزی : ' . $comment['fish'] . '</span><br />
-                                  <span>تاریخ پرداخت : ' . $comment['date'] . '</span><br />
+                                  <span>شماره فیش واریزی : ' . Helper::show_value($comment['fish'] ). '</span><br />
+                                  <span>تاریخ پرداخت : ' . Helper::show_value($comment['date']) . '</span><br />
                                 ';
-
 						}
 					}
 				}
