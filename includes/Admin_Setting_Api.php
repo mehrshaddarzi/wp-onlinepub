@@ -10,6 +10,21 @@ class Admin_Setting_Api {
 	public static $option_name = 'wp_online_pub_opt';
 
 	/**
+	 * The single instance of the class.
+	 */
+	protected static $_instance = null;
+
+	/**
+	 * Main Instance.
+	 */
+	public static function instance() {
+		if ( is_null( self::$_instance ) ) {
+			self::$_instance = new self();
+		}
+		return self::$_instance;
+	}
+
+	/**
 	 * Admin_Setting_Api constructor.
 	 */
 	public function __construct() {
