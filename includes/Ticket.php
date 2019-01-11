@@ -99,6 +99,10 @@ class Ticket {
 			if ( $row['sender'] == "admin" and $row['read_admin'] == "1" ) {
 				return 'پاسخ داده شد';
 			}
+
+			if ( $row['sender'] == "user" and $row['read_admin'] == "1" ) {
+				return 'توسط مدیریت دیده شد';
+			}
 		}
 
 	}
