@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jan 09, 2019 at 06:48 PM
+-- Generation Time: Jan 11, 2019 at 11:17 PM
 -- Server version: 5.6.41
 -- PHP Version: 7.2.7
 
@@ -11,12 +11,6 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `onlinepu_order`
@@ -143,6 +137,12 @@ ALTER TABLE `z_payment`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `z_ticket`
+--
+ALTER TABLE `z_ticket`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -169,8 +169,10 @@ ALTER TABLE `z_order`
 --
 ALTER TABLE `z_payment`
   MODIFY `id` bigint(48) NOT NULL AUTO_INCREMENT;
-COMMIT;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+--
+-- AUTO_INCREMENT for table `z_ticket`
+--
+ALTER TABLE `z_ticket`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+COMMIT;
