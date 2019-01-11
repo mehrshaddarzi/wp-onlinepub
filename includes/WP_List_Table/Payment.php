@@ -2,6 +2,9 @@
 
 namespace WP_OnlinePub\WP_List_Table;
 
+use WP_OnlinePub\Admin_Page;
+use WP_OnlinePub\Helper;
+
 if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
@@ -54,7 +57,8 @@ class Payment extends \WP_List_Table {
 	public static function get_actions( $per_page = 10, $page_number = 1 ) {
 		global $wpdb;
 
-		$tbl = $wpdb->prefix . WP_Statistics_Actions::table;
+		//$tbl = $wpdb->prefix . WP_Statistics_Actions::table;
+		$tbl = 'z_payment';
 		$sql = "SELECT * FROM `$tbl`";
 
 		//Where conditional
@@ -67,7 +71,7 @@ class Payment extends \WP_List_Table {
 		if ( ! empty( $_REQUEST['orderby'] ) ) {
 			$sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
 		} else {
-			$sql .= ' ORDER BY `ID`';
+			$sql .= ' ORDER BY `id`';
 		}
 
 		//Check Order Fields
@@ -90,18 +94,7 @@ class Payment extends \WP_List_Table {
 		//Check Search
 		if ( isset( $_GET['s'] ) and ! empty( $_GET['s'] ) ) {
 			$search  = sanitize_text_field( $_GET['s'] );
-			$where[] = "`action_name` LIKE '%{$search}%'";
-		}
-
-		//Check Filter Method
-		if ( isset( $_GET['filter'] ) and ! empty( $_GET['filter'] ) ) {
-			$status_id = array( "active" => 1, "inactive" => 0, "draft" => 2 );
-			$where[]   = '`action_status` =' . $status_id[ sanitize_text_field( $_GET["filter"] ) ];
-		}
-
-		//Check filter Creator User
-		if ( isset( $_GET['user'] ) and ! empty( $_GET['user'] ) ) {
-			$where[] = '`user_create` =' . $_GET['user'];
+			$where[] = "`factor_id` LIKE '%{$search}%'";
 		}
 
 		return $where;
@@ -114,8 +107,9 @@ class Payment extends \WP_List_Table {
 	 */
 	public static function delete_action( $id ) {
 		global $wpdb;
-		$tbl = $wpdb->prefix . WP_Statistics_Actions::table;
-		$wpdb->delete( $tbl, array( 'ID' => $id ), array( '%d' ) );
+		//$tbl = $wpdb->prefix . WP_Statistics_Actions::table;
+		$tbl = 'z_payment';
+		$wpdb->delete( $tbl, array( 'id' => $id ), array( '%d' ) );
 	}
 
 
@@ -125,7 +119,8 @@ class Payment extends \WP_List_Table {
 	 */
 	public static function record_count() {
 		global $wpdb;
-		$tbl = $wpdb->prefix . WP_Statistics_Actions::table;
+		//$tbl = $wpdb->prefix . WP_Statistics_Actions::table;
+		$tbl = 'z_payment';
 		$sql = "SELECT COUNT(*) FROM `$tbl`";
 
 		//Where conditional
@@ -141,7 +136,7 @@ class Payment extends \WP_List_Table {
 	 * Not Found Item Text
 	 */
 	public function no_items() {
-		_e( 'No actions avaliable.', 'wp-statistics-actions' );
+		_e( 'هیچ پرداختی در دسترس نیست.', 'wp-statistics-actions' );
 	}
 
 	/**
@@ -150,15 +145,14 @@ class Payment extends \WP_List_Table {
 	 */
 	function get_columns() {
 		$columns = array(
-			'cb'              => '<input type="checkbox" />',
-			'action_name'     => __( 'Name', 'wp-statistics-actions' ),
-			'date_create'     => __( 'Date Create', 'wp-statistics-actions' ),
-			'user_create'     => __( 'Created By', 'wp-statistics-actions' ),
-			'trigger'         => __( 'Trigger', 'wp-statistics-actions' ),
-			'action'          => __( 'Action', 'wp-statistics-actions' ),
-			'expiration_date' => __( 'Expiration Date', 'wp-statistics-actions' ),
-			'run_date'        => __( 'Run Time', 'wp-statistics-actions' ),
-			'status'          => __( 'Status', 'wp-statistics-actions' ),
+			'cb'      => '<input type="checkbox" />',
+			'user'    => __( 'نام پرداخت کننده', 'wp-statistics-actions' ),
+			'date'    => __( 'تاریخ پرداخت', 'wp-statistics-actions' ),
+			'type'    => __( 'نوع پرداخت', 'wp-statistics-actions' ),
+			'factor'  => __( 'برای فاکتور', 'wp-statistics-actions' ),
+			'price'   => __( 'مبلغ ' . Helper::currency(), 'wp-statistics-actions' ),
+			'status'  => __( 'وضعیت', 'wp-statistics-actions' ),
+			'comment' => __( 'توضیحات', 'wp-statistics-actions' )
 		);
 
 		return $columns;
@@ -173,7 +167,7 @@ class Payment extends \WP_List_Table {
 	 */
 	function column_cb( $item ) {
 		return sprintf(
-			'<input type="checkbox" name="bulk-delete[]" value="%s" />', $item['ID']
+			'<input type="checkbox" name="bulk-delete[]" value="%s" />', $item['id']
 		);
 	}
 
@@ -192,100 +186,67 @@ class Payment extends \WP_List_Table {
 		$unknown = '<span aria-hidden="true">—</span><span class="screen-reader-text">' . __( "Unknown", 'wp-statistics-actions' ) . '</span>';
 
 		switch ( $column_name ) {
-			case 'action_name' :
-
-				// row actions to ID
-				$actions['id'] = '<span class="text-muted">#' . $item['ID'] . '</span>';
-
-				// row actions to edit
-				$actions['edit'] = '<a href="' . add_query_arg( array( 'page' => WP_Statistics_Actions::admin_slug, 'method' => 'edit', 'ID' => $item['ID'] ), admin_url( "admin.php" ) ) . '">' . __( 'Edit', 'wp-statistics-actions' ) . '</a>';
-
-				// row actions to show status
-				if ( $item['action_status'] == 1 and $WP_Statistics->get_option( 'visits' ) ) {
-					$trigger           = WP_Statistics_Actions_Trigger::get_trigger_data( $item['action_trigger'] );
-					$actions['status'] = '<a data-trigger-type="' . $trigger['type'] . '" data-view-status="' . $trigger['value'] . '" href="#" class="text-success">' . __( 'Statistics', 'wp-statistics-actions' ) . '</a>';
-				}
-
-				//Row Action to Clone
-				$actions['clone'] = '<a href="' . add_query_arg( array( 'page' => WP_Statistics_Actions::admin_slug, 'clone' => $item['ID'], '_wpnonce' => wp_create_nonce( 'clone_action_nonce' ) ), admin_url( "admin.php" ) ) . '" class="text-warning">' . __( 'Clone', 'wp-statistics-actions' ) . '</a>';
+			case 'user' :
 
 				// row actions to Delete
-				$actions['trash'] = '<a data-trash="yes" href="' . add_query_arg( array( 'page' => WP_Statistics_Actions::admin_slug, 'action' => 'delete', '_wpnonce' => wp_create_nonce( 'delete_action_nonce' ), 'del' => $item['ID'] ), admin_url( "admin.php" ) ) . '">' . __( 'Delete', 'wp-statistics-actions' ) . '</a>';
+				if ( $item['status'] == 1 ) {
+					$actions['trash'] = '<a onclick="return confirm(\'آیا مطمئن هستید ؟\')" href="' . add_query_arg( array( 'page' => 'payment', 'action' => 'delete', '_wpnonce' => wp_create_nonce( 'delete_action_nonce' ), 'del' => $item['id'] ), admin_url( "admin.php" ) ) . '">' . __( 'حذف', 'wp-statistics-actions' ) . '</a>';
+				}
 
-				return $item['action_name'] . $this->row_actions( $actions );
+				return '<div>' . Helper::get_user_full_name( $item['user_id'] ) . ' <br /> ' . Helper::get_user_mobile( $item['user_id'] ) . '<br />' . Helper::get_user_email( $item['user_id'] ) . '</div>' . $this->row_actions( $actions );
 				break;
 
-			case 'date_create' :
+			case 'date' :
 				$date                   = date_i18n( "j F Y", strtotime( $item['date_create'] ) );
 				$actions['create_time'] = date_i18n( "H:i:s", strtotime( $item['date_create'] ) );
 
 				return $date . $this->row_actions( $actions );
 				break;
-			case 'user_create' :
+			case 'type' :
 
-				return '<span data-action-id="' . $item['ID'] . '" data-user-create="' . $item['user_create'] . '">' . WP_Statistics_Actions_Helper::get_user_fullname( $item['user_create'] ) . '</span>';
+				return '<span class="text-danger">' . Helper::get_type_payment( $item['type'] ) . '</span>';
 				break;
-			case 'trigger' :
-				$trigger = WP_Statistics_Actions_Trigger::get_trigger_data( $item['action_trigger'] );
-				if ( $trigger === false ) {
-					return $unknown;
-				} else {
-					return '<span class="text-primary">' . $trigger['name'] . '</span> <br/>' . ( $trigger['admin_link'] != "" ? '<a href="' . $trigger['admin_link'] . '" class="text-danger" target="_blank">' : '' ) . $trigger['id'] . ' : ' . number_format( $trigger['value'] ) . ( $trigger['admin_link'] != "" ? '</a>' : '' );
-				}
+			case 'factor' :
 
+				return '<span class="text-primary">' . $item['factor_id'] . '</span><br /><a href="' . admin_url( 'admin.php?page=factor&s=' . $item['factor_id'] ) . '" target="_blank">مشاهده جزئیات</a>';
 				break;
-			case 'action' :
+			case 'price' :
 
-				$action = WP_Statistics_Actions_Approach::get_action_data( $item['action_approach'] );
-				if ( ! isset( $action['method'] ) ) {
-					return $unknown;
-				} else {
-					return '<span class="text-success">' . WP_Statistics_Actions_Approach::get_group_name( $action['type'] ) . '</span> <br> ' . WP_Statistics_Actions_Approach::get_method_name( $action['type'], $action['method'] );
-				}
-				break;
-			case 'expiration_date' :
-
-				if ( is_null( $item['expiration_date'] ) || empty( $item['expiration_date'] ) ) {
-					return $unknown;
-				} else {
-					$date = date_i18n( "j F Y", strtotime( $item['expiration_date'] ) );
-					$time = date_i18n( "H:i", strtotime( $item['expiration_date'] ) );
-
-					return $date . '<br>' . $time;
-				}
-				break;
-			case 'run_date' :
-
-				if ( is_null( $item['run_date'] ) || empty( $item['run_date'] ) ) {
-					return $unknown;
-				} else {
-					$date = date_i18n( "j F Y", strtotime( $item['run_date'] ) );
-					$time = date_i18n( "H:i:s", strtotime( $item['run_date'] ) );
-
-					return $date . '<br>' . $time;
-				}
+				return number_format_i18n( $item['price'] ) . ' ' . Helper::currency();
 				break;
 			case 'status' :
 
-				$status = '<div class="tooltip">';
-				if ( $item['action_status'] == 0 ) {
-					//InActivate
-					$status .= '<i class="fa fa-circle text-danger circle"></i><span class="tooltiptext">' . __( "inActive", 'wp-statistics-actions' ) . '</span></div>';
-				} elseif ( $item['action_status'] == 1 ) {
-					//Active
-					if ( $WP_Statistics->get_option( 'visits' ) ) {
-						$status .= '<a data-view-status="' . $item['ID'] . '" href="#">';
-					}
-					$status .= '<i class="fa fa-circle active_status circle"></i><span class="tooltiptext">' . __( "Active", 'wp-statistics-actions' ) . '</span>';
-					if ( $WP_Statistics->get_option( 'visits' ) ) {
-						$status .= '</a>';
-					}
-					$status .= '</div>';
-				} else {
-					//Draft
-					$status .= '<i class="fa fa-circle circle"></i><span class="tooltiptext">' . __( "Draft", 'wp-statistics-actions' ) . '</span></div>';
+				$t   = Helper::get_payment_status( $item['status'] ) . '<br>';
+				$p_d = Helper::get_order_by_payment( $item['id'] );
+				if ( $item['status'] == 1 ) {
+					$t .= '<a target="_blank" href="' . Admin_Page::admin_link( 'factor', array( 'top' => 'change-payment-status', 'order_id' => $p_d['order']['id'], 'order_status' => $p_d['order']['status'], 'status' => $p_d['factor']['payment_status'], 'factor_id' => $item['factor_id'] ) ) . '">تغییر وضعیت</a>';
 				}
-				return $status;
+				return $t;
+				break;
+			case 'comment' :
+
+				if ( $item['status'] == 1 ) {
+					return $unknown;
+				} else {
+					if ( $item['comment'] == "" ) {
+						return $unknown;
+					} else {
+						$comment = Helper::get_serialize( $item['comment'] );
+						if ( $item['type'] == 1 ) {
+							if ( isset( $comment['payid'] ) ) {
+								return '
+                                  <span>شناسه پرداخت : ' . $comment['payid'] . '</span>
+                                ';
+							}
+						} else {
+							return '
+                                  <span>شماره فیش واریزی : ' . $comment['fish'] . '</span><br />
+                                  <span>تاریخ پرداخت : ' . $comment['date'] . '</span><br />
+                                ';
+						}
+					}
+				}
+
 				break;
 		}
 	}
@@ -296,65 +257,11 @@ class Payment extends \WP_List_Table {
 	 */
 	public function get_sortable_columns() {
 		$sortable_columns = array(
-			'action_name' => array( 'action_name', true ),
-			'date_create' => array( 'date_create', false ),
-			'user_create' => array( 'user_create', false ),
+			'date' => array( 'date', false ),
+			'user' => array( 'user_id', false ),
 		);
 
 		return $sortable_columns;
-	}
-
-	/**
-	 * Show SubSub Filter
-	 */
-	protected function get_views() {
-		$views   = array();
-		$current = ( ! empty( $_REQUEST['filter'] ) ? $_REQUEST['filter'] : 'all' );
-
-		//All Actions
-		$class        = ( $current == 'all' ? ' class="current"' : '' );
-		$all_url      = remove_query_arg( array( 'filter', 's', 'paged', 'alert', 'user' ) );
-		$views['all'] = "<a href='{$all_url }' {$class} >" . __( "All", 'wp-statistics-actions' ) . " <span class=\"count\">(" . number_format( WP_Statistics_Actions_Helper::get_number_actions_tbl() ) . ")</span></a>";
-		$views_item   = array(
-			'active'   => array( "name" => __( "Active", 'wp-statistics-actions' ), "status_id" => 1 ),
-			'inactive' => array( "name" => __( "Inactive", 'wp-statistics-actions' ), "status_id" => 0 ),
-			'draft'    => array( "name" => __( "Draft", 'wp-statistics-actions' ), "status_id" => 2 )
-		);
-		foreach ( $views_item as $k => $v ) {
-			$custom_url  = add_query_arg( 'filter', $k, remove_query_arg( array( 's', 'paged', 'alert' ) ) );
-			$class       = ( $current == $k ? ' class="current"' : '' );
-			$views[ $k ] = "<a href='{$custom_url}' {$class} >" . $v['name'] . " <span class=\"count\">(" . number_format( WP_Statistics_Actions_Helper::get_number_actions_tbl( $v['status_id'] ) ) . ")</span></a>";
-		}
-
-		return $views;
-	}
-
-	/**
-	 * Advance Custom Filter
-	 *
-	 * @param $which
-	 */
-	function extra_tablenav( $which ) {
-		if ( $which == "top" ) {
-			?>
-            <div class="alignleft actions bulkactions">
-                <label for="bulk-action-selector-top" class="screen-reader-text"><?php _e( "Creator User", 'wp-statistics-actions' ); ?></label>
-                <select name="user" id="bulk-action-selector-top">
-                    <option value=""><?php _e( "Creator User", 'wp-statistics-actions' ); ?></option>
-					<?php
-					foreach ( WP_Statistics_Actions_Helper::get_list_user_created_actions() as $user_id => $user_name ) {
-						$selected = '';
-						if ( isset( $_GET['user'] ) and $_GET['user'] == $user_id ) {
-							$selected = "selected";
-						}
-						echo '<option value="' . $user_id . '" ' . $selected . '>' . $user_name . '</option>';
-					}
-					?>
-                </select>
-                <input type="submit" id="doaction" class="button action" value="<?php _e( "Filter", 'wp-statistics-actions' ); ?>">
-            </div>
-			<?php
-		}
 	}
 
 	/**
@@ -363,8 +270,7 @@ class Payment extends \WP_List_Table {
 	 */
 	public function get_bulk_actions() {
 		$actions = array(
-			'bulk-deactivate' => __( 'Deactivate', 'wp-statistics-actions' ),
-			'bulk-delete'     => __( 'Delete', 'wp-statistics-actions' ),
+			'bulk-delete' => __( 'حذف', 'wp-statistics-actions' ),
 		);
 
 		return $actions;
@@ -397,7 +303,7 @@ class Payment extends \WP_List_Table {
 		?>
         <p class="search-box">
             <label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
-            <input type="search" placeholder="<?php echo __( "Action Name", 'wp-statistics-actions' ); ?>" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" autocomplete="off"/>
+            <input type="search" placeholder="<?php echo __( "شماره فاکتور", 'wp-statistics-actions' ); ?>" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" autocomplete="off"/>
 			<?php submit_button( $text, 'button', false, false, array( 'id' => 'search-submit' ) ); ?>
         </p>
 		<?php
@@ -417,7 +323,7 @@ class Payment extends \WP_List_Table {
 			} else {
 				self::delete_action( absint( $_GET['del'] ) );
 
-				wp_redirect( esc_url_raw( add_query_arg( array( 'page' => WP_Statistics_Actions::admin_slug, 'alert' => 'delete' ), admin_url( "admin.php" ) ) ) );
+				wp_redirect( esc_url_raw( add_query_arg( array( 'page' => 'payment', 'alert' => 'delete' ), admin_url( "admin.php" ) ) ) );
 				exit;
 			}
 		}
@@ -432,21 +338,7 @@ class Payment extends \WP_List_Table {
 					self::delete_action( $id );
 				}
 
-				wp_redirect( esc_url_raw( add_query_arg( array( 'page' => WP_Statistics_Actions::admin_slug, 'alert' => 'delete' ), admin_url( "admin.php" ) ) ) );
-				exit;
-			}
-		}
-
-		//Bulk Action Deactivated
-		if ( ( isset( $_POST['action'] ) && $_POST['action'] == 'bulk-deactivate' ) ) {
-
-			$deactivate_ids = esc_sql( $_POST['bulk-delete'] );
-			if ( is_array( $deactivate_ids ) and count( $deactivate_ids ) > 0 ) {
-				foreach ( $deactivate_ids as $id ) {
-					WP_Statistics_Actions_Helper::set_action_status( $id, 0 );
-				}
-
-				wp_redirect( esc_url_raw( add_query_arg( array( 'page' => WP_Statistics_Actions::admin_slug, 'alert' => 'deactivate' ), admin_url( "admin.php" ) ) ) );
+				wp_redirect( esc_url_raw( add_query_arg( array( 'page' => 'payment', 'alert' => 'delete' ), admin_url( "admin.php" ) ) ) );
 				exit;
 			}
 		}

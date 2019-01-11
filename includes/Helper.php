@@ -314,6 +314,64 @@ class Helper {
 		}
 	}
 
+	/**
+	 * Get Payment Status
+	 *
+	 * @param int $status
+	 * @return mixed
+	 */
+	public static function get_payment_status( $status = 1 ) {
+		return self::get_payment_status( $status );
+	}
+
+	/**
+	 * Get Type Payment
+	 *
+	 * @param int $type
+	 * @return string
+	 */
+	public static function get_type_payment( $type = 1 ) {
+		switch ( $type ) {
+			case "1":
+				return 'پرداخت آنلاین';
+				break;
+			case "2":
+				return 'واریز به حساب';
+				break;
+		}
+	}
+
+	/**
+	 * Get Payment by id
+	 *
+	 * @param $id
+	 * @return array
+	 */
+	public static function get_payment( $id ) {
+		global $wpdb;
+		return $wpdb->get_row( "SELECT * FROM `z_payment` WHERE `id` = {$id}", ARRAY_A );
+	}
+
+
+	/**
+	 * Get Order Detail by Payment id
+	 *
+	 * @param $payment_id
+	 * @return array
+	 */
+	public static function get_order_by_payment( $payment_id ) {
+		$this_payment = self::get_payment( $payment_id );
+		$factor_id    = $this_payment['factor_id'];
+		$this_order   = self::get_factor( $factor_id );
+		$order_id     = $this_order['order_id'];
+
+		return array(
+			'payment' => $this_payment,
+			'factor'  => $this_order,
+			'order'   => self::get_order( $order_id )
+		);
+	}
+
 
 	/**
 	 * Get List Factor item
@@ -458,6 +516,32 @@ class Helper {
 		$result['html'] .= '</table>';
 		$result['html'] .= '<div style="height:15px;"></div>';
 		return $result['html'];
+	}
+
+	/**
+	 * Get Validate Data (array or Serialize)
+	 *
+	 * @param $data | data is array or serialize
+	 * @param bool $export
+	 * @return array|bool|mixed
+	 */
+	public static function get_serialize( $data, $export = false ) {
+		if ( is_serialized( $data ) ) {
+			$array = maybe_unserialize( $data );
+		} elseif ( is_array( $data ) ) {
+			$array = $data;
+		}
+
+		//Security Check
+		if ( ! isset( $array ) ) {
+			return false;
+		}
+
+		if ( $export === false ) {
+			return $array;
+		} else {
+			return $array[ $export ];
+		}
 	}
 
 

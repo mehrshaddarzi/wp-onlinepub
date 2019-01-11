@@ -710,7 +710,7 @@ if ( $_GET['method'] == "add" ) {
 
 				//Delete Alert
 				case "delete":
-					//Admin_Ui::wp_admin_notice( __( "Selected item has been Deleted.", 'wp-statistics-actions' ), "success" );
+					Admin_Ui::wp_admin_notice( __( "آیتم ها انتخابی با موفقیت حذف گردید", 'wp-statistics-actions' ), "success" );
 					break;
 
 			}
