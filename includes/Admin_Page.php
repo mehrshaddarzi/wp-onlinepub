@@ -858,7 +858,7 @@ if ( $_GET['method'] == "add" ) {
 				    }
 
 				    $select = '';
-					    if(isset($_GET['order_id']) and $_GET['order_id'] ==$user->ID) {
+					    if(isset($_GET['order_id']) and $_GET['order_id'] ==$row['id']) {
 					        $select = ' selected';
 					    }
 

@@ -247,12 +247,12 @@ class Order extends \WP_List_Table {
 
 				$create_ticket    = Admin_Page::admin_link( 'ticket', array( "method" => "add", "user_id" => $item['user_id'], "order_id" => $item['id'] ) );
 
-				$count_ticket = $wpdb->get_var( "SELECT COUNT(*) FROM `z_ticket` WHERE `chat_id` =" . $row['id'] );
+				$count_ticket = $wpdb->get_var( "SELECT COUNT(*) FROM `z_ticket` WHERE `chat_id` =" . $item['id'] );
 				if ( $count_ticket >0 ) {
 					return '<a target="_blank" class="text-warning" href="' . Admin_Page::admin_link( 'ticket', array( "method" => "view", "chat_id" => $item['id'] ) ) . '">نمایش گفتگو </a><br>';
 
 				} else {
-					return '<a target="_blank" href="' . $create_ticket . '"> ایجاد تیکت جدید</a>';
+					return '<a target="_blank" href="' . $create_ticket . '"> ایجاد گفتگو جدید</a>';
 
 				}
 
