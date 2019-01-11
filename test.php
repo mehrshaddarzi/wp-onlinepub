@@ -205,35 +205,7 @@ class Ticket {
 
 	function send_to_db_ticket(){
 
-		//File
-		$attachment = "";
-		if ($_FILES['ticket_attachment']['name'] !== '') {
-			$attachment = Helper::get_instance()->Uploadfile('ticket_attachment');
-		}
 
-		//chat Id
-		if ($_POST['chat_id'] == "0") {
-			$chatid = time();
-		} else {
-			$chatid = $_POST['chat_id'];
-		}
-
-		//No error Sentto Db
-		$ticket = TicketORM::create([
-			'user_id' => $_POST['user_id'],
-			'title' => trim($_POST['ticket_title']),
-			'create_date' => current_time('mysql'),
-			'comment' => stripslashes($_POST['ticket_comment']),
-			'sender' => 'admin',
-			'read_admin' => 1,
-			'read_user' => 0,
-			'file' => $attachment,
-			'chat_id' => $chatid,
-		]);
-		$ticket->save();
-		if ($ticket->exists) {
-			return true;
-		}
 	}
 
 

@@ -2,6 +2,7 @@
 
 namespace WP_OnlinePub\WP_List_Table;
 
+use WP_Online_Pub;
 use WP_OnlinePub\Helper;
 
 if ( ! class_exists( 'WP_List_Table' ) ) {
@@ -205,12 +206,12 @@ class Ticket extends \WP_List_Table {
 				break;
 			case 'status' :
 
-			    $t = '<span class="text-danger">';
-			    $t .= \WP_OnlinePub\Ticket::instance()->vaziat_ticket($item['chat_id'], 'admin');
-			    $t .='</span>';
+				$t = '<span class="text-danger">';
+				$t .= \WP_OnlinePub\Ticket::instance()->vaziat_ticket( $item['chat_id'], 'admin' );
+				$t .= '</span>';
 				$t .= '<br>';
 
-				if(\WP_OnlinePub\Ticket::get_instance()->is_close_ticket($item['chat_id']) ===false) {
+				if ( \WP_OnlinePub\Ticket::get_instance()->is_close_ticket( $item['chat_id'] ) === false ) {
 					$t .= '<a href="' . add_query_arg( array( 'page' => 'ticket', 'action_close_ticket' => $item['chat_id'] ), admin_url( "admin.php" ) ) . '">بستن تیکت</a>';
 				} else {
 					$t .= '<a href="' . add_query_arg( array( 'page' => 'ticket', 'action_open_ticket' => $item['chat_id'] ), admin_url( "admin.php" ) ) . '">باز کردن تیکت</a>';
@@ -284,6 +285,71 @@ class Ticket extends \WP_List_Table {
 	 */
 	public function process_bulk_action() {
 		global $wpdb;
+
+
+		//Content Action : Change Status Factor
+		if ( isset( $_POST['add_ticket'] ) ) {
+
+			//Save Ticket
+			//File
+			$attachment = "";
+			if ( $_FILES['ticket_attachment']['name'] !== '' ) {
+				$attachment = \WP_OnlinePub\Ticket::wp_upload_file( 'ticket_attachment' );
+			}
+
+			//No error Sentto Db
+			$wpdb->insert(
+				"z_ticket",
+				array(
+					'user_id'     => $_POST['user_id'],
+					'title'       => trim( $_POST['ticket_title'] ),
+					'create_date' => current_time( 'mysql' ),
+					'comment'     => stripslashes( $_POST['ticket_comment'] ),
+					'sender'      => 'admin',
+					'read_admin'  => 1,
+					'read_user'   => 0,
+					'file'        => $attachment,
+					'chat_id'     => $_POST['chat_id'],
+				)
+			);
+
+			//push notification
+			if ( $_POST['is-notification'] == "yes" ) {
+
+				//Send Sms
+				$arg         = array( "order_id" => $_POST['chat_id'], "user_name" => Helper::get_user_full_name( $_POST['user_id'] ) );
+				$user_mobile = Helper::get_user_mobile( $_POST['user_id'] );
+				if ( $user_mobile != "" ) {
+					WP_Online_Pub::send_sms( $user_mobile, '', 'send_to_user_at_create_ticket', $arg );
+				}
+
+				//Send Email
+				$user_mail = Helper::get_user_email( $_POST['user_id'] );
+				if ( $user_mail != "" ) {
+					$subject = "گفتگو جدید برای سفارش  " . $_POST['chat_id'];
+					$content = '<p>';
+					$content .= 'کاربر گرامی ';
+					$content .= Helper::get_user_full_name( $_POST['user_id'] );
+					$content .= '</p><p>';
+					$content .= "گفتگوی جدید از طرف مدیریت در سامانه نشر آنلاین برای شما ایجاد شده است لطفا مشاهده کنید و نسبت به پاسخ آن اقدام نمایید. ";
+					$content .= '</p><p>اطلاعات تیکت : </p>';
+					$content .= '<p>عنوان گفتگو : ' . trim( $_POST['ticket_title'] ) . '</p>';
+					$content .= '<p>متن گفتگو : </p>';
+					$content .= '<p>' . stripslashes( $_POST['ticket_comment'] ) . '</p>';
+					$content .= '<br /><br />';
+					$content .= '<p>با تشکر</p>';
+					$content .= '<p><a href="' . get_bloginfo( "url" ) . '">' . get_bloginfo( "name" ) . '</a></p>';
+
+					WP_Online_Pub::send_mail( $user_mail, $subject, $content );
+				}
+
+			}
+			sleep( 1 );
+
+			wp_redirect( esc_url_raw( add_query_arg( array( 'page' => 'ticket', 'alert' => 'send-ticket' ), admin_url( "admin.php" ) ) ) );
+			exit;
+		}
+
 
 		//Close Ticket
 		if ( isset( $_GET['action_close_ticket'] ) ) {

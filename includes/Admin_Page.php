@@ -796,7 +796,7 @@ if ( $_GET['method'] == "add" ) {
 				echo '
 				<div class="wrap wps_actions"><h1 class="wp-heading-inline">
                 <span class="dashicons dashicons-testimonial"></span> ایجاد تیکت </h1>
-                <form action="' . add_query_arg( array( 'page' => 'ticket' ), admin_url( "admin.php" ) ) . '" method="post">
+                <form action="' . add_query_arg( array( 'page' => 'ticket' ), admin_url( "admin.php" ) ) . '" method="post" enctype="multipart/form-data">
                 <table class="form-table">
                            	<tbody>
 	
@@ -812,14 +812,21 @@ if ( $_GET['method'] == "add" ) {
 				foreach ( get_users() as $user ) {
 					//Check User Have A Order
 					$count = $wpdb->get_var( "SELECT COUNT(*) FROM `z_order` WHERE `user_id` =" . $user->ID );
-					if ( $count > 0 ) {
-						echo '<option value="' . self::admin_link( 'ticket', array( 'method' => 'add', 'user_id' => $user->ID ) ) . '">' . Helper::get_user_full_name( $user->ID ) . '</option>';
-					}
 
+					if ( $count > 0 ) {
+
+					    $select = '';
+					    if(isset($_GET['user_id']) and $_GET['user_id'] ==$user->ID) {
+					        $select = ' selected';
+					    }
+
+					    echo '<option '.$select.' value="' . self::admin_link( 'ticket', array( 'method' => 'add', 'user_id' => $user->ID ) ) . '">' . Helper::get_user_full_name( $user->ID ) . '</option>';
 					if ( $x == 0 ) {
 						$first_user = $user->ID;
 					}
 					$x ++;
+					}
+
 				}
 
 				$user = $first_user;
@@ -839,10 +846,18 @@ if ( $_GET['method'] == "add" ) {
 		<select type="text" name="chat_id" style="width: 300px;" class="form-control rtl input-group">
        ';
 
-
 				$query = $wpdb->get_results( "SELECT * FROM `z_order` WHERE `user_id` = $user ORDER BY `id` DESC", ARRAY_A );
 				foreach ( $query as $row ) {
-					echo '<option value="' . $row['id'] . '">#' . $row['id'] . ' - ' . $row['title'] . '</option>';
+
+				    $count_ticket = $wpdb->get_var( "SELECT COUNT(*) FROM `z_ticket` WHERE `chat_id` =" . $row['id'] );
+				    $disable = '';
+				    $name = '#' . $row['id'] . ' - ' . $row['title'];
+				    if ( $count_ticket >0 ) {
+				        $disable = ' disabled';
+				        $name = '#' . $row['id'] . ' - ' . $row['title'].' - '.' گفتگو وجود دارد ';
+				    }
+
+				    echo '<option value="' . $row['id'] . '"'.$disable.'>'.$name.'</option>';
 				}
 
 				echo '
@@ -885,9 +900,19 @@ if ( $_GET['method'] == "add" ) {
         </td>
 	</tr>
 	
+	<tr class="user-role-wrap">
+                        <th><label for="role">اطلاع رسانی شود به کاربر ؟</label></th>
+                        <td>
+                            <select name="is-notification">
+                                <option value="yes">آری</option>
+                                <option value="no">خیر</option>
+                            </select>
+                        </td>
+    </tr>
 	
 	<tr class="form-field">
 		<td>
+		<input type="hidden" name="add_ticket" value="yes">
 		<input class="btn btn-default" id="send-user-ticket" value="ارسال تیکت" type="submit" style="font-size:11px;">
 
         </td>
@@ -938,6 +963,10 @@ if ( $_GET['method'] == "add" ) {
 				//close Alert
 				case "open":
 					Admin_Ui::wp_admin_notice( __( "تیکت باز شد", 'wp-statistics-actions' ), "success" );
+					break;
+
+				case "send-ticket":
+					Admin_Ui::wp_admin_notice( __( "تیکت ایجاد شد", 'wp-statistics-actions' ), "success" );
 					break;
 
 			}

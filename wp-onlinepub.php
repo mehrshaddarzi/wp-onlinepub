@@ -175,6 +175,15 @@ class WP_Online_Pub {
 				$text .= "\n" . $brand;
 				break;
 
+			case "send_to_user_at_create_ticket":
+				$text = 'کاربر گرامی';
+				$text .= " یک تیکت جدید برای سفارش با شناسه ";
+				$text .= $args['order_id'];
+				$text .= " در سامانه نشر آنلاین ایجاد شده است.لطفا مشاهده کنید و به آن پاسخ دهید ";
+				$text .= "\n" . $brand;
+				break;
+
+
 			default:
 				$text = $text . "\n" . $brand;
 		}
