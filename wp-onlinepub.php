@@ -98,15 +98,15 @@ class WP_Online_Pub {
 		self::$option = get_option( \WP_OnlinePub\Admin_Setting_Api::$option_name );
 
 		//Load init Class
-		new \WP_OnlinePub\Front();
 		new \WP_OnlinePub\Admin_Page();
+		new \WP_OnlinePub\Front();
 		new \WP_OnlinePub\Payment();
 		new \WP_OnlinePub\Ajax();
 
 		//Test Service
-		if ( isset( $_GET['test'] ) ) {
-			exit;
-		}
+//		if ( isset( $_GET['test'] ) ) {
+//			exit;
+//		}
 	}
 
 	/**
