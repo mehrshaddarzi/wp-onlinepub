@@ -99,9 +99,9 @@ class WP_Online_Pub {
 
 		//Load init Class
 		new \WP_OnlinePub\Front();
-		new \WP_OnlinePub\Ajax();
 		new \WP_OnlinePub\Admin_Page();
 		new \WP_OnlinePub\Payment();
+		new \WP_OnlinePub\Ajax();
 
 		//Test Service
 		if ( isset( $_GET['test'] ) ) {
