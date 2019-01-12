@@ -106,11 +106,13 @@
 .growl.growl-default {
     color: #FFF;
     background: #7f8c8d;
+    box-shadow: 2px 2px 2px #fff;
 }
 
 .growl.growl-error {
     color: #FFF;
     background: #C0392B;
+    box-shadow: 2px 2px 2px #fff;
 }
 
 .growl.growl-notice {
@@ -122,6 +124,7 @@
 .growl.growl-warning {
     color: #FFF;
     background: #F39C12;
+    box-shadow: 2px 2px 2px #fff;
 }
 
 .growl .growl-close {

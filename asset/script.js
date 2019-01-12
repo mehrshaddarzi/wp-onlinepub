@@ -15,7 +15,7 @@ jQuery(document).ready(function ($) {
     if (typeof wps_online_js !== "undefined") {
         if (parseInt(wps_online_js.is_login_user) == 1) {
 
-            $.growl.notice({ title: "پیام جدید", message: "شما یک پیام جدید دارید", url: "http://googgle.com" });
+            $.growl.warning({ title: "پیام جدید", message: "شما یک پیام جدید دارید", url: "http://googgle.com" });
 
         }
     }
