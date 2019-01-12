@@ -33,8 +33,8 @@ class Front {
 
 		//Jquery Growl
 		//@see https://github.com/ksylvest/jquery-growl
-		wp_register_style( 'jquery-growl', WP_Online_Pub::$plugin_url . '/asset/growl/jquery.growl.css', array(), WP_Online_Pub::$plugin_version, 'all' );
-		wp_register_script( 'jquery-growl', WP_Online_Pub::$plugin_url . '/asset/growl/jquery.growl.js', array( 'jquery' ), WP_Online_Pub::$plugin_version, false );
+		wp_enqueue_style( 'jquery-growl', WP_Online_Pub::$plugin_url . '/asset/growl/jquery.growl.css', array(), WP_Online_Pub::$plugin_version, 'all' );
+		wp_enqueue_script( 'jquery-growl', WP_Online_Pub::$plugin_url . '/asset/growl/jquery.growl.js', array( 'jquery' ), WP_Online_Pub::$plugin_version, false );
 
 		//Native Plugin
 		wp_register_style( self::$asset_name, WP_Online_Pub::$plugin_url . '/asset/style.css', array(), WP_Online_Pub::$plugin_version, 'all' );
