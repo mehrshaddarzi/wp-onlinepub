@@ -24,6 +24,9 @@ class Front {
 
 		//Show Factor
 		add_action( 'wp', array( $this, 'show_factor' ) );
+
+		//Send Request Noticiation
+		add_action( 'wp', array( $this, 'check_new_notification' ) );
 	}
 
 	/**
@@ -40,10 +43,54 @@ class Front {
 		wp_enqueue_style( self::$asset_name, WP_Online_Pub::$plugin_url . '/asset/style.css', array(), WP_Online_Pub::$plugin_version, 'all' );
 		wp_enqueue_script( self::$asset_name, WP_Online_Pub::$plugin_url . '/asset/script.js', array( 'jquery' ), WP_Online_Pub::$plugin_version, false );
 		wp_localize_script( self::$asset_name, 'wps_online_js', array(
-			'ajax'          => admin_url( "admin-ajax.php" ),
-			'is_login_user' => ( is_user_logged_in() ? 1 : 0 ),
-			'time'          => current_time( 'timestamp' ),
+			'ajax'          => home_url() . '/?wp_online_pub_check_notification=yes&time=' . current_time( 'timestamp' ),
+			'is_login_user' => ( is_user_logged_in() ? 1 : 0 )
 		) );
+	}
+
+	/**
+	 * Check New Notification
+	 */
+	public static function check_new_notification() {
+		global $wpdb;
+
+		//Create Empty Result
+		$result = array(
+			'exist' => 'no',
+			'title' => '',
+			'text'  => '',
+			'url'   => ''
+		);
+
+		//Setup Data
+		$user_id = get_current_user_id();
+		$time    = date( "Y-m-d H:i:s", $_REQUEST['time'] );
+
+		//check New Alert Ticket
+		$alert = $wpdb->get_row( "SELECT COUNT(*) FROM `z_ticket` WHERE `user_id` = {$user_id} and `sender` = 'admin' and `read_user` =0" );
+		if ( null !== $alert ) {
+			$result = array(
+				'exist' => 'yes',
+				'title' => 'پیام جدید',
+				'text'  => 'شما یک پیام جدید دارید',
+				'url'   => add_query_arg( array( 'order' => $alert['chat_id'] ), get_the_permalink( WP_Online_Pub::$option['user_panel'] ) )
+			);
+		}
+
+		//Check New Factor
+		$factor = $wpdb->get_row( "SELECT * FROM `z_factor` WHERE `user_id` = $user_id AND `date` >= $time ORDER BY `id` DESC LIMIT 1", ARRAY_A );
+		if ( null !== $factor ) {
+			$result = array(
+				'exist' => 'yes',
+				'title' => 'فاکتور جدید',
+				'text'  => 'شما یک فاکتور دارید',
+				'url'   => add_query_arg( array( 'view_factor' => $factor['id'], 'redirect' => 'user', '_security_code' => wp_create_nonce( 'view_factor_access' ) ), home_url() )
+			);
+		}
+
+		//Send Data
+		wp_send_json( $result );
+		exit;
 	}
 
 

@@ -18,8 +18,6 @@ jQuery(document).ready(function ($) {
                 jQuery.post({
                     url: wps_online_js.ajax,
                     dataType: "json",
-                    cache: false,
-                    data: {'action': 'check_new_notification_online_pub', 'time': wps_online_js.time},
                     success: function (data) {
                         if (data.exist == "yes") {
                             jQuery.growl.warning({
