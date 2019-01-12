@@ -444,7 +444,7 @@ class Helper {
 
 		//Site Post
 		$site = array(
-			'logo'    => WP_Online_Pub::$plugin_url . '/template/email.png',
+			'logo'    => WP_Online_Pub::$plugin_url . '/template/email.jpg',
 			'name'    => 'نشر آنلاین',
 			'phone'   => '02149279770',
 			'email'   => 'order@onlinepub.ir',

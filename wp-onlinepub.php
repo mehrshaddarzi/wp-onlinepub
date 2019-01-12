@@ -93,11 +93,11 @@ class WP_Online_Pub {
 
 		//set plugin option
 		new \WP_OnlinePub\Gravity_Form();
+		new \WP_OnlinePub\Ticket();
 		new \WP_OnlinePub\Admin_Setting_Api();
 		self::$option = get_option( \WP_OnlinePub\Admin_Setting_Api::$option_name );
 
 		//Load init Class
-		new \WP_OnlinePub\Ticket();
 		new \WP_OnlinePub\Front();
 		new \WP_OnlinePub\Ajax();
 		new \WP_OnlinePub\Admin_Page();
@@ -286,7 +286,7 @@ class WP_Online_Pub {
 		//Template Arg
 		$template_arg = array(
 			'title'      => $subject,
-			'logo'       => plugins_url( '', __FILE__ ) . '/template/email.png',
+			'logo'       => plugins_url( '', __FILE__ ) . '/template/email.jpg',
 			'content'    => $content,
 			'site_url'   => home_url(),
 			'site_title' => 'نشر آنلاین',

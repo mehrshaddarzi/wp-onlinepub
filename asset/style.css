@@ -34,7 +34,7 @@
 .status-order {
     width: 100%;
     height: 30px;
-    background: #eddea5;
+    background: orange;
     border-radius: 5px;
     padding: 5px;
     font-weight: bold;
@@ -50,7 +50,7 @@
 
 .order-accordion .title {
     height: 50px;
-    background: #a9a9a9;
+    background: #352d59;
     border-radius: 5px;
     padding: 13px;
     font-weight: bold;
