@@ -105,11 +105,6 @@ class WP_Online_Pub {
 
 		//Test Service
 		if ( isset( $_GET['test'] ) ) {
-
-			$forms = GFAPI::get_forms();
-			echo '<pre>';
-			print_r( $forms );
-
 			exit;
 		}
 	}

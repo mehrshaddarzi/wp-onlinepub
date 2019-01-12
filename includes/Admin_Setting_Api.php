@@ -72,10 +72,14 @@ class Admin_Setting_Api {
 				'id'    => self::$option_name,
 				'title' => __( 'تنظیمات افزونه', 'wedevs' )
 			),
+			array(
+				'id'    => 'wp_online_pub_gravity',
+				'title' => __( 'تنظیمات گراویتی فرم', 'wedevs' )
+			),
 		);
 
 		$fields = array(
-			self::$option_name => array(
+			self::$option_name      => array(
 				array(
 					'name'    => 'modir_mobile',
 					'label'   => __( 'شماره همراه مدیر', 'wedevs' ),
@@ -111,7 +115,31 @@ class Admin_Setting_Api {
 					'type'    => 'pages',
 					'default' => ''
 				),
-			)
+			),
+			'wp_online_pub_gravity' => array(
+				array(
+					'name'    => 'order',
+					'label'   => __( 'فرم ثبت سفارش', 'wedevs' ),
+					'type'    => 'select',
+					'options' => Gravity_Form::get_forms_list()
+				),
+				array(
+					'name'  => 'title',
+					'label' => __( 'شناسه فیلد عنوان', 'wedevs' ),
+					'type'  => 'text'
+				),
+				array(
+					'name'  => 'type',
+					'label' => __( 'شناسه نوع سفارش', 'wedevs' ),
+					'type'  => 'text'
+				),
+				array(
+					'name'  => 'hidden',
+					'label' => __( 'شناسه فیلد هایی که باید در گزارش مخفی باشد', 'wedevs' ),
+					'desc'  => 'لطفا با کاما جدا کنید مثلا 3,67',
+					'type'  => 'text'
+				)
+			),
 		);
 
 		$this->setting = new \WeDevs_Settings_API();

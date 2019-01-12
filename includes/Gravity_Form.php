@@ -7,25 +7,39 @@ use WP_Online_Pub;
 class Gravity_Form {
 
 	/**
+	 * Gravity Form Option
+	 */
+	public static $gravity_opt;
+
+	/**
 	 * Order Form Id
 	 */
-	public static $order_form_id = 12;
+	public static $order_form_id;
 
 	/**
 	 * Custom Field ID for Push to table
 	 */
-	public static $title = 10;
-	public static $order_type = 78;
+	public static $title;
+	public static $order_type;
 
 	/**
 	 * Hidden Field id in Entry Table
 	 */
-	public static $hidden_field_id = array( 71, 67 );
+	public static $hidden_field_id;
 
 	/**
 	 * Gravity_Form constructor.
 	 */
 	public function __construct() {
+
+		//Get Gravity Option
+		self::$gravity_opt = get_option( 'wp_online_pub_gravity' );
+
+		//Set Order Form
+		self::$order_form_id   = self::$gravity_opt['order'];
+		self::$title           = self::$gravity_opt['title'];
+		self::$order_type      = self::$gravity_opt['type'];
+		self::$hidden_field_id = explode( ",", self::$gravity_opt['hidden'] );
 
 		//Save Order After Push Form
 		add_action( 'gform_after_submission_' . self::$order_form_id, array( $this, 'after_submission_order_form' ), 10, 2 );
@@ -47,7 +61,13 @@ class Gravity_Form {
 	 * Get List Of Form From Gravity Form
 	 */
 	public static function get_forms_list() {
+		$list  = array();
+		$forms = \GFAPI::get_forms();
+		foreach ( $forms as $form ) {
+			$list[ $form['id'] ] = $form['title'];
+		}
 
+		return $list;
 	}
 
 	/**
