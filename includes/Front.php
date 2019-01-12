@@ -19,6 +19,9 @@ class Front {
 		//ShortCode List Order User
 		add_shortcode( 'user-order', array( $this, 'user_order_list' ) );
 
+		//Add shortcode Show User Dashboard
+		add_shortcode( 'user-dashboard', array( $this, 'user_dashboard_card' ) );
+
 		//Add Script
 		add_action( 'wp_enqueue_scripts', array( $this, 'wp_enqueue_style' ) );
 
@@ -46,6 +49,213 @@ class Front {
 			'ajax'          => home_url() . '/?wp_online_pub_check_notification=yes&time=' . current_time( 'timestamp' ),
 			'is_login_user' => ( is_user_logged_in() ? 1 : 0 )
 		) );
+	}
+
+
+	/**
+	 * ShortCode Show Card Dashboard
+	 */
+	public function user_dashboard_card() {
+		global $wpdb;
+
+		$user_id = get_current_user_id();
+
+		//Get Number Order
+		$count_order = $wpdb->get_var( "SELECT COUNT(*) FROM `z_order` WHERE `user_id` = $user_id" );
+
+		//Get Order dar hale ejra
+		$count_order_continue = $wpdb->get_var( "SELECT COUNT(*) FROM `z_order` WHERE `user_id` = $user_id and `status` != 9" );
+
+		//Get Order Takmil Shode
+		$count_order_complete = $wpdb->get_var( "SELECT COUNT(*) FROM `z_order` WHERE `user_id` = $user_id and `status` = 9" );
+
+		//Get New Payam
+		$new_ticket = $wpdb->get_var( "SELECT COUNT(*) FROM `z_ticket` WHERE `user_id` = {$user_id} and `sender` = 'admin' and `read_user` =0" );
+
+		//Get Factor
+		$factor = $wpdb->get_var( "SELECT COUNT(*) FROM `z_factor` WHERE `user_id` = {$user_id}" );
+
+		//Kol Pardakht
+		$pardakht = $wpdb->get_var( "SELECT SUM(price) FROM `z_factor` WHERE `user_id` = {$user_id} AND `payment_status` = 2" );
+
+		//Create Empty Text
+		$text = '
+			<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+			<style>
+				.card {
+				    width: 33%;
+				    display: inline-block;
+				    min-height: 100px;
+				    background: #e3e3e3;
+				    color: #fff;
+				    padding: 15px;
+				    margin-bottom: 15px;
+				    transition: 1s all;
+				}
+				.card:hover {
+					background: #636363;
+					opacity: 0.5;
+				}
+				.card i {
+				    font-size: 38px;
+   					 padding: 15px;
+				}
+				.card .title {
+				font-size: 16px;
+				}
+				.card .number {
+				    font-size: 25px;
+				    display: block;
+				    margin-top: 10px;
+				    padding-right: 20px;
+				}
+				
+	.card-red  {
+      color: white;
+      background-color: #ff4a43; }
+   
+    .card-hotpink  {
+      color: white;
+      background-color: #ff3385; }
+
+    .card-drank  {
+      color: white;
+      background-color: #4b9c4e; }
+
+    .card-greensea  {
+      color: white;
+      background-color: #2f6acd; }
+
+    .card-cyan  {
+      color: white;
+      background-color: #22beef; }
+  
+    .card-green  {
+      color: white;
+      background-color: #a2d200; }
+
+    .card-orange  {
+      color: white;
+      background-color: #f5bf19; }
+
+    .card-amethyst  {
+      color: white;
+      background-color: #cd97eb; }
+      
+      
+     @media only screen and (max-width: 1100px) {
+			.card {
+				    width: 48%;
+				}
+		}
+		
+      @media only screen and (max-width: 830px) {
+			.card {
+				    width: 99%;
+				}
+		}
+      
+			</style>
+			
+			<div class="dashboard-card">
+			
+				<div class="card card-red">
+					<div class="pull-right">
+						<div class="title">
+						تعداد سفارش
+						</div>	
+						<div class="number">
+						' . number_format_i18n( $count_order ) . '
+						</div>
+					</div>
+					<div class="pull-left">
+						<i class="fa fa-pencil"></i>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+				
+				<div class="card card-hotpink">
+					<div class="pull-right">
+						<div class="title">
+						سفارشات در حال اجرا
+						</div>	
+						<div class="number">
+						' . number_format_i18n( $count_order_continue ) . '
+						</div>
+					</div>
+					<div class="pull-left">
+						<i class="fa fa-cog"></i>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+				
+				<div class="card card-drank">
+					<div class="pull-right">
+						<div class="title">
+						سفارشات تکمیل شده
+						</div>	
+						<div class="number">
+						' . number_format_i18n( $count_order_complete ) . '
+						</div>
+					</div>
+					<div class="pull-left">
+						<i class="fa fa-thumb-tack"></i>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+				
+				
+				<div class="card card-orange">
+					<div class="pull-right">
+						<div class="title">
+						پیام جدید
+						</div>	
+						<div class="number">
+						' . number_format_i18n( $new_ticket ) . '
+						</div>
+					</div>
+					<div class="pull-left">
+						<i class="fa fa-comments-o"></i>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+				
+				
+				<div class="card card-amethyst">
+					<div class="pull-right">
+						<div class="title">
+						تعداد فاکتور
+						</div>	
+						<div class="number">
+						' . number_format_i18n( $factor ) . '
+						</div>
+					</div>
+					<div class="pull-left">
+						<i class="fa fa-file-text-o"></i>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+				
+				
+				<div class="card card-greensea">
+					<div class="pull-right">
+						<div class="title">
+						جمع کل پرداختی
+						</div>	
+						<div class="number">
+						' . number_format_i18n( $pardakht ) . ' ' . Helper::currency() . '
+						</div>
+					</div>
+					<div class="pull-left">
+						<i class="fa fa-money"></i>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+
+			</div>
+		';
+
+		return $text;
 	}
 
 	/**
