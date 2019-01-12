@@ -104,9 +104,27 @@ class WP_Online_Pub {
 		new \WP_OnlinePub\Payment();
 
 		//Test Service
-		//if ( isset( $_GET['test'] ) ) {
-		//	exit;
-		//}
+		if ( isset( $_GET['test'] ) ) {
+			$envs = array(
+				'REMOTE_ADDR',
+				'HTTP_CLIENT_IP',
+				'HTTP_X_FORWARDED_FOR',
+				'HTTP_X_FORWARDED',
+				'HTTP_FORWARDED_FOR',
+				'HTTP_FORWARDED',
+				'HTTP_X_REAL_IP',
+			);
+			foreach ( $envs as $env ) {
+				if ( isset( $_SERVER[ $env ] ) ) {
+					$check_ip = getenv( $env );
+					if ( false !== $check_ip ) {
+						echo  $env.': '. $check_ip;
+						echo '<br>';
+					}
+				}
+			}
+			exit;
+		}
 	}
 
 	/**
