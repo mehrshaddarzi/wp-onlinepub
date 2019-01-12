@@ -13,7 +13,7 @@ class Ajax {
 	public function __construct() {
 
 		$list_function = array(
-			'wp_check_new_notification'
+			'check_new_notification_online_pub'
 		);
 
 		foreach ( $list_function as $method ) {
@@ -38,7 +38,7 @@ class Ajax {
 	/**
 	 * Check New Notification
 	 */
-	public function wp_check_new_notification() {
+	public function check_new_notification_online_pub() {
 		global $wpdb;
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 

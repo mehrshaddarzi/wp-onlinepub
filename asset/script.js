@@ -15,11 +15,11 @@ jQuery(document).ready(function ($) {
     if (typeof wps_online_js !== "undefined") {
         if (parseInt(wps_online_js.is_login_user) == 1) {
             setInterval(function () {
-                jQuery.get({
+                jQuery.post({
                     url: wps_online_js.ajax,
                     dataType: "json",
                     cache: false,
-                    data: {'action': 'wp_check_new_notification', 'time': wps_online_js.time},
+                    data: {'action': 'check_new_notification_online_pub', 'time': wps_online_js.time},
                     success: function (data) {
                         if (data.exist == "yes") {
                             jQuery.growl.warning({
