@@ -389,7 +389,7 @@ class Front {
 								$status  = 'پرداخت بصورت : ';
 								$status  .= Helper::get_type_payment( $payment_inf['type'] );
 								$comment = Helper::get_serialize( $payment_inf['comment'] );
-								if ( $row['type'] == 1 ) {
+								if ( $payment_inf['type'] == 1 ) {
 									if ( isset( $comment['payid'] ) ) {
 										$status .= '<br /><span>شناسه پرداخت : ' . Helper::show_value( $comment['payid'] ) . '</span>';
 									}
@@ -487,7 +487,7 @@ class Front {
 								$status  = 'پرداخت بصورت : ';
 								$status  .= Helper::get_type_payment( $payment_inf['type'] );
 								$comment = Helper::get_serialize( $payment_inf['comment'] );
-								if ( $row['type'] == 1 ) {
+								if ( $payment_inf['type'] == 1 ) {
 									if ( isset( $comment['payid'] ) ) {
 										$status .= '<br /><span>شناسه پرداخت : ' . Helper::show_value( $comment['payid'] ) . '</span>';
 									}
