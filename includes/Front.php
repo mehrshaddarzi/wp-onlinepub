@@ -31,8 +31,18 @@ class Front {
 	 */
 	public function wp_enqueue_style() {
 
+		//Jquery Growl
+		//@see https://github.com/ksylvest/jquery-growl
+		wp_register_style( 'jquery-growl', WP_Online_Pub::$plugin_url . '/asset/growl/jquery.growl.css', array(), WP_Online_Pub::$plugin_version, 'all' );
+		wp_register_script( 'jquery-growl', WP_Online_Pub::$plugin_url . '/asset/growl/jquery.growl.js', array( 'jquery' ), WP_Online_Pub::$plugin_version, false );
+
+		//Native Plugin
 		wp_register_style( self::$asset_name, WP_Online_Pub::$plugin_url . '/asset/style.css', array(), WP_Online_Pub::$plugin_version, 'all' );
 		wp_register_script( self::$asset_name, WP_Online_Pub::$plugin_url . '/asset/script.js', array( 'jquery' ), WP_Online_Pub::$plugin_version, false );
+		wp_localize_script( self::$asset_name, 'wps_online_js', array(
+			'ajax'          => admin_url( "admin-ajax.php" ),
+			'is_login_user' => ( is_user_logged_in() ? 1 : 0 )
+		) );
 	}
 
 
