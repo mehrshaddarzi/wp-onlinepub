@@ -1,7 +1,6 @@
 <?php
 
 namespace WP_OnlinePub;
-
 use WP_Online_Pub;
 
 class Ajax {
@@ -12,9 +11,7 @@ class Ajax {
 	 */
 	public function __construct() {
 
-		$list_function = array(
-
-		);
+		$list_function = array();
 
 		foreach ( $list_function as $method ) {
 			add_action( 'wp_ajax_' . $method, array( $this, $method ) );
@@ -30,7 +27,8 @@ class Ajax {
 	 * @param $array
 	 */
 	public function json_exit( $array ) {
-
+		wp_send_json( $array );
+		exit;
 	}
 
 
@@ -38,8 +36,11 @@ class Ajax {
 	 * Check New Notification
 	 */
 	public function check_new_notification_online_pub() {
+		global $wpdb;
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 
 
+		}
 		die();
 	}
 

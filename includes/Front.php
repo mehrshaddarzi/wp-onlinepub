@@ -54,15 +54,15 @@ class Front {
 	public static function check_new_notification() {
 		global $wpdb;
 
-		//Create Empty Result
-		$result = array(
-			'exist' => 'no',
-			'title' => '',
-			'text'  => '',
-			'url'   => ''
-		);
-
 		if ( isset( $_GET['wp_online_pub_check_notification'] ) and isset( $_GET['time'] ) and is_user_logged_in() ) {
+
+			//Create Empty Result
+			$result = array(
+				'exist' => 'no',
+				'title' => '',
+				'text'  => '',
+				'url'   => ''
+			);
 
 			//Setup Data
 			$user_id = get_current_user_id();
@@ -71,10 +71,13 @@ class Front {
 			//check New Alert Ticket
 			$alert = $wpdb->get_row( "SELECT * FROM `z_ticket` WHERE `user_id` = {$user_id} and `sender` = 'admin' and `read_user` =0", ARRAY_A );
 			if ( null !== $alert ) {
+				$t      = 'شما یک پیام جدید در سفارش';
+				$t      .= ' ' . $alert['chat_id'] . ' ';
+				$t      .= 'دارید';
 				$result = array(
 					'exist' => 'yes',
 					'title' => 'پیام جدید',
-					'text'  => 'شما یک پیام جدید دارید',
+					'text'  => $t,
 					'url'   => add_query_arg( array( 'order' => $alert['chat_id'] ), get_the_permalink( WP_Online_Pub::$option['user_panel'] ) )
 				);
 			}
@@ -82,19 +85,23 @@ class Front {
 			//Check New Factor
 			$factor = $wpdb->get_row( "SELECT * FROM `z_factor` WHERE `user_id` = $user_id AND `date` >= $time ORDER BY `id` DESC LIMIT 1", ARRAY_A );
 			if ( null !== $factor ) {
+
+				$t = 'شما یک فاکتور جدید در سفارش';
+				$t .= ' ' . $factor['order_id'] . ' ';
+				$t .= 'دارید';
+
 				$result = array(
 					'exist' => 'yes',
 					'title' => 'فاکتور جدید',
-					'text'  => 'شما یک فاکتور دارید',
+					'text'  => $t,
 					'url'   => add_query_arg( array( 'view_factor' => $factor['id'], 'redirect' => 'user', '_security_code' => wp_create_nonce( 'view_factor_access' ) ), home_url() )
 				);
 			}
 
+			//Send Data
+			wp_send_json( $result );
+			exit;
 		}
-
-		//Send Data
-		wp_send_json( $result );
-		exit;
 	}
 
 
