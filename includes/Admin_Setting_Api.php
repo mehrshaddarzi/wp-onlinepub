@@ -134,7 +134,7 @@ class Admin_Setting_Api {
 					'type'  => 'text'
 				),
 				array(
-					'name'  => 'hidden',
+					'name'  => 'hidden_field',
 					'label' => __( 'شناسه فیلد هایی که باید در گزارش مخفی باشد', 'wedevs' ),
 					'desc'  => 'لطفا با کاما جدا کنید مثلا 3,67',
 					'type'  => 'text'

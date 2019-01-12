@@ -92,12 +92,12 @@ class WP_Online_Pub {
 		include_once dirname( __FILE__ ) . '/vendor/autoload.php';
 
 		//set plugin option
+		new \WP_OnlinePub\Gravity_Form();
 		new \WP_OnlinePub\Admin_Setting_Api();
 		self::$option = get_option( \WP_OnlinePub\Admin_Setting_Api::$option_name );
 
 		//Load init Class
 		new \WP_OnlinePub\Ticket();
-		new \WP_OnlinePub\Gravity_Form();
 		new \WP_OnlinePub\Front();
 		new \WP_OnlinePub\Ajax();
 		new \WP_OnlinePub\Admin_Page();

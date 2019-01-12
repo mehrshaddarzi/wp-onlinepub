@@ -32,14 +32,16 @@ class Gravity_Form {
 	 */
 	public function __construct() {
 
-		//Get Gravity Option
-		self::$gravity_opt = get_option( 'wp_online_pub_gravity' );
+		if ( get_option( 'wp_online_pub_gravity' ) ) {
+			//Get Gravity Option
+			self::$gravity_opt = get_option( 'wp_online_pub_gravity' );
 
-		//Set Order Form
-		self::$order_form_id   = self::$gravity_opt['order'];
-		self::$title           = self::$gravity_opt['title'];
-		self::$order_type      = self::$gravity_opt['type'];
-		self::$hidden_field_id = explode( ",", self::$gravity_opt['hidden'] );
+			//Set Order Form
+			self::$order_form_id   = self::$gravity_opt['order'];
+			self::$title           = self::$gravity_opt['title'];
+			self::$order_type      = self::$gravity_opt['type'];
+			self::$hidden_field_id = explode( ",", self::$gravity_opt['hidden_field'] );
+		}
 
 		//Save Order After Push Form
 		add_action( 'gform_after_submission_' . self::$order_form_id, array( $this, 'after_submission_order_form' ), 10, 2 );
