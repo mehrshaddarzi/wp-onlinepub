@@ -13,9 +13,9 @@ jQuery(document).ready(function ($) {
 
     //Check User Notification
     if (typeof wps_online_js !== "undefined") {
-        if (wps_online_js.is_login_user === 1) {
+        if (parseInt(wps_online_js.is_login_user) == 1) {
 
-            alert('hast');
+            $.growl.notice({ title: "پیام جدید", message: "شما یک پیام جدید دارید", url: "http://googgle.com" });
 
         }
     }
