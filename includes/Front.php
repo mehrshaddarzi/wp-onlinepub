@@ -66,14 +66,15 @@ class Front {
 		$user_id = get_current_user_id();
 		$time    = date( "Y-m-d H:i:s", $_REQUEST['time'] );
 
-		//check New Alert Ticket
+		//check New Alert Ticke
 		$alert = $wpdb->get_row( "SELECT COUNT(*) FROM `z_ticket` WHERE `user_id` = {$user_id} and `sender` = 'admin' and `read_user` =0" );
 		if ( null !== $alert ) {
+			$url = add_query_arg( array( 'order' => $alert['chat_id'] ), get_the_permalink( WP_Online_Pub::$option['user_panel'] ) );
 			$result = array(
 				'exist' => 'yes',
 				'title' => 'پیام جدید',
 				'text'  => 'شما یک پیام جدید دارید',
-				'url'   => add_query_arg( array( 'order' => $alert['chat_id'] ), get_the_permalink( WP_Online_Pub::$option['user_panel'] ) )
+				'url'   => $url
 			);
 		}
 
