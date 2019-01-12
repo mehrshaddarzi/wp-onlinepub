@@ -91,6 +91,7 @@ class Front {
 				    padding: 15px;
 				    margin-bottom: 15px;
 				    transition: 1s all;
+				    cursor: default;
 				}
 				.card:hover {
 					background: #636363;
@@ -104,7 +105,7 @@ class Front {
 				font-size: 16px;
 				}
 				.card .number {
-				    font-size: 25px;
+				    font-size: 23px;
 				    display: block;
 				    margin-top: 10px;
 				    padding-right: 20px;
@@ -140,7 +141,7 @@ class Front {
 
     .card-amethyst  {
       color: white;
-      background-color: #cd97eb; }
+      background-color: #9040bd; }
       
       
      @media only screen and (max-width: 1100px) {
