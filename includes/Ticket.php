@@ -312,7 +312,7 @@ class Ticket {
 
 <div class="form-group form-inline" style="' . ( count( $query ) > 0 ? 'display: none' : '' ) . '">
 <label style="vertical-align: top; width: 120px;display: inline-block;">عنوان پیام </label>
-<input type="hidden" name="ticket_title" value="">
+<input type="text" name="ticket_title" value="" style="width: 300px;margin-bottom: 20px;" ' . ( count( $query ) > 0 ? '' : 'required="required"' ) . '>
 </div>
 
 
