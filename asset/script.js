@@ -14,15 +14,27 @@ jQuery(document).ready(function ($) {
     //Check User Notification
     if (typeof wps_online_js !== "undefined") {
         if (parseInt(wps_online_js.is_login_user) == 1) {
-
-            $.growl.warning({
-                duration: "8000",
-                location: "br",
-                title: "پیام جدید",
-                message: "شما یک پیام جدید دارید",
-                url: "http://googgle.com"
-            });
-
+            setInterval(function () {
+                jQuery.get({
+                    url: wps_online_js.ajax,
+                    dataType: "json",
+                    cache: false,
+                    data: {'action': 'wp_check_new_notification', 'time': wps_online_js.time},
+                    success: function (data) {
+                        if (data.exist == "yes") {
+                            jQuery.growl.warning({
+                                duration: "8000",
+                                location: "br",
+                                title: data.title,
+                                message: data.text,
+                                url: data.url
+                            });
+                        }
+                    },
+                    error: function () {
+                    }
+                });
+            }, 9000);
         }
     }
 

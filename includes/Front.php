@@ -41,7 +41,8 @@ class Front {
 		wp_register_script( self::$asset_name, WP_Online_Pub::$plugin_url . '/asset/script.js', array( 'jquery' ), WP_Online_Pub::$plugin_version, false );
 		wp_localize_script( self::$asset_name, 'wps_online_js', array(
 			'ajax'          => admin_url( "admin-ajax.php" ),
-			'is_login_user' => ( is_user_logged_in() ? 1 : 0 )
+			'is_login_user' => ( is_user_logged_in() ? 1 : 0 ),
+			'time'          => current_time( 'timestamp' ),
 		) );
 	}
 
