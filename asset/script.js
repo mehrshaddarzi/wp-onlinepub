@@ -36,12 +36,4 @@ jQuery(document).ready(function ($) {
         }
     }
 
-
-    jQuery.growl.warning({
-        duration: "8000",
-        location: "br",
-        title: 'پیام جدید',
-        message: 'شما یک پیام جدید دارید',
-    });
-
 });

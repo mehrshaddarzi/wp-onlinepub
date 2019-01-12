@@ -648,12 +648,12 @@ class Front {
 				}
 
 				$text .= '</tbody ></table ></div >';
-				$text .= '</div>';
+				//$text .= '</div>';
 
 			} else {
 				$text .= '<div style="text-align:center;">شما هیچ سفارشی تا بحال ثبت نکرده اید</div>';
 			}
-
+			return $text;
 		}
 
 
