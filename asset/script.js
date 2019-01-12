@@ -11,5 +11,14 @@ jQuery(document).ready(function ($) {
         $(this).parent().find(".content").toggle('slow');
     });
 
+    //Check User Notification
+    if (typeof wps_online_js !== "undefined") {
+        if (wps_online_js.is_login_user === 1) {
+
+            alert('hast');
+
+        }
+    }
+
 
 });
