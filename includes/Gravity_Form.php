@@ -44,6 +44,13 @@ class Gravity_Form {
 	}
 
 	/**
+	 * Get List Of Form From Gravity Form
+	 */
+	public static function get_forms_list() {
+
+	}
+
+	/**
 	 * Remove Entry By id
 	 *
 	 * @param $entry_id

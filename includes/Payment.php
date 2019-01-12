@@ -105,7 +105,8 @@ class Payment {
 
 				//Check request zarinPal is True / False
 				if ( $result['Status'] == 100 ) {
-					Header( 'Location: https://www.zarinpal.com/pg/StartPay/' . $result['Authority'] );
+					//If Not ZarinGate, I Must Remove /zaringate from this url
+					Header( 'Location: https://www.zarinpal.com/pg/StartPay/' . $result['Authority'] . '/ZarinGate' );
 					exit;
 				} else {
 					wp_redirect( $url_back . '&check_payment_status=yes&payment_factor=' . $_GET['payment_factor'] . '&pay_id=' . $idpay );

@@ -105,24 +105,11 @@ class WP_Online_Pub {
 
 		//Test Service
 		if ( isset( $_GET['test'] ) ) {
-			$envs = array(
-				'REMOTE_ADDR',
-				'HTTP_CLIENT_IP',
-				'HTTP_X_FORWARDED_FOR',
-				'HTTP_X_FORWARDED',
-				'HTTP_FORWARDED_FOR',
-				'HTTP_FORWARDED',
-				'HTTP_X_REAL_IP',
-			);
-			foreach ( $envs as $env ) {
-				if ( isset( $_SERVER[ $env ] ) ) {
-					$check_ip = getenv( $env );
-					if ( false !== $check_ip ) {
-						echo  $env.': '. $check_ip;
-						echo '<br>';
-					}
-				}
-			}
+
+			$forms = GFAPI::get_forms();
+			echo '<pre>';
+			print_r( $forms );
+
 			exit;
 		}
 	}
@@ -240,7 +227,7 @@ class WP_Online_Pub {
 				$text .= " فاکتور با شناسه ";
 				$text .= $args['factor_id'];
 				$text .= " و مبلغ ";
-				$text .= $args['factor_price'].' '.\WP_OnlinePub\Helper::currency();
+				$text .= $args['factor_price'] . ' ' . \WP_OnlinePub\Helper::currency();
 				$text .= " با موفقیت پرداخت و تایید شد .";
 				$text .= "\n" . $brand;
 				break;
@@ -251,7 +238,7 @@ class WP_Online_Pub {
 				$text .= " برای فاکتور با شناسه ";
 				$text .= $args['factor_id'];
 				$text .= " یک پرداخت آنلاین موفق به مبلغ ";
-				$text .= $args['factor_price'].' '.\WP_OnlinePub\Helper::currency();
+				$text .= $args['factor_price'] . ' ' . \WP_OnlinePub\Helper::currency();
 				$text .= " انجام داده است.  ";
 				$text .= "\n" . $brand;
 				break;
