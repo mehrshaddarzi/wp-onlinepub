@@ -287,16 +287,16 @@ class Helper {
 	 * @param $new_status
 	 */
 	public static function change_payment_status( $payment_id, $new_status ) {
-			global $wpdb;
+		global $wpdb;
 
-			//Update in database
-			$wpdb->update(
-				'z_payment',
-				array( 'status' => $new_status ),
-				array( 'id' => $payment_id ),
-				array( '%d' ),
-				array( '%d' )
-			);
+		//Update in database
+		$wpdb->update(
+			'z_payment',
+			array( 'status' => $new_status ),
+			array( 'id' => $payment_id ),
+			array( '%d' ),
+			array( '%d' )
+		);
 	}
 
 	/**
@@ -532,10 +532,41 @@ class Helper {
 			$z ++;
 		}
 
+
+//Kol Main Factor
 		$result['html'] .= '
 <tr>
-<td colspan="2" style="vertical-align:middle; text-align:center;" class="text-danger">جمع کل فاکتور</td>
-<td style="vertical-align:middle; text-align:center;" class="text-danger"><b>' . number_format_i18n( $sum ) . ' ' . Helper::currency() . '</b></td>
+<td colspan="2" style="vertical-align:middle; text-align:center;">جمع کل فاکتور</td>
+<td style="vertical-align:middle; text-align:center;" class="text-danger"><b>' . number_format_i18n( $factor['price_main'] ) . ' ' . Helper::currency() . '</b></td>
+</tr>
+';
+
+//Takhfif
+		if ( $factor['discount_percent'] != 0 ) {
+			$result['html'] .= '
+<tr>
+<td colspan="2" style="vertical-align:middle; text-align:center;">تخفیف (' . $factor['discount_percent'] . '%)</td>
+<td style="vertical-align:middle; text-align:center;"><b>' . number_format_i18n( round( ( $factor['price_main'] * $factor['discount_percent'] ) / 100 ) ) . ' ' . Helper::currency() . '</b></td>
+</tr>
+';
+		}
+
+//if ghabel Pardakht
+		if ( $factor['price_main'] != $factor['price'] ) {
+			$result['html'] .= '
+<tr>
+<td colspan="2" style="vertical-align:middle; text-align:center;">کسر می شود : پرداخت برای فاکتور آتی</td>
+<td style="vertical-align:middle; text-align:center;"><b>' . number_format_i18n( $factor['price_main'] - $factor['price'] ) . ' ' . Helper::currency() . '</b></td>
+</tr>
+';
+		}
+
+
+//GHabel Pardakht
+		$result['html'] .= '
+<tr>
+<td colspan="2" style="vertical-align:middle; text-align:center;" class="text-danger">مبلغ قابل پرداخت</td>
+<td style="vertical-align:middle; text-align:center;" class="text-danger"><b>' . number_format_i18n( Helper::payment_price_factor( $factor_id ) ) . ' ' . Helper::currency() . '</b></td>
 </tr>
 </table>
 </div>
@@ -575,6 +606,17 @@ class Helper {
 		} else {
 			return $array[ $export ];
 		}
+	}
+
+
+	/**
+	 * Payable Factor Price
+	 * @param $factor_id
+	 * @return mixed
+	 */
+	public static function payment_price_factor( $factor_id ) {
+		$factor = self::get_factor( $factor_id );
+		return $factor['price'];
 	}
 
 

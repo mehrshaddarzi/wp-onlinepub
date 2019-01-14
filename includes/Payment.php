@@ -1,7 +1,6 @@
 <?php
 
 namespace WP_OnlinePub;
-
 use WP_Online_Pub;
 
 class Payment {
@@ -53,7 +52,7 @@ class Payment {
 
 				//init Data for Zarinpal
 				$MerchantID  = self::$payment_service;
-				$Amount      = $this_factor['price'];
+				$Amount      = Helper::payment_price_factor( $this_factor['price'] );
 				$Description = 'بابت پرداخت آنلاین فاکتور خرید به شماره ' . $_GET['payment_factor'];
 
 				//Tax ZarinPal
@@ -133,7 +132,7 @@ class Payment {
 			//include Soap
 			include( WP_Online_Pub::$plugin_path . '/lib/nusoap/nusoap.php' );
 			$MerchantID = self::$payment_service;
-			$Amount     = $this_factor['price']; //Amount will be based on Toman
+			$Amount     = Helper::payment_price_factor( $this_factor['price'] ); //Amount will be based on Toman
 			$Authority  = $_GET['Authority'];
 
 			if ( $_GET['Status'] == 'OK' ) {
