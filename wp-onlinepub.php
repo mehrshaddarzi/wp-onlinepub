@@ -106,7 +106,7 @@ class WP_Online_Pub {
 		//Test Service
 		if ( isset( $_GET['test'] ) ) {
 			//self::send_mail('admin', 'عنوان ایمیل','matn email test');
-			exit;
+			//exit;
 		}
 	}
 

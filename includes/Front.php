@@ -78,6 +78,9 @@ class Front {
 		//Kol Pardakht
 		$pardakht = $wpdb->get_var( "SELECT SUM(price) FROM `z_factor` WHERE `user_id` = {$user_id} AND `payment_status` = 2" );
 
+		//Faktor dar entezar pardakht
+		$factor_pardakht_nashode = $wpdb->get_var( "SELECT COUNT(*) FROM `z_factor` WHERE `user_id` = {$user_id} WHERE `payment_status` = 1" );
+
 		//Create Empty Text
 		$text = '
 			<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -241,14 +244,14 @@ class Front {
 				<div class="card card-greensea">
 					<div class="pull-right">
 						<div class="title">
-						جمع کل پرداختی
+						فاکتور در انتظار پرداخت
 						</div>	
 						<div class="number">
-						' . number_format_i18n( $pardakht ) . ' ' . Helper::currency() . '
+						' . number_format_i18n( $factor_pardakht_nashode ) . '
 						</div>
 					</div>
 					<div class="pull-left">
-						<i class="fa fa-money"></i>
+						<i class="fa fa-wpforms"></i>
 					</div>
 					<div class="clearfix"></div>
 				</div>
@@ -686,7 +689,7 @@ class Front {
 					<td>' . date_i18n( "j F Y ساعت H:i", strtotime( $row['date'] ) ) . '</td>
 					<td>' . number_format( $row['price'] ) . ' ' . Helper::currency() . '</td>
 					<td>' . $status . '</td>
-					<td><a href="' . add_query_arg( array( 'view_factor' => $row['id'], 'redirect' => 'user', '_security_code' => wp_create_nonce( 'view_factor_access' ) ), home_url() ) . '" target="_blank">' . ( $row['payment_status'] == 2 ? 'مشاهده فاکتور' : 'مشاهده و پرداخت فاکتور' ) . '</a></td>
+					<td style="background: #ff0000;"><a style="color: #fff;" href="' . add_query_arg( array( 'view_factor' => $row['id'], 'redirect' => 'user', '_security_code' => wp_create_nonce( 'view_factor_access' ) ), home_url() ) . '" target="_blank">' . ( $row['payment_status'] == 2 ? 'مشاهده فاکتور' : 'مشاهده و پرداخت فاکتور' ) . '</a></td>
 					</tr>
 					';
 
@@ -784,7 +787,7 @@ class Front {
 					<td>' . date_i18n( "j F Y ساعت H:i", strtotime( $row['date'] ) ) . '</td>
 					<td>' . number_format( $row['price'] ) . ' ' . Helper::currency() . '</td>
 					<td>' . $status . '</td>
-					<td><a href="' . add_query_arg( array( 'view_factor' => $row['id'], 'redirect' => 'user', '_security_code' => wp_create_nonce( 'view_factor_access' ) ), home_url() ) . '" target="_blank">' . ( $row['payment_status'] == 2 ? 'مشاهده فاکتور' : 'مشاهده و پرداخت فاکتور' ) . '</a></td>
+					<td style="background: #ff0000;"><a style="color: #fff;" href="' . add_query_arg( array( 'view_factor' => $row['id'], 'redirect' => 'user', '_security_code' => wp_create_nonce( 'view_factor_access' ) ), home_url() ) . '" target="_blank">' . ( $row['payment_status'] == 2 ? 'مشاهده فاکتور' : 'مشاهده و پرداخت فاکتور' ) . '</a></td>
 					</tr>
 					';
 
@@ -853,7 +856,7 @@ class Front {
 <td>' . $entry[ Gravity_Form::$order_type ] . '</td>
 <td>' . $entry[ Gravity_Form::$title ] . '</td>
 <td>' . Helper::show_status( $row['status'] ) . '</td>
-<td><a href="' . add_query_arg( array( 'order' => $row['id'] ), $page_link ) . '">جزئیات و پیگیری</a></td>
+<td style="background: #ff0000;"><a style="color: #fff;" href="' . add_query_arg( array( 'order' => $row['id'] ), $page_link ) . '">جزئیات و پیگیری</a></td>
 </tr>
 ';
 				}
