@@ -408,8 +408,8 @@ if ( $_GET['method'] == "add" ) {
             <th><label for="role">مبلغ قابل پرداخت 50 درصد لحاظ شود ؟</label></th>
             <td>
             <select name="payable_price">
-                    <option value="1">بله</option>
                     <option value="2">خیر</option>
+                    <option value="1">بله</option>
                 </select>
             </td>
         </tr>
@@ -466,8 +466,6 @@ if ( $_GET['method'] == "add" ) {
                 </select>
             </td>
         </tr>
-
-
 
         <tr class="user-role-wrap">
             <th><label for="role">تغییر وضعیت این سفارش به</label></th>
@@ -584,6 +582,87 @@ if ( $_GET['method'] == "add" ) {
                 <select name="type">
                     <option value="1" <?php selected( $this_factor['type'], 1, true ); ?>><?php echo Helper::get_type_factor( 1 ); ?></option>
                     <option value="2" <?php selected( $this_factor['type'], 2, true ); ?>><?php echo Helper::get_type_factor( 2 ); ?></option>
+                </select>
+            </td>
+        </tr>
+
+
+
+        <script>
+        jQuery(document).ready(function(){
+            let type_factor =  jQuery("select[name=type]");
+            if(type_factor.val() ==2) {
+                jQuery("#payable_price").hide();
+            }
+           type_factor.change(function(){
+               var new_value = jQuery(this).val();
+               if(new_value ==2) {
+                jQuery("#payable_price").hide();
+               } else {
+                   jQuery("#payable_price").show();
+             }
+            });
+        });
+        </script>
+         <tr class="user-role-wrap" id="payable_price">
+            <th><label for="role">مبلغ قابل پرداخت 50 درصد لحاظ شود ؟</label></th>
+            <td>
+            <select name="payable_price">
+                    <option value="2">خیر</option>
+                    <option value="1">بله</option>
+                </select>
+            </td>
+        </tr>
+
+
+        <!-- Show Price discount --->
+        <script>
+        jQuery(document).ready(function(){
+            let type_factor =  jQuery("select[name=type]");
+            if(type_factor.val() ==1) {
+                jQuery("#discount_percent").hide();
+            }
+           type_factor.change(function(){
+               var new_value = jQuery(this).val();
+               if(new_value ==1) {
+                jQuery("#discount_percent").hide();
+               } else {
+                   jQuery("#discount_percent").show();
+             }
+            });
+        });
+        </script>
+         <tr class="user-role-wrap" id="discount_percent">
+            <th><label for="role">درصد تخفیف</label></th>
+            <td>
+                <input type="text" autocomplete="off" class="regular-small only-numeric" name="discount_percent" value="<?php echo $this_factor['discount_percent']; ?>" style="text-align: left; direction: ltr;">
+            </td>
+        </tr>
+
+
+        <!-- Show Price discount --->
+        <script>
+        jQuery(document).ready(function(){
+             let type_factor =  jQuery("select[name=type]");
+            if(type_factor.val() ==1) {
+                jQuery("#is_calculate_price_main").hide();
+            }
+           type_factor.change(function(){
+               var new_value = jQuery(this).val();
+               if(new_value ==1) {
+                jQuery("#is_calculate_price_main").hide();
+               } else {
+                   jQuery("#is_calculate_price_main").show();
+             }
+            });
+        });
+        </script>
+        <tr class="user-role-wrap" id="is_calculate_price_main">
+            <th><label for="role">مبلغ پرداخت شده ی پیش فاکتور ها در این فاکتور لحاظ شود ؟</label></th>
+            <td>
+                <select name="is_calculate_price_main">
+                 <option value="2">خیر</option>
+                 <option value="1">بله</option>
                 </select>
             </td>
         </tr>

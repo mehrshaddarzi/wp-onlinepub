@@ -437,6 +437,7 @@ class Helper {
 	 * @return string
 	 */
 	public static function show_factor( $factor_id ) {
+		global $wpdb;
 		$result = array();
 
 		//Factor Get
@@ -542,17 +543,18 @@ class Helper {
 ';
 
 //Takhfif
+		$takhfif = round( ( $factor['price_main'] * $factor['discount_percent'] ) / 100 );
 		if ( $factor['discount_percent'] != 0 ) {
 			$result['html'] .= '
 <tr>
 <td colspan="2" style="vertical-align:middle; text-align:right;">تخفیف (' . $factor['discount_percent'] . '%)</td>
-<td style="vertical-align:middle; text-align:center;">' . number_format_i18n( round( ( $factor['price_main'] * $factor['discount_percent'] ) / 100 ) ) . ' ' . Helper::currency() . '</td>
+<td style="vertical-align:middle; text-align:center;">' . number_format_i18n( $takhfif ) . ' ' . Helper::currency() . '</td>
 </tr>
 ';
 		}
 
 //if ghabel Pardakht
-		if ( $factor['price_main'] != $factor['price'] and $factor['type'] == 2 ) {
+		if ( $factor['price_main'] != $factor['price'] and $factor['type'] == 2 and ( $factor['price_main'] - $factor['price'] ) != $takhfif ) {
 			$result['html'] .= '
 <tr>
 <td colspan="2" style="vertical-align:middle; text-align:right;">مبلغ پرداخت شده</td>

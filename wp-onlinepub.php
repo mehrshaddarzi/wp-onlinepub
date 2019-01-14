@@ -254,9 +254,9 @@ class WP_Online_Pub {
 //				'text'     => $text,
 //			)
 //		) );
-		if ( ! is_wp_error( $request ) ) {
-			return true;
-		}
+		//if ( ! is_wp_error( $request ) ) {
+		//	return true;
+		//}
 
 		return false;
 	}

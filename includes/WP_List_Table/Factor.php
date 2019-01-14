@@ -321,21 +321,67 @@ class Factor extends \WP_List_Table {
 		//Content Action : Edit Factor
 		if ( isset( $_REQUEST['content-action'] ) and $_REQUEST['content-action'] == "edit-factor" ) {
 
-			//Get now price
-			$this_factor = Helper::get_factor( $_POST['factor_id'] );
-			$now_price   = $this_factor['price'];
 
-			//Update Factor
+			//Get Before Price
+			$this_factor  = Helper::get_factor( $_POST['factor_id'] );
+			$before_price = $this_factor['price'];
+
+			//Set Factor item
+			$Sum_Factor = 0;
+			$z          = 0;
+			foreach ( $_POST['item'] as $item ) {
+				if ( trim( $_POST['item'][ $z ] ) != "" and trim( $_POST['price'][ $z ] ) != "" ) {
+					$Sum_Factor = $Sum_Factor + $_POST['price'][ $z ];
+				}
+				$z ++;
+			}
+
+			//Get Main Price
+			$price            = $price_main = $Sum_Factor;
+			$discount_percent = 0;
+
+			//if Pish Factor
+			if ( $_POST['type'] == 1 ) {
+				//Check Ghabel Pardakht
+				if ( $_POST['payable_price'] == 1 ) {
+					$price = round( ( $Sum_Factor * 50 ) / 100 );
+				}
+			}
+
+			//if main Factor
+			if ( $_POST['type'] == 2 ) {
+
+				//if last pish factor
+				$sum_pish_factor = 0;
+				if ( $_POST['is_calculate_price_main'] == 1 ) {
+					$sum_pish_factor = $wpdb->get_var( "SELECT SUM(price) FROM `z_factor` WHERE `order_id` = {$_POST['order_id']} AND `payment_status` = 2 AND `type` = 1" );
+				}
+				$price = $price - $sum_pish_factor;
+
+				//Calculate Discount
+				if ( ! empty( $_POST['discount_percent'] ) and $_POST['discount_percent'] != 0 ) {
+					$discount_percent = $_POST['discount_percent'];
+					$price            = $price - round( ( $price * $discount_percent ) / 100 );
+				}
+
+			}
+
+
+			//Save To database
 			$order = Helper::get_order( $_POST['order_id'] );
 			$wpdb->update(
 				'z_factor',
 				array(
-					'user_id'  => $order['user_id'],
-					'order_id' => $_POST['order_id'],
-					'type'     => $_POST['type']
+					'user_id'          => $order['user_id'],
+					'order_id'         => $_POST['order_id'],
+					'type'             => $_POST['type'],
+					'price'            => $price,
+					'discount_percent' => $discount_percent,
+					'price_main'       => $price_main,
 				),
 				array( 'id' => $_POST['factor_id'] )
 			);
+			$factor_id = $_POST['factor_id'];
 
 			//Remove All Factor item
 			Helper::remove_factor_items( $_POST['factor_id'] );
@@ -348,7 +394,7 @@ class Factor extends \WP_List_Table {
 					$wpdb->insert(
 						'z_factor_item',
 						array(
-							'factor_id' => $_POST['factor_id'],
+							'factor_id' => $factor_id,
 							'item'      => $_POST['item'][ $z ],
 							'price'     => $_POST['price'][ $z ]
 						)
@@ -358,17 +404,11 @@ class Factor extends \WP_List_Table {
 				$z ++;
 			}
 
-			//Set Factor Price
-			$wpdb->update(
-				'z_factor',
-				array(
-					'price' => $sum
-				),
-				array( 'id' => $_POST['factor_id'] )
-			);
+			//Set Sum Price
+			$sum = $price;
 
 			//Push Notification
-			if ( $now_price != $sum ) {
+			if ( $before_price != $sum ) {
 
 				//Send Sms
 				$arg         = array( "factor_id" => $_POST['factor_id'], "factor_price" => $sum, "factor_type" => $_POST['type'], "order_id" => $_POST['order_id'], "user_name" => Helper::get_user_full_name( $order['user_id'] ) );
@@ -408,7 +448,6 @@ class Factor extends \WP_List_Table {
 		//Content Action : New Factor
 		if ( isset( $_REQUEST['content-action'] ) and $_REQUEST['content-action'] == "add-factor" ) {
 
-
 			//Set Factor item
 			$Sum_Factor = 0;
 			$z          = 0;
@@ -444,7 +483,7 @@ class Factor extends \WP_List_Table {
 				//Calculate Discount
 				if ( ! empty( $_POST['discount_percent'] ) and $_POST['discount_percent'] != 0 ) {
 					$discount_percent = $_POST['discount_percent'];
-					$price            = round( ( $price * $discount_percent ) / 100 );
+					$price            = $price - round( ( $price * $discount_percent ) / 100 );
 				}
 
 			}
