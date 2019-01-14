@@ -536,8 +536,8 @@ class Helper {
 //Kol Main Factor
 		$result['html'] .= '
 <tr>
-<td colspan="2" style="vertical-align:middle; text-align:center;">جمع کل فاکتور</td>
-<td style="vertical-align:middle; text-align:center;" class="text-danger"><b>' . number_format_i18n( $factor['price_main'] ) . ' ' . Helper::currency() . '</b></td>
+<td colspan="2" style="vertical-align:middle; text-align:right;">جمع کل فاکتور</td>
+<td style="vertical-align:middle; text-align:center;" class="text-danger">' . number_format_i18n( $factor['price_main'] ) . ' ' . Helper::currency() . '</td>
 </tr>
 ';
 
@@ -545,8 +545,8 @@ class Helper {
 		if ( $factor['discount_percent'] != 0 ) {
 			$result['html'] .= '
 <tr>
-<td colspan="2" style="vertical-align:middle; text-align:center;">تخفیف (' . $factor['discount_percent'] . '%)</td>
-<td style="vertical-align:middle; text-align:center;"><b>' . number_format_i18n( round( ( $factor['price_main'] * $factor['discount_percent'] ) / 100 ) ) . ' ' . Helper::currency() . '</b></td>
+<td colspan="2" style="vertical-align:middle; text-align:right;">تخفیف (' . $factor['discount_percent'] . '%)</td>
+<td style="vertical-align:middle; text-align:center;">' . number_format_i18n( round( ( $factor['price_main'] * $factor['discount_percent'] ) / 100 ) ) . ' ' . Helper::currency() . '</td>
 </tr>
 ';
 		}
@@ -555,8 +555,8 @@ class Helper {
 		if ( $factor['price_main'] != $factor['price'] ) {
 			$result['html'] .= '
 <tr>
-<td colspan="2" style="vertical-align:middle; text-align:center;">کسر می شود : پرداخت برای فاکتور آتی</td>
-<td style="vertical-align:middle; text-align:center;"><b>' . number_format_i18n( $factor['price_main'] - $factor['price'] ) . ' ' . Helper::currency() . '</b></td>
+<td colspan="2" style="vertical-align:middle; text-align:right;">کسر می شود : پرداخت برای فاکتور آتی</td>
+<td style="vertical-align:middle; text-align:center;">' . number_format_i18n( $factor['price_main'] - $factor['price'] ) . ' ' . Helper::currency() . '</td>
 </tr>
 ';
 		}
@@ -565,7 +565,7 @@ class Helper {
 //GHabel Pardakht
 		$result['html'] .= '
 <tr>
-<td colspan="2" style="vertical-align:middle; text-align:center;" class="text-danger">مبلغ قابل پرداخت</td>
+<td colspan="2" style="vertical-align:middle; text-align:right;" class="text-danger">مبلغ قابل پرداخت</td>
 <td style="vertical-align:middle; text-align:center;" class="text-danger"><b>' . number_format_i18n( Helper::payment_price_factor( $factor_id ) ) . ' ' . Helper::currency() . '</b></td>
 </tr>
 </table>

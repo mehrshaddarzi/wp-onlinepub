@@ -108,11 +108,15 @@ class Payment {
 					Header( 'Location: https://www.zarinpal.com/pg/StartPay/' . $result['Authority'] . '/ZarinGate' );
 					exit;
 				} else {
+					echo 'onja';
+					exit;
 					wp_redirect( $url_back . '&check_payment_status=yes&payment_factor=' . $_GET['payment_factor'] . '&pay_id=' . $idpay );
 					exit;
 				}
 
 			} else {
+				echo 'inja';
+				exit;
 				wp_redirect( $url_back );
 				exit;
 			}
