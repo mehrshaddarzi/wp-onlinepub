@@ -52,7 +52,7 @@ class Payment {
 
 				//init Data for Zarinpal
 				$MerchantID  = self::$payment_service;
-				$Amount      = Helper::payment_price_factor( $this_factor['price'] );
+				$Amount      = $this_factor['price'];
 				$Description = 'بابت پرداخت آنلاین فاکتور خرید به شماره ' . $_GET['payment_factor'];
 
 				//Tax ZarinPal
@@ -108,15 +108,11 @@ class Payment {
 					Header( 'Location: https://www.zarinpal.com/pg/StartPay/' . $result['Authority'] . '/ZarinGate' );
 					exit;
 				} else {
-					echo 'onja';
-					exit;
 					wp_redirect( $url_back . '&check_payment_status=yes&payment_factor=' . $_GET['payment_factor'] . '&pay_id=' . $idpay );
 					exit;
 				}
 
 			} else {
-				echo 'inja';
-				exit;
 				wp_redirect( $url_back );
 				exit;
 			}
@@ -136,7 +132,7 @@ class Payment {
 			//include Soap
 			include( WP_Online_Pub::$plugin_path . '/lib/nusoap/nusoap.php' );
 			$MerchantID = self::$payment_service;
-			$Amount     = Helper::payment_price_factor( $this_factor['price'] ); //Amount will be based on Toman
+			$Amount     = $this_factor['price']; //Amount will be based on Toman
 			$Authority  = $_GET['Authority'];
 
 			if ( $_GET['Status'] == 'OK' ) {
