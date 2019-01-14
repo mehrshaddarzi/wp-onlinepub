@@ -602,6 +602,18 @@ class Front {
 		 *----------------------------------------------------------------------------------------*/
 		if ( isset( $_GET['order'] ) and is_numeric( $_GET['order'] ) and Helper::check_order_for_user( $_GET['order'], $user_id ) === true ) {
 
+			//disable Title
+			echo '
+			<style>
+			.t-page {
+			display: none;
+			}
+			
+			</style>
+			
+			';
+
+
 			//Get Order
 			$row = $wpdb->get_row( "SELECT * FROM `z_order` WHERE `id` = {$_GET['order']}", ARRAY_A );
 			if ( null !== $row ) {

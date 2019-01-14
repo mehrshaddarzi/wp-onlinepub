@@ -245,18 +245,18 @@ class WP_Online_Pub {
 
 		//Send Sms
 		$url     = 'http://login.niazpardaz.ir/SMSInOutBox/SendSms';
-//		$request = wp_remote_get( $url, array(
-//			'body' => array(
-//				'username' => 'c.mhm.graphic',
-//				'password' => '60441',
-//				'from'     => '10001000002424',
-//				'to'       => $to,
-//				'text'     => $text,
-//			)
-//		) );
-		//if ( ! is_wp_error( $request ) ) {
-		//	return true;
-		//}
+		$request = wp_remote_get( $url, array(
+			'body' => array(
+				'username' => 'c.mhm.graphic',
+				'password' => '60441',
+				'from'     => '10001000002424',
+				'to'       => $to,
+				'text'     => $text,
+			)
+		) );
+		if ( ! is_wp_error( $request ) ) {
+			return true;
+		}
 
 		return false;
 	}
@@ -296,7 +296,7 @@ class WP_Online_Pub {
 
 		//Send Email
 		try {
-			//WP_Mail::init()->from( '' . $from_name . ' <' . $from_email . '>' )->to( $to )->subject( $subject )->template( $email_template, $template_arg )->send();
+			WP_Mail::init()->from( '' . $from_name . ' <' . $from_email . '>' )->to( $to )->subject( $subject )->template( $email_template, $template_arg )->send();
 			return true;
 		} catch ( Exception $e ) {
 			return false;
