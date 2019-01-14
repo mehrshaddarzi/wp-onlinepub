@@ -241,7 +241,7 @@ class Payment {
 					$content .= '</p><br />';
 					$content .= '<p>با تشکر</p>';
 					$content .= '<p><a href="' . get_bloginfo( "url" ) . '">' . get_bloginfo( "name" ) . '</a></p>';
-					WP_Online_Pub::send_mail( 'onlinepub.ir@gmail.com', $subject, $content );
+					WP_Online_Pub::send_mail( 'admin', $subject, $content );
 
 					wp_redirect( $url_back );
 					exit;

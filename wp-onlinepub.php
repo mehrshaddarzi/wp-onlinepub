@@ -276,11 +276,11 @@ class WP_Online_Pub {
 		$email_template = wp_normalize_path( dirname( __FILE__ ) . '/template/email.php' );
 
 		//Set To Admin
-//		if ( $to == "admin" ) {
-//			$opt = get_option( 'wp_online_pub_opt' );
-//			//$to = 'opub.ir@gmail.com';
-//			$to = $opt['modir_email'];
-//		}
+		if ( $to == "admin" ) {
+			$opt = get_option( 'wp_online_pub_opt' );
+			//$to = 'opub.ir@gmail.com';
+			$to = $opt['modir_email'];
+		}
 
 		//Email from
 		$from_name  = 'نشرآنلاین';
