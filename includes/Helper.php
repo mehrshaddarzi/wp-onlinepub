@@ -552,11 +552,11 @@ class Helper {
 		}
 
 //if ghabel Pardakht
-		if ( $factor['price_main'] != $factor['price'] ) {
+		if ( $factor['price_main'] != $factor['price'] and $factor['type'] == 2 ) {
 			$result['html'] .= '
 <tr>
 <td colspan="2" style="vertical-align:middle; text-align:right;">مبلغ پرداخت شده</td>
-<td style="vertical-align:middle; text-align:center;">' . number_format_i18n( $factor['price_main'] - $factor['price'] ) . ' ' . Helper::currency() . '</td>
+<td style="vertical-align:middle; text-align:center;">' . number_format_i18n( $wpdb->get_var( "SELECT SUM(price) FROM `z_factor` WHERE `order_id` = {$factor['order_id']} AND `payment_status` = 2 AND `type` = 1" ) ) . ' ' . Helper::currency() . '</td>
 </tr>
 ';
 		}

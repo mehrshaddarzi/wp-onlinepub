@@ -408,16 +408,61 @@ class Factor extends \WP_List_Table {
 		//Content Action : New Factor
 		if ( isset( $_REQUEST['content-action'] ) and $_REQUEST['content-action'] == "add-factor" ) {
 
+
+			//Set Factor item
+			$Sum_Factor = 0;
+			$z          = 0;
+			foreach ( $_POST['item'] as $item ) {
+				if ( trim( $_POST['item'][ $z ] ) != "" and trim( $_POST['price'][ $z ] ) != "" ) {
+					$Sum_Factor = $Sum_Factor + $_POST['price'][ $z ];
+				}
+				$z ++;
+			}
+
+			//Get Main Price
+			$price            = $price_main = $Sum_Factor;
+			$discount_percent = 0;
+
+			//if Pish Factor
+			if ( $_POST['type'] == 1 ) {
+				//Check Ghabel Pardakht
+				if ( $_POST['payable_price'] == 1 ) {
+					$price = round( ( $Sum_Factor * 50 ) / 100 );
+				}
+			}
+
+			//if main Factor
+			if ( $_POST['type'] == 2 ) {
+
+				//if last pish factor
+				$sum_pish_factor = 0;
+				if ( $_POST['is_calculate_price_main'] == 1 ) {
+					$sum_pish_factor = $wpdb->get_var( "SELECT SUM(price) FROM `z_factor` WHERE `order_id` = {$_POST['order_id']} AND `payment_status` = 2 AND `type` = 1" );
+				}
+				$price = $price - $sum_pish_factor;
+
+				//Calculate Discount
+				if ( ! empty( $_POST['discount_percent'] ) and $_POST['discount_percent'] != 0 ) {
+					$discount_percent = $_POST['discount_percent'];
+					$price            = round( ( $price * $discount_percent ) / 100 );
+				}
+
+			}
+
+
 			//Save To database
 			$order = Helper::get_order( $_POST['order_id'] );
 			$wpdb->insert(
 				'z_factor',
 				array(
-					'user_id'        => $order['user_id'],
-					'order_id'       => $_POST['order_id'],
-					'date'           => current_time( 'mysql' ),
-					'type'           => $_POST['type'],
-					'payment_status' => 1
+					'user_id'          => $order['user_id'],
+					'order_id'         => $_POST['order_id'],
+					'date'             => current_time( 'mysql' ),
+					'type'             => $_POST['type'],
+					'price'            => $price,
+					'discount_percent' => $discount_percent,
+					'price_main'       => $price_main,
+					'payment_status'   => 1
 				)
 			);
 			$factor_id = $wpdb->insert_id;
@@ -440,14 +485,17 @@ class Factor extends \WP_List_Table {
 				$z ++;
 			}
 
+			//Set Sum Price
+			$sum = $price;
+
 			//Set Factor Price
-			$wpdb->update(
-				'z_factor',
-				array(
-					'price' => $sum
-				),
-				array( 'id' => $factor_id )
-			);
+//			$wpdb->update(
+//				'z_factor',
+//				array(
+//					'price' => $sum
+//				),
+//				array( 'id' => $factor_id )
+//			);
 
 			//change Order Status
 			Helper::change_status_order( $_POST['order_id'], $_POST['new-status-order'], false );
@@ -510,7 +558,29 @@ class Factor extends \WP_List_Table {
 
 					$content .= '
                     <tr>
-                    <td colspan="2" >جمع کل</td>
+                    <td colspan="2" >جمع کل فاکتور</td>
+                    <td>' . number_format_i18n( $price_main ) . ' ' . Helper::currency() . '</td>
+                    </tr>';
+
+					if ( $discount_percent != 0 ) {
+						$content .= '
+                        <tr>
+                        <td colspan="2" >تخفیف (' . $discount_percent . '%)</td>
+                        <td>' . number_format_i18n( round( ( $price_main * $discount_percent ) / 100 ) ) . ' ' . Helper::currency() . '</td>
+                        </tr>';
+					}
+
+					if ( $price_main != $price and $_POST['type'] == 2 ) {
+						$content .= '
+                            <tr>
+                            <td colspan="2" >مبلغ پرداخت شده</td>
+                            <td>' . number_format_i18n( $wpdb->get_var( "SELECT SUM(price) FROM `z_factor` WHERE `order_id` = {$_POST['order_id']} AND `payment_status` = 2 AND `type` = 1" ) ) . ' ' . Helper::currency() . '</td>
+                            </tr>';
+					}
+
+					$content .= '
+                    <tr>
+                    <td colspan="2" >قابل پرداخت</td>
                     <td>' . number_format_i18n( $sum ) . ' ' . Helper::currency() . '</td>
                     </tr>
                     </tbody>
