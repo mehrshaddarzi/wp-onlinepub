@@ -169,7 +169,7 @@ class Gravity_Form {
 				$content .= 'کاربر گرامی ';
 				$content .= Helper::get_user_full_name( $entry['created_by'] );
 				$content .= '</p><p>';
-				$content .= 'سفارش شما با موفقیت در سامانه نشر آنلاین ثبت و برای بررسی اولیه به مدیریت ارسال گردید';
+				$content .= 'سفارش شما با موفقیت در سامانه نشر آنلاین ثبت و برای بررسی اولیه به کارشناس ارسال گردید';
 				$content .= '</p>';
 				$content .= '<p>شناسه سفارش : ' . $order_id . '</p>';
 				$content .= '<p>عنوان سفارش : ' . $entry[ self::$title ] . '</p>';

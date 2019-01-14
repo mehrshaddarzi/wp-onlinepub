@@ -540,7 +540,7 @@ class Front {
 			$content .= '<br /><br />';
 			$content .= '<p>با تشکر</p>';
 			$content .= '<p><a href="' . get_bloginfo( "url" ) . '">' . get_bloginfo( "name" ) . '</a></p>';
-			WP_Online_Pub::send_mail( 'admin', $subject, $content );
+			WP_Online_Pub::send_mail( 'onlinepub.ir@gmail.com', $subject, $content );
 
 			$text .= '<div class="admin_notice suc"> اطلاعات فیش بانکی شما با موفقیت ثبت گردید.</div>';
 		}
@@ -589,7 +589,7 @@ class Front {
 			$content .= '<br /><br />';
 			$content .= '<p>با تشکر</p>';
 			$content .= '<p><a href="' . get_bloginfo( "url" ) . '">' . get_bloginfo( "name" ) . '</a></p>';
-			WP_Online_Pub::send_mail( 'admin', $subject, $content );
+			WP_Online_Pub::send_mail( 'onlinepub.ir@gmail.com', $subject, $content );
 
 			$text .= '<div class="admin_notice suc"> کاربر گرامی پیام شما با موفقیت برای کارشناسان ارسال گردید و بزودی بررسی خواهد شد.</div>';
 		}
