@@ -250,7 +250,7 @@ class Payment {
 					exit;
 				}
 			} else {
-				//Payment is canseled
+				//Payment is canceled
 				wp_redirect( $url_back );
 				exit;
 			}

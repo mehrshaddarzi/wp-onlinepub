@@ -555,7 +555,7 @@ class Helper {
 		if ( $factor['price_main'] != $factor['price'] ) {
 			$result['html'] .= '
 <tr>
-<td colspan="2" style="vertical-align:middle; text-align:right;">کسر می شود : پرداخت برای فاکتور آتی</td>
+<td colspan="2" style="vertical-align:middle; text-align:right;">مبلغ پرداخت شده</td>
 <td style="vertical-align:middle; text-align:center;">' . number_format_i18n( $factor['price_main'] - $factor['price'] ) . ' ' . Helper::currency() . '</td>
 </tr>
 ';

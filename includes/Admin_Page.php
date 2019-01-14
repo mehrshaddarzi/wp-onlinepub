@@ -347,7 +347,7 @@ if ( $_GET['method'] == "add" ) {
         </tr>
 
 		<?php
-		for ( $x = 1; $x <= 5; $x ++ ) {
+		for ( $x = 1; $x <= 15; $x ++ ) {
 			$v = '';
 			if ( $x == 1 ) {
 				if ( isset( $_GET['order_id'] ) ) {
@@ -386,6 +386,60 @@ if ( $_GET['method'] == "add" ) {
                 </select>
             </td>
         </tr>
+
+        <!-- Show Price discount --->
+        <script>
+        jQuery(document).ready(function(){
+            let type_factor =  jQuery("select[name=type]");
+            if(type_factor.val() ==="2") {
+                jQuery("#discount_percent").hide();
+            }
+           type_factor.change(function(){
+               var new_value = jQuery(this).val();
+               if(new_value ==="2") {
+                jQuery("#discount_percent").hide();
+               } else {
+                   jQuery("#discount_percent").show();
+             }
+            });
+        });
+        </script>
+         <tr class="user-role-wrap" id="discount_percent">
+            <th><label for="role">درصد تخفیف</label></th>
+            <td>
+                <input type="text" autocomplete="off" class="regular-small only-numeric" name="discount_percent" value="" style="text-align: left; direction: ltr;">
+            </td>
+        </tr>
+
+
+        <!-- Show Price discount --->
+        <script>
+        jQuery(document).ready(function(){
+            let main_factor =  jQuery("select[name=is_calculate_price_main]");
+            if(main_factor.val() ==="1") {
+                jQuery("#is_calculate_price_main").hide();
+            }
+           main_factor.change(function(){
+               var new_value = jQuery(this).val();
+               if(new_value ==="1") {
+                jQuery("#is_calculate_price_main").hide();
+               } else {
+                   jQuery("#is_calculate_price_main").show();
+             }
+            });
+        });
+        </script>
+        <tr class="user-role-wrap" id="is_calculate_price_main">
+            <th><label for="role">مبلغ پرداخت شده ی پیش فاکتور ها در این فاکتور لحاظ شود ؟</label></th>
+            <td>
+                <select name="is_calculate_price_main">
+                    <option value="1">بله</option>
+                    <option value="2">خیر</option>
+                </select>
+            </td>
+        </tr>
+
+
 
         <tr class="user-role-wrap">
             <th><label for="role">تغییر وضعیت این سفارش به</label></th>
@@ -480,7 +534,7 @@ if ( $_GET['method'] == "add" ) {
 			$r ++;
 		}
 
-		for ( $x = 1; $x <= 5; $x ++ ) {
+		for ( $x = 1; $x <= 15; $x ++ ) {
 			$v = '';
 			?>
             <tr class="user-role-wrap">
