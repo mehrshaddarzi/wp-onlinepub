@@ -78,6 +78,9 @@ class WP_Online_Pub {
 		}
 		$plugin_data = get_plugin_data( __FILE__ );
 
+		//Get Option
+		self::$option = get_option( 'wp_online_pub_opt' );
+
 		//Get Plugin Version
 		self::$plugin_version = $plugin_data['Version'];
 
@@ -95,9 +98,6 @@ class WP_Online_Pub {
 		new \WP_OnlinePub\Gravity_Form();
 		new \WP_OnlinePub\Ticket();
 		new \WP_OnlinePub\Admin_Setting_Api();
-		self::$option = get_option( \WP_OnlinePub\Admin_Setting_Api::$option_name );
-
-		//Load init Class
 		new \WP_OnlinePub\Admin_Page();
 		new \WP_OnlinePub\Front();
 		new \WP_OnlinePub\Payment();
@@ -128,7 +128,8 @@ class WP_Online_Pub {
 		//Sms To Admin
 		if ( $to == "admin" ) {
 			//$to = '09101566463';
-			$to = self::$option['modir_mobile'];
+			$opt = get_option( 'wp_online_pub_opt' );
+			$to  = $opt['modir_mobile'];
 		}
 
 		//Template Sms
@@ -275,8 +276,9 @@ class WP_Online_Pub {
 
 		//Set To Admin
 		if ( $to == "admin" ) {
+			$opt = get_option( 'wp_online_pub_opt' );
 			//$to = 'opub.ir@gmail.com';
-			$to = self::$option['modir_email'];
+			$to = $opt['modir_email'];
 		}
 
 		//Email from
