@@ -266,7 +266,7 @@ class Admin_Page {
 			//Redirect For $_POST Form Performance
 			foreach ( array( "s", "user" ) as $post ) {
 				if ( isset( $_POST[ $post ] ) and ! empty( $_POST[ $post ] ) ) {
-					$args = array( 'page' => $page_slug, $post => $_POST[ $post ] );
+					$args = array( 'page' => $page_slug, $post => str_ireplace(" ", "+", $_POST[ $post ]) );
 					if ( isset( $_GET['filter'] ) ) {
 						$args['filter'] = $_GET['filter'];
 					}
@@ -819,7 +819,7 @@ if ( $_GET['method'] == "add" ) {
 			//Redirect For $_POST Form Performance
 			foreach ( array( "s", "user" ) as $post ) {
 				if ( isset( $_POST[ $post ] ) and ! empty( $_POST[ $post ] ) ) {
-					$args = array( 'page' => $page_slug, $post => $_POST[ $post ] );
+					$args = array( 'page' => $page_slug, $post => str_ireplace(" ", "+", $_POST[ $post ]) );
 					if ( isset( $_GET['filter'] ) ) {
 						$args['filter'] = $_GET['filter'];
 					}
@@ -905,7 +905,7 @@ if ( $_GET['method'] == "add" ) {
 			//Redirect For $_POST Form Performance
 			foreach ( array( "s", "user" ) as $post ) {
 				if ( isset( $_POST[ $post ] ) and ! empty( $_POST[ $post ] ) ) {
-					$args = array( 'page' => $page_slug, $post => $_POST[ $post ] );
+					$args = array( 'page' => $page_slug, $post => str_ireplace(" ", "+", $_POST[ $post ]) );
 					if ( isset( $_GET['filter'] ) ) {
 						$args['filter'] = $_GET['filter'];
 					}
@@ -1358,7 +1358,7 @@ echo '
 			//Redirect For $_POST Form Performance
 			foreach ( array( "s", "user" ) as $post ) {
 				if ( isset( $_POST[ $post ] ) and ! empty( $_POST[ $post ] ) ) {
-					$args = array( 'page' => $page_slug, $post => $_POST[ $post ] );
+					$args = array( 'page' => $page_slug, $post => str_ireplace(" ", "+", $_POST[ $post ]) );
 					if ( isset( $_GET['filter'] ) ) {
 						$args['filter'] = $_GET['filter'];
 					}

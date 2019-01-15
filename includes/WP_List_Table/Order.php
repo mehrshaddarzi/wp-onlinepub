@@ -68,6 +68,7 @@ class Order extends \WP_List_Table {
 		//Where conditional
 		$conditional = self::conditional_sql();
 		if ( ! empty( $conditional ) ) {
+			//$join = "INNER JOIN `".$wpdb->prefix."users` ON `".$wpdb->prefix."users`.`ID` = `$tbl`.`user_id` WHERE `$tbl`.`title` LIKE '%{$search}%' OR `".$wpdb->prefix."users`.`display_name` LIKE '%{$search}%';";
 			$sql .= ' WHERE ' . implode( ' AND ', $conditional );
 		}
 

@@ -3,7 +3,7 @@
  * Plugin Name: Online pub
  * Description: A Plugin For Shopping System in OnlinePub.Ir
  * Plugin URI:  https://realwp.net
- * Version:     2.0.2
+ * Version:     2.0.4
  * Author:      Mehrshad darzi
  * Author URI:  https://realwp.net
  * License:     MIT
