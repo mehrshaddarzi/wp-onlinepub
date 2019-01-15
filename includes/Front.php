@@ -675,7 +675,7 @@ class Front {
 				$text  .= '
 				<div class="order-accordion">
 					<div class="title">
-						<div class="pull-right">پیش فاکتور</div>
+						<div class="pull-right">پیش فاکتور (پیش پرداخت)</div>
 						<div class="pull-left">+</div>
 						<div class="clearfix"></div>
 					</div>
@@ -737,6 +737,8 @@ class Front {
 					</tbody>
 					</table>
 					';
+
+					$text .= '<br><div style="text-align: center;">مبلغ قابل پرداخت در پیش فاکتور ۵۰ درصد مبلغ جمع کل می باشد.</div>';
 				} else {
 					$text .= '<div style="text-align: center;">هیچ پیش فاکتوری برای این سفارش ایجاد نشده است.</div>';
 				}
