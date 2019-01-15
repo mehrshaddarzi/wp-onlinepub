@@ -79,7 +79,7 @@ class Front {
 		$pardakht = $wpdb->get_var( "SELECT SUM(price) FROM `z_factor` WHERE `user_id` = {$user_id} AND `payment_status` = 2" );
 
 		//Faktor dar entezar pardakht
-		$factor_pardakht_nashode = $wpdb->get_var( "SELECT COUNT(*) FROM `z_factor` WHERE `user_id` = {$user_id} WHERE `payment_status` = 1" );
+		$factor_pardakht_nashode = $wpdb->get_var( "SELECT COUNT(*) FROM `z_factor` WHERE `user_id` = {$user_id} AND `payment_status` = 1" );
 
 		//Create Empty Text
 		$text = '

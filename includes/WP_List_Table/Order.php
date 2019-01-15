@@ -97,7 +97,7 @@ class Order extends \WP_List_Table {
 
 		//Check Search
 		if ( isset( $_GET['s'] ) and ! empty( $_GET['s'] ) ) {
-			$search  = sanitize_text_field( $_GET['s'] );
+			$search  = $_GET['s'];
 			$where[] = "`title` LIKE '%{$search}%'";
 		}
 
@@ -245,10 +245,10 @@ class Order extends \WP_List_Table {
 				break;
 			case 'ticket' :
 
-				$create_ticket    = Admin_Page::admin_link( 'ticket', array( "method" => "add", "user_id" => $item['user_id'], "order_id" => $item['id'] ) );
+				$create_ticket = Admin_Page::admin_link( 'ticket', array( "method" => "add", "user_id" => $item['user_id'], "order_id" => $item['id'] ) );
 
 				$count_ticket = $wpdb->get_var( "SELECT COUNT(*) FROM `z_ticket` WHERE `chat_id` =" . $item['id'] );
-				if ( $count_ticket >0 ) {
+				if ( $count_ticket > 0 ) {
 					return '<a target="_blank" class="text-warning" href="' . Admin_Page::admin_link( 'ticket', array( "method" => "view", "chat_id" => $item['id'] ) ) . '">نمایش گفتگو </a><br>';
 
 				} else {
