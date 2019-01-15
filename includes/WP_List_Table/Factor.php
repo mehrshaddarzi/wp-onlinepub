@@ -351,18 +351,18 @@ class Factor extends \WP_List_Table {
 			//if main Factor
 			if ( $_POST['type'] == 2 ) {
 
+				//Calculate Discount
+				if ( ! empty( $_POST['discount_percent'] ) and $_POST['discount_percent'] != 0 ) {
+					$discount_percent = $_POST['discount_percent'];
+					$price            = $price - round( ( $price * $discount_percent ) / 100 );
+				}
+
 				//if last pish factor
 				$sum_pish_factor = 0;
 				if ( $_POST['is_calculate_price_main'] == 1 ) {
 					$sum_pish_factor = $wpdb->get_var( "SELECT SUM(price) FROM `z_factor` WHERE `order_id` = {$_POST['order_id']} AND `payment_status` = 2 AND `type` = 1" );
 				}
 				$price = $price - $sum_pish_factor;
-
-				//Calculate Discount
-				if ( ! empty( $_POST['discount_percent'] ) and $_POST['discount_percent'] != 0 ) {
-					$discount_percent = $_POST['discount_percent'];
-					$price            = $price - round( ( $price * $discount_percent ) / 100 );
-				}
 
 			}
 
@@ -473,18 +473,18 @@ class Factor extends \WP_List_Table {
 			//if main Factor
 			if ( $_POST['type'] == 2 ) {
 
+				//Calculate Discount
+				if ( ! empty( $_POST['discount_percent'] ) and $_POST['discount_percent'] != 0 ) {
+					$discount_percent = $_POST['discount_percent'];
+					$price            = $price - round( ( $price * $discount_percent ) / 100 );
+				}
+
 				//if last pish factor
 				$sum_pish_factor = 0;
 				if ( $_POST['is_calculate_price_main'] == 1 ) {
 					$sum_pish_factor = $wpdb->get_var( "SELECT SUM(price) FROM `z_factor` WHERE `order_id` = {$_POST['order_id']} AND `payment_status` = 2 AND `type` = 1" );
 				}
 				$price = $price - $sum_pish_factor;
-
-				//Calculate Discount
-				if ( ! empty( $_POST['discount_percent'] ) and $_POST['discount_percent'] != 0 ) {
-					$discount_percent = $_POST['discount_percent'];
-					$price            = $price - round( ( $price * $discount_percent ) / 100 );
-				}
 
 			}
 
