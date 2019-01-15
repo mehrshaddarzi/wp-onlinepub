@@ -443,6 +443,18 @@ class Helper {
 		//Factor Get
 		$factor = Helper::get_factor( $factor_id );
 
+		//Update REad Factor
+		$user_id = get_current_user_id();
+		if ( $factor['user_id'] == $user_id ) {
+			$wpdb->update(
+				'z_factor',
+				array(
+					'read_user' => 1
+				),
+				array( 'id' => $factor_id )
+			);
+		}
+
 		//Site Post
 		$site = array(
 			'logo'    => WP_Online_Pub::$plugin_url . '/template/email.jpg',

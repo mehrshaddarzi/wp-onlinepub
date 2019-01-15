@@ -3,7 +3,7 @@
  * Plugin Name: Online pub
  * Description: A Plugin For Shopping System in OnlinePub.Ir
  * Plugin URI:  https://realwp.net
- * Version:     2.0.0
+ * Version:     2.0.1
  * Author:      Mehrshad darzi
  * Author URI:  https://realwp.net
  * License:     MIT
@@ -166,8 +166,10 @@ class WP_Online_Pub {
 				} else {
 					$text .= 'فاکتور ';
 				}
-				$text .= "به مبلغ ";
-				$text .= number_format( $args['factor_price'] ) . ' ' . \WP_OnlinePub\Helper::currency() . ' ';
+				//$text .= "به مبلغ ";
+				//$text .= number_format( $args['factor_price'] ) . ' ' . \WP_OnlinePub\Helper::currency() . ' ';
+				$text .= "به شناسه ";
+				$text .= number_format( $args['factor_id'] );
 				$text .= 'برای سفارش به شناسه ';
 				$text .= $args['order_id'];
 				$text .= ' ایجاد شده است.لطفا نسبت به پرداخت آن اقدام نمایید.';

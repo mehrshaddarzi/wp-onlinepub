@@ -297,7 +297,7 @@ class Front {
 			}
 
 			//Check New Factor
-			$factor = $wpdb->get_row( "SELECT * FROM `z_factor` WHERE `user_id` = $user_id AND `date` >= $time ORDER BY `id` DESC LIMIT 1", ARRAY_A );
+			$factor = $wpdb->get_row( "SELECT * FROM `z_factor` WHERE `user_id` = $user_id AND `read_user` = 0 ORDER BY `id` DESC LIMIT 1", ARRAY_A );
 			if ( null !== $factor ) {
 
 				$t = 'شما یک فاکتور جدید در سفارش';
@@ -422,6 +422,29 @@ class Front {
 </div>
 <br><br>
 ';
+			} else {
+
+				echo 'وضعیت : ';
+				echo '<span class="text-danger">پرداخت شده</span>';
+				echo '<br>';
+				$payment_inf = $wpdb->get_row( "SELECT * FROM `z_payment` WHERE `factor_id` = {$factor['id']} and `status` = 2", ARRAY_A );
+				if ( null !== $payment_inf ) {
+					echo 'پرداخت بصورت : ';
+					echo Helper::get_type_payment( $payment_inf['type'] );
+					if ( ! empty( $payment_inf['comment'] ) ) {
+						$comment = Helper::get_serialize( $payment_inf['comment'] );
+						if ( $payment_inf['type'] == 1 ) {
+							if ( isset( $comment['payid'] ) ) {
+								echo '<br /><span>شناسه پرداخت : ' . Helper::show_value( $comment['payid'] ) . '</span>';
+							}
+						} else {
+							echo '<br /><span>شماره فیش واریزی : ' . Helper::show_value( $comment['fish'] ) . '</span><br /><span>تاریخ پرداخت : ' . Helper::show_value( $comment['date'] ) . '</span><br />';
+						}
+					}
+
+				}
+
+
 			}
 
 			echo '	
@@ -681,15 +704,17 @@ class Front {
 						if ( $row['payment_status'] == 2 ) {
 							$payment_inf = $wpdb->get_row( "SELECT * FROM `z_payment` WHERE `factor_id` = {$row['id']} and `status` = 2", ARRAY_A );
 							if ( null !== $payment_inf ) {
-								$status  = 'پرداخت بصورت : ';
-								$status  .= Helper::get_type_payment( $payment_inf['type'] );
-								$comment = Helper::get_serialize( $payment_inf['comment'] );
-								if ( $payment_inf['type'] == 1 ) {
-									if ( isset( $comment['payid'] ) ) {
-										$status .= '<br /><span>شناسه پرداخت : ' . Helper::show_value( $comment['payid'] ) . '</span>';
+								$status = 'پرداخت بصورت : ';
+								$status .= Helper::get_type_payment( $payment_inf['type'] );
+								if ( ! empty( $payment_inf['comment'] ) ) {
+									$comment = Helper::get_serialize( $payment_inf['comment'] );
+									if ( $payment_inf['type'] == 1 ) {
+										if ( isset( $comment['payid'] ) ) {
+											$status .= '<br /><span>شناسه پرداخت : ' . Helper::show_value( $comment['payid'] ) . '</span>';
+										}
+									} else {
+										$status .= '<br /><span>شماره فیش واریزی : ' . Helper::show_value( $comment['fish'] ) . '</span><br /><span>تاریخ پرداخت : ' . Helper::show_value( $comment['date'] ) . '</span><br />';
 									}
-								} else {
-									$status .= '<br /><span>شماره فیش واریزی : ' . Helper::show_value( $comment['fish'] ) . '</span><br /><span>تاریخ پرداخت : ' . Helper::show_value( $comment['date'] ) . '</span><br />';
 								}
 							}
 						}
@@ -779,15 +804,17 @@ class Front {
 						if ( $row['payment_status'] == 2 ) {
 							$payment_inf = $wpdb->get_row( "SELECT * FROM `z_payment` WHERE `factor_id` = {$row['id']} and `status` = 2", ARRAY_A );
 							if ( null !== $payment_inf ) {
-								$status  = 'پرداخت بصورت : ';
-								$status  .= Helper::get_type_payment( $payment_inf['type'] );
-								$comment = Helper::get_serialize( $payment_inf['comment'] );
-								if ( $payment_inf['type'] == 1 ) {
-									if ( isset( $comment['payid'] ) ) {
-										$status .= '<br /><span>شناسه پرداخت : ' . Helper::show_value( $comment['payid'] ) . '</span>';
+								$status = 'پرداخت بصورت : ';
+								$status .= Helper::get_type_payment( $payment_inf['type'] );
+								if ( ! empty( $payment_inf['comment'] ) ) {
+									$comment = Helper::get_serialize( $payment_inf['comment'] );
+									if ( $payment_inf['type'] == 1 ) {
+										if ( isset( $comment['payid'] ) ) {
+											$status .= '<br /><span>شناسه پرداخت : ' . Helper::show_value( $comment['payid'] ) . '</span>';
+										}
+									} else {
+										$status .= '<br /><span>شماره فیش واریزی : ' . Helper::show_value( $comment['fish'] ) . '</span><br /><span>تاریخ پرداخت : ' . Helper::show_value( $comment['date'] ) . '</span><br />';
 									}
-								} else {
-									$status .= '<br /><span>شماره فیش واریزی : ' . Helper::show_value( $comment['fish'] ) . '</span><br /><span>تاریخ پرداخت : ' . Helper::show_value( $comment['date'] ) . '</span><br />';
 								}
 							}
 						}
