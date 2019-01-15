@@ -21,7 +21,7 @@ jQuery(document).ready(function ($) {
                     success: function (data) {
                         if (data.exist == "yes") {
                             jQuery.growl.warning({
-                                duration: "8000",
+                                duration: 2500,
                                 location: "br",
                                 title: data.title,
                                 message: data.text,
@@ -32,7 +32,7 @@ jQuery(document).ready(function ($) {
                     error: function () {
                     }
                 });
-            }, 9000);
+            }, 10000);
         }
     }
 

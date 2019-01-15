@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jan 11, 2019 at 11:17 PM
+-- Generation Time: Jan 15, 2019 at 10:24 AM
 -- Server version: 5.6.41
 -- PHP Version: 7.2.7
 
@@ -29,7 +29,10 @@ CREATE TABLE `z_factor` (
   `date` datetime NOT NULL,
   `type` int(3) NOT NULL COMMENT '1=pishfactor/ 2=factor',
   `payment_status` int(3) NOT NULL COMMENT '1=nashode/2=shode',
-  `price` bigint(48) NOT NULL
+  `price` bigint(48) NOT NULL COMMENT 'مبلغ قابل پرداخت',
+  `discount_percent` int(10) NOT NULL COMMENT 'درصد تخفیف',
+  `price_main` int(48) NOT NULL COMMENT 'قیمت بدون تخفیف',
+  `read_user` int(3) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
